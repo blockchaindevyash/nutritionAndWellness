@@ -1,0 +1,230 @@
+import {StyleSheet} from 'react-native';
+import { COLORS, Fonts } from '../../utils';
+import { hp, normalize, wp } from '../../components/responsive';
+
+export const portraitStyles = StyleSheet.create({
+  safeAreaStyle: {
+    flex: 1,
+    height: '100%',
+    width: '100%',
+    backgroundColor: COLORS.backColor,
+  },
+  headerView: {
+    height: '8%', 
+    width: '100%', 
+    backgroundColor: COLORS.primary,
+  },
+  editTextInputView: {
+    width: '90%',
+    alignSelf: 'center',
+    marginTop: hp(2),
+  },
+  textInputView: {
+    width: '100%',
+    borderWidth: 0.3,
+    borderColor: COLORS.black,
+    borderRadius: 6,
+    height: hp(9),
+    justifyContent: 'center',
+    marginTop: hp(1),
+    backgroundColor: COLORS.primary,
+    paddingHorizontal: wp(3),
+  },
+  textInput: {
+    fontFamily: Fonts.FONTS.PoppinsMedium,
+    color: COLORS.greyColor,
+    fontSize: hp(1.9),
+    paddingVertical: hp(0.5)
+  },
+  titleText: {
+    fontFamily: Fonts.FONTS.PoppinsMedium,
+    color: COLORS.white,
+    fontSize: hp(2),
+  },
+  editImage: {
+    width: wp(5),
+    height: hp(2),
+    resizeMode: 'contain',
+    tintColor: COLORS.white,
+  },
+  detailText: {
+    fontSize: normalize(18),
+    fontFamily: Fonts.FONTS.PoppinsMedium,
+    color: COLORS.white,
+  },
+  detailText1: {
+    fontSize: normalize(16),
+    fontFamily: Fonts.FONTS.PoppinsMedium,
+    color: COLORS.greyColor,
+  },
+  optionView: {
+    width: '100%',
+    height: hp(6),
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+  },
+  optionView1: {
+    width: '100%',
+    height: hp(12),
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+  },
+  logoutButton: {
+    width: '100%',
+    paddingVertical: hp(1),
+    backgroundColor: COLORS.subPrimary,
+    borderRadius: 5,
+    alignItems: 'center',
+    marginTop: hp(3),
+  },
+  logoutText: {
+    fontSize: normalize(18),
+    fontFamily: Fonts.FONTS.PoppinsSemiBold,
+    color: COLORS.white,
+  },
+  detailView: {
+    width: '100%',
+    paddingVertical: hp(1),
+    paddingHorizontal: wp(3),
+    backgroundColor: COLORS.primary,
+    borderRadius: 8,
+  },
+  dropdown2DropdownStyle: {
+    backgroundColor: COLORS.primary,
+    borderRadius: 4,
+    paddingVertical: hp(1),
+    // height: hp(25),
+    // borderRadius: 12,
+  },
+  dropdownItemTxtStyle: {
+    color: COLORS.greyColor,
+    fontFamily: Fonts.FONTS.PoppinsMedium,
+    fontSize: hp(2.1),
+  },
+  dropdownView: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: hp(1),
+    // height: hp(4),
+    borderBottomWidth: 0,
+  },
+  dropdown2BtnStyle2: {
+    width: '100%',
+    paddingVertical: hp(0.5),
+    backgroundColor: COLORS.primary,
+    borderRadius: 5,
+    alignItems: 'center',
+    flexDirection: 'row',
+    borderWidth: 1,
+    borderColor: COLORS.primary,
+    // marginTop: hp(1),
+    justifyContent: 'space-between',
+  },
+  filterImage: {
+    width: wp(4),
+    height: hp(2.5),
+    resizeMode: 'contain',
+    tintColor: COLORS.greyColor,
+  },
+});
+
+export const landscapeStyles = StyleSheet.create({
+  safeAreaStyle: {
+    flex: 1,
+    height: '100%',
+    width: '100%',
+    backgroundColor: COLORS.backColor,
+  },
+  headerView: {
+    height: '8%', 
+    width: '100%', 
+    backgroundColor: COLORS.primary,
+  },
+  editTextInputView: {
+    width: '90%',
+    alignSelf: 'center',
+    marginTop: hp(2),
+  },
+  textInputView: {
+    width: '100%',
+    borderWidth: 0.3,
+    borderColor: COLORS.black,
+    borderRadius: 6,
+    height: hp(9),
+    justifyContent: 'center',
+    marginTop: hp(1),
+    backgroundColor: COLORS.primary,
+    paddingHorizontal: wp(3),
+  },
+  textInput: {
+    fontFamily: Fonts.FONTS.PoppinsMedium,
+    color: COLORS.greyColor,
+    fontSize: hp(1.9),
+    paddingVertical: hp(0.5)
+  },
+  titleText: {
+    fontFamily: Fonts.FONTS.PoppinsMedium,
+    color: COLORS.white,
+    fontSize: hp(2),
+  },
+  editImage: {
+    width: wp(5),
+    height: hp(2.5),
+    resizeMode: 'contain',
+    tintColor: COLORS.white,
+  },
+  logoutButton: {
+    width: '100%',
+    paddingVertical: hp(1),
+    backgroundColor: COLORS.subPrimary,
+    borderRadius: 5,
+    alignItems: 'center',
+    marginTop: hp(3),
+  },
+  logoutText: {
+    fontSize: normalize(18),
+    fontFamily: Fonts.FONTS.PoppinsSemiBold,
+    color: COLORS.white,
+  },
+  dropdown2DropdownStyle: {
+    backgroundColor: COLORS.primary,
+    borderRadius: 4,
+    paddingVertical: hp(1),
+    marginTop: -hp(2)
+    // height: hp(25),
+    // borderRadius: 12,
+  },
+  dropdownItemTxtStyle: {
+    color: COLORS.white,
+    fontFamily: Fonts.FONTS.PoppinsMedium,
+    fontSize: hp(2.1),
+    marginLeft: wp(2),
+  },
+  dropdownView: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: hp(1),
+    // height: hp(4),
+    borderBottomWidth: 0,
+  },
+  dropdown2BtnStyle2: {
+    width: '100%',
+    paddingVertical: hp(0.5),
+    backgroundColor: COLORS.primary,
+    borderRadius: 5,
+    alignItems: 'center',
+    flexDirection: 'row',
+    borderWidth: 1,
+    borderColor: COLORS.primary,
+    // marginTop: hp(1),
+    justifyContent: 'space-between',
+  },
+  filterImage: {
+    width: wp(4),
+    height: hp(2.5),
+    resizeMode: 'contain',
+    tintColor: COLORS.white,
+  },
+})

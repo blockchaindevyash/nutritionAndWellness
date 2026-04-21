@@ -1,0 +1,49 @@
+import React from 'react';
+import {View, Text, StyleSheet} from 'react-native';
+import {COLORS, Fonts} from '../utils';
+import useOrientation from './OrientationComponent';
+import { hp, wp } from './responsive';
+
+const getRandomColor = () => {
+  const colors = ['#8fce00', '#f055b0', '#e34949'];
+  const randomIndex = Math.floor(Math.random() * colors.length);
+  return colors[randomIndex];
+};
+  
+const ProfilePhoto = ({username, style}) => {
+  const orientation = useOrientation();
+  const isPortrait = orientation === 'portrait';
+  const initials = username ? username.substring(0, 2).toUpperCase() : '';
+  const backgroundColor = getRandomColor();
+
+  return (
+    <View style={styles.container}>
+      <View style={[styles.circle, style, {backgroundColor}]}>
+        <Text style={[styles.text, {fontSize: isPortrait ? hp(1.8) : wp(1.8)}]}>{initials}</Text>
+      </View>
+    </View>      
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    margin: 7,
+  },
+  circle: {
+    width: 35, // Adjust size as needed
+    height: 35, // Adjust size as needed
+    borderRadius: 35, // Half of the width and height to make it a circle
+    backgroundColor: '#3498db', // Change to any color or use a function to generate a color
+    alignItems: 'center', // Center the text horizontally
+    justifyContent: 'center', // Center the text vertically
+  },
+  text: {
+    color: COLORS.white, // Text color
+    fontSize: hp(1.8), // Adjust font size for two characters
+    fontWeight: Fonts.FONTS.PoppinsBold, // Make text bold
+  },
+});
+
+export default ProfilePhoto;
