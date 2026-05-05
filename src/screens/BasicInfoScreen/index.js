@@ -212,7 +212,7 @@ const BasicInfoScreen = ({ navigation }) => {
                         {isLoading ? (
                             <ActivityIndicator size={'large'} color={COLORS.white} />
                         ) : (
-                            <Text style={styles.signinText}>Continue</Text>
+                            <Text style={styles.signinText}>Next</Text>
                         )}
                     </TouchableOpacity>
                 </View>

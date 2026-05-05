@@ -104,6 +104,10 @@ const AccountScreen = ({ navigation }) => {
                     <Text style={styles.detailText}>Change Password</Text>
                     <Image style={styles.editImage} source={rightArrow} />
                 </TouchableOpacity>
+                <TouchableOpacity style={styles.optionView} onPress={() => navigation.navigate('NotificationScreen')}>
+                    <Text style={styles.detailText}>Notifications</Text>
+                    <Image style={styles.editImage} source={rightArrow} />
+                </TouchableOpacity>
                 <TouchableOpacity style={styles.optionView}>
                     <Text style={styles.detailText}>Term & Conditions</Text>
                     <Image style={styles.editImage} source={rightArrow} />

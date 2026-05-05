@@ -12,6 +12,7 @@ import BasicInfoScreen from './src/screens/BasicInfoScreen';
 import GoalSelection from './src/screens/GoalSelection';
 import DietPreferenceScreen from './src/screens/DietPreferenceScreen';
 import ActivityLevelScreen from './src/screens/ActivityLevelScreen';
+import MedicalScreen from './src/screens/MedicalScreen';
 import AIChatScreen from './src/screens/AIChatScreen';
 import FoodAnalysis from './src/screens/FoodAnalysis';
 import AnalysisDetailScreen from './src/screens/AnalysisDetailScreen';
@@ -19,6 +20,9 @@ import EditScreen from './src/screens/EditScreen';
 import RecipeScreen from './src/screens/RecipeScreen';
 import DashboardScreen from './src/screens/DashboardScreen';
 import ChangePassword from './src/screens/ChangePassword';
+import NotificationScreen from './src/screens/NotificationScreen';
+import ProgramDetailScreen from './src/screens/ProgramDetailScreen';
+import WorkoutReference from './src/screens/WorkoutReference';
 import { Image, Platform, StatusBar, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import {COLORS, Fonts} from './src/utils';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -215,6 +219,11 @@ const App = () => {
             options={{headerShown: false}}
           />
           <Stack.Screen
+            name="MedicalScreen"
+            component={MedicalScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
             name="AIChatScreen"
             component={AIChatScreen}
             options={{headerShown: false}}
@@ -232,6 +241,21 @@ const App = () => {
           <Stack.Screen
             name="RecipeScreen"
             component={RecipeScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="NotificationScreen"
+            component={NotificationScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="ProgramDetailScreen"
+            component={ProgramDetailScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="WorkoutReference"
+            component={WorkoutReference}
             options={{headerShown: false}}
           />
         </Stack.Navigator>

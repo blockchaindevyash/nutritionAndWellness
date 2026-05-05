@@ -51,20 +51,6 @@ const ActivityLevelScreen = ({ navigation }) => {
     const [isLoading, setIsLoading] = useState(false);
     const styles = isPortrait ? portraitStyles : landscapeStyles;
 
-    const handleContinue = () => {
-        const previousData = route?.params || {};
-
-        const payload = {
-        ...previousData,
-        activityLevel: selectedLevel,
-        };
-
-        console.log('Final User Data:', payload);
-
-        // Navigate to next screen (or home/dashboard)
-        navigation.navigate('SummaryScreen', payload);
-    };
-
     return (
         <View style={styles.safeAreaStyle}>
             
@@ -92,11 +78,11 @@ const ActivityLevelScreen = ({ navigation }) => {
                 <TouchableOpacity
                     style={[styles.buttonView, { opacity: isLoading ? 0.75 : 1 }]}
                     disabled={isLoading}
-                    onPress={() => navigation.navigate('TabStack')}>
+                    onPress={() => navigation.navigate('MedicalScreen')}>
                     {isLoading ? (
                         <ActivityIndicator size={'large'} color={COLORS.white} />
                     ) : (
-                        <Text style={styles.signinText}>Submit</Text>
+                        <Text style={styles.signinText}>Next</Text>
                     )}
                 </TouchableOpacity>
             </View>

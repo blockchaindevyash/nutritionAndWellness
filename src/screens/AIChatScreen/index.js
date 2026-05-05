@@ -90,11 +90,11 @@ const AIChatScreen = ({ navigation }) => {
               <TextInput
                 value={enterText}
                 onChangeText={text => {
-                  setEnterText(text);
+                  setEnterText(text); 
                 }}
                 placeholder="Ask anything"
                 placeholderTextColor={COLORS.greyColor}
-                style={[styles.textInput, { width: '78%' }]}
+                style={[styles.textInput, {width: '78%'}]}
                 multiline
               />
               <TouchableOpacity

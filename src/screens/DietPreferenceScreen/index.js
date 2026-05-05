@@ -22,6 +22,7 @@ const dietOptions = [
     { id: 2, title: 'Vegan', icon: '🌱', desc: 'No animal products' },
     { id: 3, title: 'Eggetarian', icon: '🥚', desc: 'Vegetarian + eggs' },
     { id: 4, title: 'Non-Vegetarian', icon: '🍗', desc: 'Includes meat & fish' },
+    { id: 5, title: 'No Onion/Garlic', icon: '🍗', desc: 'food prepared without onions/garlic' },
 ];
 
 const allergyOptions = [
@@ -116,7 +117,7 @@ const DietPreferenceScreen = ({ navigation }) => {
                     {isLoading ? (
                         <ActivityIndicator size={'large'} color={COLORS.white} />
                     ) : (
-                        <Text style={styles.signinText}>Continue</Text>
+                        <Text style={styles.signinText}>Next</Text>
                     )}
                 </TouchableOpacity>
             </View>
