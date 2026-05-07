@@ -23,9 +23,13 @@ import ChangePassword from './src/screens/ChangePassword';
 import NotificationScreen from './src/screens/NotificationScreen';
 import ProgramDetailScreen from './src/screens/ProgramDetailScreen';
 import WorkoutReference from './src/screens/WorkoutReference';
+import MealDetailScreen from './src/screens/MealDetailScreen';
 import { Image, Platform, StatusBar, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import {COLORS, Fonts} from './src/utils';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import {requestNotificationPermission,
+  createNotificationChannel,
+  scheduleMealNotifications} from './notificationService';
 import useOrientation from './src/components/OrientationComponent';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { hp, wp } from './src/components/responsive';
@@ -160,6 +164,16 @@ const TabStack = () => {
 }
 
 const App = () => {
+  
+  useEffect(() => {
+    async function initNotifications() {
+      await requestNotificationPermission();
+      await createNotificationChannel();
+      await scheduleMealNotifications();
+    }
+    initNotifications();
+  }, []);
+  
   return (
     <>
       <StatusBar
@@ -256,6 +270,11 @@ const App = () => {
           <Stack.Screen
             name="WorkoutReference"
             component={WorkoutReference}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="MealDetailScreen"
+            component={MealDetailScreen}
             options={{headerShown: false}}
           />
         </Stack.Navigator>

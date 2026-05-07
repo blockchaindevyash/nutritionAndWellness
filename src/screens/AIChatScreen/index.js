@@ -51,7 +51,7 @@ const AIChatScreen = ({ navigation }) => {
                       </View>
                     ) : (
                       <>
-                        <Text style={styles.ansTitleText}>{'MDxAIWriter  '}
+                        <Text style={styles.ansTitleText}>{'AIHealthCare  '}
                           <Text style={styles.ansDateText}>{moment(item.created_at, "MM/DD/YY hh:mm:ss A").format('MMM DD, hh:mm a')}</Text>
                         </Text>
                         <Text style={styles.ansText}>{renderContent(item.content)}</Text>
@@ -66,7 +66,7 @@ const AIChatScreen = ({ navigation }) => {
                     )}
                     {(answerLoading && index == searchList.length - 1) && (
                       <>
-                        <Text style={styles.ansTitleText}>{'MDxAIWriter '}</Text>
+                        <Text style={styles.ansTitleText}>{'AIHealthCare '}</Text>
                         <Text style={[styles.ansText, { color: COLORS.greyColor }]}>{loadingCount == 1 ? 'Loading.' : loadingCount == 2 ? 'Loading. .' : 'Loading. . .'}</Text>
                       </>
                     )}

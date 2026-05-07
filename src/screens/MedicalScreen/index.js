@@ -85,7 +85,6 @@ const MedicalScreen = ({ navigation }) => {
 
     return (
         <View style={styles.safeAreaStyle}>
-
             <View style={styles.headerView}>
                 <Header title={'Medical Conditions'} onPress={() => navigation.goBack()} />
             </View>

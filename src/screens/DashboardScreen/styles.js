@@ -42,16 +42,6 @@ export const portraitStyles = StyleSheet.create({
     color: COLORS.white,
     marginBottom: 10,
   },
-  progressBar: {
-    height: 8,
-    backgroundColor: '#E5E7EB',
-    borderRadius: 10,
-  },
-  progressFill: {
-    height: 8,
-    backgroundColor: COLORS.subPrimary,
-    borderRadius: 10,
-  },
   button: {
     marginTop: 10,
     backgroundColor: COLORS.subPrimary,
@@ -164,14 +154,28 @@ export const portraitStyles = StyleSheet.create({
     color: COLORS.white,
   },
   sectionTitle: {
-    fontSize: normalize(18),
+    fontSize: normalize(20),
     fontFamily: Fonts.FONTS.PoppinsSemiBold,
     color: COLORS.white,
-    marginBottom: 10  ,
+    marginBottom: 10,
   },
   exerciseText: {
     fontSize: normalize(16),
     fontFamily: Fonts.FONTS.PoppinsRegular,
+    color: COLORS.white,
+  },
+  workoutButton: {
+    width: '100%',
+    backgroundColor: COLORS.subPrimary,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 6,
+    borderRadius: 5,
+    marginTop: hp(2),
+  },
+  startText: {
+    fontSize: normalize(18),
+    fontFamily: Fonts.FONTS.PoppinsSemiBold,
     color: COLORS.white,
   },
 })
@@ -215,16 +219,6 @@ export const landscapeStyles = StyleSheet.create({
     fontFamily: Fonts.FONTS.PoppinsSemiBold,
     color: COLORS.white,
     marginBottom: 10,
-  },
-  progressBar: {
-    height: 8,
-    backgroundColor: '#E5E7EB',
-    borderRadius: 10,
-  },
-  progressFill: {
-    height: 8,
-    backgroundColor: COLORS.subPrimary,
-    borderRadius: 10,
   },
   button: {
     marginTop: 10,

@@ -52,8 +52,7 @@ const GoalSelection = ({ navigation }) => {
                     padding: 15,
                     borderRadius: 5,
                     marginBottom: 10,
-                }}
-            >
+                }}>
                 <Text style={styles.titleText}>{item.icon} {item.title}</Text>
             </TouchableOpacity>
         );

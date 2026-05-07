@@ -22,7 +22,7 @@ const dietOptions = [
     { id: 2, title: 'Vegan', icon: '🌱', desc: 'No animal products' },
     { id: 3, title: 'Eggetarian', icon: '🥚', desc: 'Vegetarian + eggs' },
     { id: 4, title: 'Non-Vegetarian', icon: '🍗', desc: 'Includes meat & fish' },
-    { id: 5, title: 'No Onion/Garlic', icon: '🍗', desc: 'food prepared without onions/garlic' },
+    { id: 5, title: 'No Onion/Garlic', icon: '🍗', desc: 'Vegetarian without onions/garlic' },
 ];
 
 const allergyOptions = [

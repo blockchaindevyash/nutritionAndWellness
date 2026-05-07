@@ -135,7 +135,8 @@ const lineData = [
   { value: 40, dataPointText: '40' },
   { value: 36, dataPointText: '36' },
   { value: 60, dataPointText: '60' },
-  { value: 54, dataPointText: '54' }
+  { value: 54, dataPointText: '54' },
+  { value: 50, dataPointText: '50' }
 ];
 
 const areaData = [
@@ -143,27 +144,6 @@ const areaData = [
   { id: 2, name: 'Abs' },
   { id: 3, name: 'Legs' },
 ]
-
-const weeklyData = [
-  {
-    date: '2026-04-20',
-    day: 'Mon',
-    meals: {
-      breakfast: { name: 'Oats + Milk', done: true },
-      lunch: { name: 'Dal + Rice', done: true },
-      dinner: { name: 'Salad + Soup', done: false },
-    },
-  },
-  {
-    date: '2026-04-21',
-    day: 'Tue',
-    meals: {
-      breakfast: { name: 'Poha', done: false },
-      lunch: { name: 'Chapati + Sabji', done: false },
-      dinner: { name: 'Khichdi', done: false },
-    },
-  },
-];
 
 const DashboardScreen = ({ navigation }) => {
   const orientation = useOrientation();
@@ -214,7 +194,7 @@ const DashboardScreen = ({ navigation }) => {
         {/* Week Header */}
         <View style={styles.header}>
           {weekDays.map((d, i) => (
-            <TouchableOpacity key={i} style={styles.dayBox} onPress={() => {
+            <TouchableOpacity key={i} style={[styles.dayBox, {backgroundColor: selectedDate?.date === d.date ? COLORS.textColor : COLORS.primary}]} onPress={() => {
               setSelectedDate(d);
               console.log('OnPress', d, i);
             }}>
@@ -235,22 +215,27 @@ const DashboardScreen = ({ navigation }) => {
                   🔥 {item.calories} kcal
                 </Text>
               </View>
-              <View style={styles.card}>
-                {/* Meals */}
+              {/* Meals */}
+              <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('MealDetailScreen', {item: item})}>
                 <View style={styles.section}>
-                  <Text style={styles.sectionTitle}>Meals</Text>
-                  <Text style={styles.foodText}>{`Breakfast\n ${item.meals.breakfast}\n`}</Text>
-                  <Text style={styles.foodText}>{`Lunch \n${item.meals.lunch}\n`}</Text>
-                  <Text style={styles.foodText}>{`Dinner \n${item.meals.dinner}\n`}</Text>
+                  <Text style={styles.sectionTitle}>Breakfast</Text>
+                  <Text style={styles.foodText}>{`${item.meals.breakfast}\n`}</Text>
+                  <Text style={styles.sectionTitle}>Lunch</Text>
+                  <Text style={styles.foodText}>{`${item.meals.lunch}\n`}</Text>
+                  <Text style={styles.sectionTitle}>Dinner</Text>
+                  <Text style={styles.foodText}>{`${item.meals.dinner}\n`}</Text>
                 </View>
-              </View>
+              </TouchableOpacity>
+              {/* Exercises */}
               <View style={styles.card}>
-                {/* Exercises */}
                 <View style={styles.section}>
                   <Text style={styles.sectionTitle}>Workout</Text>
                   {item.exercises.map((ex, index) => (
                     <Text key={index} style={styles.exerciseText}>• {ex}</Text>
                   ))}
+                  <TouchableOpacity style={styles.workoutButton} onPress={() => navigation.navigate('ProgramDetailScreen', {item: item})}>
+                    <Text style={styles.startText}>Start Workout</Text>
+                  </TouchableOpacity>
                 </View>
               </View>
             </View>
@@ -261,7 +246,7 @@ const DashboardScreen = ({ navigation }) => {
           <LineChart
             initialSpacing={0}
             data={lineData}
-            spacing={36}
+            spacing={39}
             textColor1={COLORS.white}
             textShiftY={-8}
             textShiftX={-10}
@@ -280,7 +265,7 @@ const DashboardScreen = ({ navigation }) => {
         {/* <View style={styles.progremView}>
           <Text style={styles.cardTitle}>💪 Target Muscle Area</Text>
         </View> */}
-        <FlatList
+        {/* <FlatList
           data={areaData}
           numColumns={2}
           columnWrapperStyle={{ justifyContent: 'space-between' }}
@@ -288,11 +273,10 @@ const DashboardScreen = ({ navigation }) => {
           keyExtractor={(item, index) => index.toString()}
           renderItem={({ item }) => (
             <TouchableOpacity style={styles.dishCard} onPress={() => { }}>
-              {/* <Image source={item.image} style={styles.dishImage} /> */}
               <Text style={styles.cardTitle}>{item.name}</Text>
             </TouchableOpacity>
           )}
-        />
+        /> */}
       </ScrollView>
     </View>
   );
