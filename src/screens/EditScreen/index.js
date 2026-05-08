@@ -24,6 +24,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import SelectDropdown from 'react-native-select-dropdown';
 import down from '../../images/down.png';
 import Header from '../../components/HeaderComponent';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const genderArray = [
     { id: 1, value: 'Male' },
@@ -33,6 +34,7 @@ const genderArray = [
 const EditScreen = ({ navigation }) => {
     const orientation = useOrientation(); // Get current orientation
     const isPortrait = orientation === 'portrait';
+    const insets = useSafeAreaInsets();
     const [name, setName] = useState('');
     const [dob, setDob] = useState(null);
     const [dobError, setDobError] = useState(false);
@@ -48,6 +50,13 @@ const EditScreen = ({ navigation }) => {
 
     return (
         <View style={styles.safeAreaStyle}>
+            <View
+                style={{
+                    width: '100%',
+                    paddingTop: insets.top,
+                    backgroundColor: COLORS.primary,
+                }}
+            />
             <View style={styles.headerView}>
                 <Header title={'Edit Profile'} onPress={() => navigation.goBack()} />
             </View>

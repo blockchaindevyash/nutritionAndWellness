@@ -72,7 +72,7 @@ export const portraitStyles = StyleSheet.create({
     justifyContent: "space-between",
     marginBottom: 10,
   },
-  sectionTitle: {
+  sectionTitle: { 
     fontSize: normalize(20),
     fontFamily: Fonts.FONTS.PoppinsSemiBold,
     color: COLORS.white,
@@ -81,23 +81,25 @@ export const portraitStyles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "space-between",
+    width:'100%',
   },
   mealCard: {
     width: "48%",
-    padding: 15,
-    borderRadius: 20,
-    marginBottom: 15,
+    // paddingVertical: hp(2),
+    borderRadius: 10,
+    marginBottom: hp(2),
   },
   mealTitle: {
     color: COLORS.white,
     fontSize: normalize(18),
     fontFamily: Fonts.FONTS.PoppinsSemiBold,
+    flexShrink: 1,
   },
   mealDesc: {
     color: COLORS.white,
     fontSize: normalize(16),
     fontFamily: Fonts.FONTS.PoppinsRegular,
-    marginVertical: 10,
+    marginVertical: hp(1),
   },
   kcalText: {
     color: COLORS.white,

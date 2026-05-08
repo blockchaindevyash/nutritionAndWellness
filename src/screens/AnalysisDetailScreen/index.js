@@ -17,10 +17,12 @@ import Header from '../../components/HeaderComponent';
 import moment from 'moment';
 import plane from '../../images/plane.png';
 import plus from '../../images/plus.png';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 
 const AnalysisDetailScreen = ({navigation, route}) => {
   const orientation = useOrientation(); // Get current orientation
+  const insets = useSafeAreaInsets();
   const isPortrait = orientation === 'portrait';
   const styles = isPortrait ? portraitStyles : landscapeStyles;
   const [enterText, setEnterText] = useState('');
@@ -28,6 +30,13 @@ const AnalysisDetailScreen = ({navigation, route}) => {
 
   return(
     <View style={styles.safeAreaStyle}>
+      <View
+        style={{
+            width: '100%',
+            paddingTop: insets.top,
+            backgroundColor: COLORS.primary,
+        }}
+      />
         <View style={[styles.container, {backgroundColor: COLORS.backColor}]}>
             <View style={styles.headerView}>
               <Header title={'Analysis Details'} onPress={() => navigation.goBack()}/>

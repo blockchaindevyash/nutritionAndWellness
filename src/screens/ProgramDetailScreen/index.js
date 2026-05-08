@@ -15,11 +15,13 @@ import { portraitStyles, landscapeStyles } from './styles';
 import useOrientation from '../../components/OrientationComponent';
 import Header from '../../components/HeaderComponent';
 import { COLORS } from '../../utils';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const ProgramDetailScreen = ({ navigation, route }) => {
     const orientation = useOrientation(); // Get current orientation
     const isPortrait = orientation === 'portrait';
     const styles = isPortrait ? portraitStyles : landscapeStyles;
+    const insets = useSafeAreaInsets();
 
     const { item } = route.params;
 
@@ -61,6 +63,13 @@ const ProgramDetailScreen = ({ navigation, route }) => {
 
     return (
         <View style={styles.safeAreaStyle}>
+            <View
+                style={{
+                    width: '100%',
+                    paddingTop: insets.top,
+                    backgroundColor: COLORS.primary,
+                }}
+            />
             <View style={styles.headerView}>
                 <Header title={`${item.day} Workout`} onPress={() => navigation.goBack()} />
             </View>
@@ -76,7 +85,7 @@ const ProgramDetailScreen = ({ navigation, route }) => {
                 />
 
                 {/* Bottom Buttons */}
-                <View style={styles.footer}>
+                <View style={[styles.footer, {marginBottom: insets.bottom + 30}]}>
                     <TouchableOpacity style={styles.completeBtn} onPress={() => navigation.goBack()}>
                         <Text style={styles.buttonText}>Complete Workout</Text>
                     </TouchableOpacity>

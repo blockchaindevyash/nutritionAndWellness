@@ -194,10 +194,13 @@ const DashboardScreen = ({ navigation }) => {
         {/* Week Header */}
         <View style={styles.header}>
           {weekDays.map((d, i) => (
-            <TouchableOpacity key={i} style={[styles.dayBox, {backgroundColor: selectedDate?.date === d.date ? COLORS.textColor : COLORS.primary}]} onPress={() => {
-              setSelectedDate(d);
-              console.log('OnPress', d, i);
-            }}>
+            <TouchableOpacity 
+              key={i} 
+              style={[styles.dayBox, {backgroundColor: selectedDate?.date === d.date ? COLORS.textColor : COLORS.primary}]} 
+              onPress={() => {
+                setSelectedDate(d);
+                console.log('OnPress', d, i);
+              }}>
               <Text style={styles.dayFont}>{d.day}</Text>
               <Text style={styles.dateFont}>{d.date.split("-")[2]}</Text>
             </TouchableOpacity>

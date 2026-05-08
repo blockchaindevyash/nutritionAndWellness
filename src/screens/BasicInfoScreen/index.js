@@ -22,6 +22,7 @@ import moment from 'moment';
 import { hp, wp } from '../../components/responsive';
 import SelectDropdown from 'react-native-select-dropdown';
 import down from '../../images/down.png';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const genderArray = [
     { id: 1, value: 'Male' },
@@ -31,6 +32,7 @@ const genderArray = [
 const BasicInfoScreen = ({ navigation }) => {
     const orientation = useOrientation(); // Get current orientation
     const isPortrait = orientation === 'portrait';
+    const insets = useSafeAreaInsets();
     const [dob, setDob] = useState(null);
     const [dobError, setDobError] = useState(false);
     const [gender, setGender] = useState('');
@@ -47,6 +49,13 @@ const BasicInfoScreen = ({ navigation }) => {
 
     return (
         <KeyboardAwareScrollView contentContainerStyle={styles.safeAreaStyle}>
+            <View
+                style={{
+                    width: '100%',
+                    paddingTop: insets.top,
+                    backgroundColor: COLORS.primary,
+                }}
+            />
             <View style={[styles.container, { backgroundColor: COLORS.backColor }]}>
                 <View style={styles.headerView}>
                     <Header title={'Basic Information'} onPress={() => navigation.goBack()} />

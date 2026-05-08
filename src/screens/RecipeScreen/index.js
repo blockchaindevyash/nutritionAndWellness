@@ -16,17 +16,27 @@ import useOrientation from '../../components/OrientationComponent';
 import { hp } from '../../components/responsive';
 import dish1 from '../../images/dish1.jpg';
 import Header from '../../components/HeaderComponent';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { COLORS } from '../../utils';
 
 const RecipeScreen = ({ navigation, route }) => {
   const {item} = route.params;
   const orientation = useOrientation();
   const isPortrait = orientation === 'portrait';
   const styles = isPortrait ? portraitStyles : landscapeStyles;
+  const insets = useSafeAreaInsets();
   const [water, setWater] = useState(2); // current glasses
   const maxWater = 8;
 
   return (
     <View style={styles.safeAreaStyle}>
+      <View
+        style={{
+          width: '100%',
+          paddingTop: insets.top,
+          backgroundColor: COLORS.primary,
+        }}
+      />
       <View style={styles.headerView}>
         <Header title={'Recipe'} onPress={() => navigation.goBack()} />
       </View>

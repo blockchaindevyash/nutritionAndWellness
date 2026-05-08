@@ -16,11 +16,13 @@ import useOrientation from '../../components/OrientationComponent';
 import Header from '../../components/HeaderComponent';
 import { COLORS } from '../../utils';
 import LinearGradient from 'react-native-linear-gradient';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const MealDetailScreen = ({ navigation, route }) => {
     const orientation = useOrientation(); // Get current orientation
     const isPortrait = orientation === 'portrait';
     const styles = isPortrait ? portraitStyles : landscapeStyles;
+    const insets = useSafeAreaInsets();
 
     const { item } = route.params;
 
@@ -32,6 +34,13 @@ const MealDetailScreen = ({ navigation, route }) => {
 
     return (
         <View style={styles.safeAreaStyle}>
+            <View
+                style={{
+                    width: '100%',
+                    paddingTop: insets.top,
+                    backgroundColor: COLORS.primary,
+                }}
+            />
             <View style={styles.headerView}>
                 <Header title={`${item.day} Workout`} onPress={() => navigation.goBack()} />
             </View>
@@ -40,8 +49,8 @@ const MealDetailScreen = ({ navigation, route }) => {
                     <Text style={styles.date}>{item.day} - {item.date}</Text>
                     <View style={styles.calorieCard}>
                         <View>
-                        <Text style={styles.eaten}>Eaten</Text>
-                        <Text style={styles.kcal}>{item.calories} kcal</Text>
+                            <Text style={styles.eaten}>Eaten</Text>
+                            <Text style={styles.kcal}>{item.calories} kcal</Text>
                         </View>
                         <View style={styles.circle}>
                             <Text style={styles.remaining}>1250</Text>
@@ -58,9 +67,11 @@ const MealDetailScreen = ({ navigation, route }) => {
                                 key={index}
                                 colors={["#fc6127", "#faa181"]}
                                 style={styles.mealCard}>
+                                <View style={{padding: 15}}>
                                 <Text style={styles.mealTitle}>{meal.title}</Text>
                                 <Text style={styles.mealDesc}>{meal.data}</Text>
                                 <Text style={styles.kcalText}>{meal.kcal} kcal</Text>
+                                </View>
                             </LinearGradient>
                         ))}
                     </View>

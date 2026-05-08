@@ -16,6 +16,7 @@ import useOrientation from '../../components/OrientationComponent';
 import { COLORS } from '../../utils';
 import Header from '../../components/HeaderComponent';
 import { hp } from '../../components/responsive';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const dietOptions = [
     { id: 1, title: 'Vegetarian', icon: '🥦', desc: 'Plant-based diet' },
@@ -35,6 +36,7 @@ const allergyOptions = [
 const DietPreferenceScreen = ({ navigation }) => {
     const orientation = useOrientation(); // Get current orientation
     const isPortrait = orientation === 'portrait';
+    const insets = useSafeAreaInsets();
     const [selectedDiet, setSelectedDiet] = useState(null);
     const [selectedAllergies, setSelectedAllergies] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
@@ -70,6 +72,13 @@ const DietPreferenceScreen = ({ navigation }) => {
 
     return (
         <View style={styles.safeAreaStyle}>
+            <View
+                style={{
+                    width: '100%',
+                    paddingTop: insets.top,
+                    backgroundColor: COLORS.primary,
+                }}
+            />
             <View style={styles.headerView}>
                 <Header title={'Your Diet Preference'} onPress={() => navigation.goBack()} />
             </View>

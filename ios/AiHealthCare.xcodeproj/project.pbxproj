@@ -11,6 +11,12 @@
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		761780ED2CA45674006654EE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 761780EC2CA45674006654EE /* AppDelegate.swift */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		882748BC2FADC9AC000CBD09 /* PublicSans-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 882748B62FADC921000CBD09 /* PublicSans-Bold.ttf */; };
+		882748BD2FADC9AC000CBD09 /* PublicSans-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 882748B72FADC921000CBD09 /* PublicSans-ExtraBold.ttf */; };
+		882748BE2FADC9AC000CBD09 /* PublicSans-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 882748B82FADC921000CBD09 /* PublicSans-Light.ttf */; };
+		882748BF2FADC9AC000CBD09 /* PublicSans-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 882748B92FADC921000CBD09 /* PublicSans-Medium.ttf */; };
+		882748C02FADC9AC000CBD09 /* PublicSans-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 882748BA2FADC921000CBD09 /* PublicSans-Regular.ttf */; };
+		882748C12FADC9AC000CBD09 /* PublicSans-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 882748BB2FADC921000CBD09 /* PublicSans-SemiBold.ttf */; };
 		C95D288186B9CB7E4E7B317F /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */; };
 /* End PBXBuildFile section */
 
@@ -24,6 +30,12 @@
 		5DCACB8F33CDC322A6C60F78 /* libPods-AiHealthCare.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-AiHealthCare.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		761780EC2CA45674006654EE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = AiHealthCare/AppDelegate.swift; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = AiHealthCare/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		882748B62FADC921000CBD09 /* PublicSans-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "PublicSans-Bold.ttf"; sourceTree = "<group>"; };
+		882748B72FADC921000CBD09 /* PublicSans-ExtraBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "PublicSans-ExtraBold.ttf"; sourceTree = "<group>"; };
+		882748B82FADC921000CBD09 /* PublicSans-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "PublicSans-Light.ttf"; sourceTree = "<group>"; };
+		882748B92FADC921000CBD09 /* PublicSans-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "PublicSans-Medium.ttf"; sourceTree = "<group>"; };
+		882748BA2FADC921000CBD09 /* PublicSans-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "PublicSans-Regular.ttf"; sourceTree = "<group>"; };
+		882748BB2FADC921000CBD09 /* PublicSans-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "PublicSans-SemiBold.ttf"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -70,6 +82,12 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				882748B62FADC921000CBD09 /* PublicSans-Bold.ttf */,
+				882748B72FADC921000CBD09 /* PublicSans-ExtraBold.ttf */,
+				882748B82FADC921000CBD09 /* PublicSans-Light.ttf */,
+				882748B92FADC921000CBD09 /* PublicSans-Medium.ttf */,
+				882748BA2FADC921000CBD09 /* PublicSans-Regular.ttf */,
+				882748BB2FADC921000CBD09 /* PublicSans-SemiBold.ttf */,
 				13B07FAE1A68108700A75B9A /* AiHealthCare */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				83CBBA001A601CBA00E9B192 /* Products */,
@@ -158,6 +176,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				882748BC2FADC9AC000CBD09 /* PublicSans-Bold.ttf in Resources */,
+				882748BD2FADC9AC000CBD09 /* PublicSans-ExtraBold.ttf in Resources */,
+				882748BE2FADC9AC000CBD09 /* PublicSans-Light.ttf in Resources */,
+				882748BF2FADC9AC000CBD09 /* PublicSans-Medium.ttf in Resources */,
+				882748C02FADC9AC000CBD09 /* PublicSans-Regular.ttf in Resources */,
+				882748C12FADC9AC000CBD09 /* PublicSans-SemiBold.ttf in Resources */,
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				C95D288186B9CB7E4E7B317F /* PrivacyInfo.xcprivacy in Resources */,
@@ -191,9 +215,13 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-AiHealthCare/Pods-AiHealthCare-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
+			inputPaths = (
+			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-AiHealthCare/Pods-AiHealthCare-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -230,9 +258,13 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-AiHealthCare/Pods-AiHealthCare-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
+			inputPaths = (
+			);
 			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-AiHealthCare/Pods-AiHealthCare-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -260,6 +292,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = GP4N3SFTVA;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = AiHealthCare/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
@@ -273,7 +306,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.aihealthcare;
 				PRODUCT_NAME = AiHealthCare;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -288,6 +321,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = GP4N3SFTVA;
 				INFOPLIST_FILE = AiHealthCare/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -300,7 +334,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.aihealthcare;
 				PRODUCT_NAME = AiHealthCare;
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";

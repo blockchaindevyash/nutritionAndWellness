@@ -14,6 +14,7 @@ import { portraitStyles, landscapeStyles } from './styles';
 import useOrientation from '../../components/OrientationComponent';
 import Header from '../../components/HeaderComponent';
 import { COLORS } from '../../utils';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const workoutOptions = [
   { id: 1, title: "Home Workout", icon: "🏠" },
@@ -26,6 +27,7 @@ const WorkoutReference = ({ navigation }) => {
     const orientation = useOrientation(); // Get current orientation
     const isPortrait = orientation === 'portrait';
     const styles = isPortrait ? portraitStyles : landscapeStyles;
+    const insets = useSafeAreaInsets();
     const [selected, setSelected] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const [otherText, setOtherText] = useState("");
@@ -58,7 +60,13 @@ const WorkoutReference = ({ navigation }) => {
 
     return (
         <View style={styles.safeAreaStyle}>
-
+            <View
+                style={{
+                    width: '100%',
+                    paddingTop: insets.top,
+                    backgroundColor: COLORS.primary,
+                }}
+            />
             <View style={styles.headerView}>
                 <Header title={'Workout Reference'} onPress={() => navigation.goBack()} />
             </View>

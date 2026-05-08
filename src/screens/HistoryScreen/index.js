@@ -149,7 +149,7 @@ const HistoryScreen = ({ navigation }) => {
                         </View>
                     )}
                 </View>
-                <View style={styles.bottomView}>
+                <View style={[styles.bottomView, {bottom: insets.bottom+40}]}>
                     <View style={styles.chatInputView}>
                         <View style={styles.chatInputView1}>
                             <TouchableOpacity style={styles.roundButtonView} onPress={() => onDocumentPress()}>

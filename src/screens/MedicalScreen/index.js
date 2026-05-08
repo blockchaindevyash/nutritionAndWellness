@@ -14,6 +14,7 @@ import { portraitStyles, landscapeStyles } from './styles';
 import useOrientation from '../../components/OrientationComponent';
 import Header from '../../components/HeaderComponent';
 import { COLORS } from '../../utils';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const medicalOptions = [
     { id: 1, title: "None" },
@@ -28,6 +29,7 @@ const MedicalScreen = ({ navigation }) => {
     const orientation = useOrientation(); // Get current orientation
     const isPortrait = orientation === 'portrait';
     const styles = isPortrait ? portraitStyles : landscapeStyles;
+    const insets = useSafeAreaInsets();
     const [selected, setSelected] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [otherText, setOtherText] = useState("");
@@ -85,6 +87,13 @@ const MedicalScreen = ({ navigation }) => {
 
     return (
         <View style={styles.safeAreaStyle}>
+            <View
+                style={{
+                    width: '100%',
+                    paddingTop: insets.top,
+                    backgroundColor: COLORS.primary,
+                }}
+            />
             <View style={styles.headerView}>
                 <Header title={'Medical Conditions'} onPress={() => navigation.goBack()} />
             </View>

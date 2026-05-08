@@ -53,11 +53,11 @@ const TabStack = () => {
       screenOptions={{
         tabBarShowLabel: false,
         tabBarStyle: {
-          height: isPortrait ? Platform.OS == 'ios' ? hp(8.5) : insets.bottom > 20 ? hp(10) : hp(8.5) : hp(10),
+          height: isPortrait ? insets.bottom > 20 ? hp(10) : hp(8.5) : hp(10),
           alignItems: 'center',
           justifyContent: 'center',
           paddingTop: Platform.OS == 'ios' ? isPortrait ? 0 : hp(1.5) : 0,
-          paddingBottom: insets.bottom > 20 ? Math.max(insets.bottom + 20, hp(1)) : Math.max(insets.bottom, hp(1)),
+          paddingBottom: Math.max(insets.bottom, hp(1)),
           backgroundColor: COLORS.primary,
           shadowColor: '#000',
           shadowOffset: { width: 0, height: -3 }, // IMPORTANT: negative for top shadow

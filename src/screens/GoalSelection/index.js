@@ -16,6 +16,7 @@ import useOrientation from '../../components/OrientationComponent';
 import { COLORS } from '../../utils';
 import Header from '../../components/HeaderComponent';
 import { hp } from '../../components/responsive';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const goals = [
     { id: 1, title: 'Weight Loss', icon: '🔥' },
@@ -29,6 +30,7 @@ const goals = [
 const GoalSelection = ({ navigation }) => {
     const orientation = useOrientation(); // Get current orientation
     const isPortrait = orientation === 'portrait';
+    const insets = useSafeAreaInsets();
     const [selectedGoals, setSelectedGoals] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const styles = isPortrait ? portraitStyles : landscapeStyles;
@@ -60,6 +62,13 @@ const GoalSelection = ({ navigation }) => {
 
     return (
         <View style={styles.safeAreaStyle}>
+            <View
+                style={{
+                    width: '100%',
+                    paddingTop: insets.top,
+                    backgroundColor: COLORS.primary,
+                }}
+            />
             <View style={styles.headerView}>
                 <Header title={'Choose Your Goal'} onPress={() => navigation.goBack()} />
             </View>
