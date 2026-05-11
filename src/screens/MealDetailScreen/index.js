@@ -42,7 +42,7 @@ const MealDetailScreen = ({ navigation, route }) => {
                 }}
             />
             <View style={styles.headerView}>
-                <Header title={`${item.day} Workout`} onPress={() => navigation.goBack()} />
+                <Header title={`${item.day} Meals`} onPress={() => navigation.goBack()} />
             </View>
             <View style={styles.mainView}>
                 <ScrollView>

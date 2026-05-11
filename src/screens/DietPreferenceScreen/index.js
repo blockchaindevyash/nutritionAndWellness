@@ -23,7 +23,7 @@ const dietOptions = [
     { id: 2, title: 'Vegan', icon: '🌱', desc: 'No animal products' },
     { id: 3, title: 'Eggetarian', icon: '🥚', desc: 'Vegetarian + eggs' },
     { id: 4, title: 'Non-Vegetarian', icon: '🍗', desc: 'Includes meat & fish' },
-    { id: 5, title: 'No Onion/Garlic', icon: '🍗', desc: 'Vegetarian without onions/garlic' },
+    { id: 5, title: 'No Onion/Garlic', icon: '🌱', desc: 'Vegetarian without onions/garlic' },
 ];
 
 const allergyOptions = [
@@ -100,8 +100,7 @@ const DietPreferenceScreen = ({ navigation }) => {
                             <Text style={styles.cardDesc}>{item.desc}</Text>
                         </TouchableOpacity>
                     ))}
-                    {/* Allergies Section */}
-                    <Text style={styles.sectionTitle}>⚠️ Allergies (Optional)</Text>
+                    {/* <Text style={styles.sectionTitle}>⚠️ Allergies (Optional)</Text>
                     <View style={styles.allergyContainer}>
                         {allergyOptions.map((item, index) => (
                             <TouchableOpacity
@@ -117,7 +116,7 @@ const DietPreferenceScreen = ({ navigation }) => {
                                 <Text style={styles.allergyText}>{item}</Text>
                             </TouchableOpacity>
                         ))}
-                    </View>
+                    </View> */}
                 </ScrollView>
                 <TouchableOpacity
                     style={[styles.buttonView, { opacity: isLoading ? 0.75 : 1 }]}

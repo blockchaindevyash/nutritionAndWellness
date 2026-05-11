@@ -36,11 +36,6 @@ const HomeScreen = ({navigation}) => {
     const [water, setWater] = useState(2); // current glasses
     const maxWater = 8;
   
-    const handleAddWater = () => {
-      if (water < maxWater) {
-        setWater(water + 1);
-      }
-    };
 
   return (
     <View style={styles.safeAreaStyle}>

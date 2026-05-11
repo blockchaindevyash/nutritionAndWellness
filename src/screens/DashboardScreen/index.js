@@ -24,7 +24,7 @@ import { LineChart } from "react-native-gifted-charts"
 
 const weeklyPlan = [
   {
-    date: "2026-05-04",
+    date: "2026-05-11",
     day: "Monday",
     calories: 1500,
     meals: {
@@ -40,7 +40,7 @@ const weeklyPlan = [
     ],
   },
   {
-    date: "2026-05-05",
+    date: "2026-05-12",
     day: "Tuesday",
     calories: 1500,
     meals: {
@@ -55,7 +55,7 @@ const weeklyPlan = [
     ],
   },
   {
-    date: "2026-05-06",
+    date: "2026-05-13",
     day: "Wednesday",
     calories: 1450,
     meals: {
@@ -70,7 +70,7 @@ const weeklyPlan = [
     ],
   },
   {
-    date: "2026-05-07",
+    date: "2026-05-14",
     day: "Thursday",
     calories: 1500,
     meals: {
@@ -85,7 +85,7 @@ const weeklyPlan = [
     ],
   },
   {
-    date: "2026-05-08",
+    date: "2026-05-15",
     day: "Friday",
     calories: 1500,
     meals: {
@@ -99,7 +99,7 @@ const weeklyPlan = [
     ],
   },
   {
-    date: "2026-05-09",
+    date: "2026-05-16",
     day: "Saturday",
     calories: 1550,
     meals: {
@@ -113,7 +113,7 @@ const weeklyPlan = [
     ],
   },
   {
-    date: "2026-05-10",
+    date: "2026-05-17",
     day: "Sunday",
     calories: 1400,
     meals: {
@@ -196,7 +196,7 @@ const DashboardScreen = ({ navigation }) => {
           {weekDays.map((d, i) => (
             <TouchableOpacity 
               key={i} 
-              style={[styles.dayBox, {backgroundColor: selectedDate?.date === d.date ? COLORS.textColor : COLORS.primary}]} 
+              style={[styles.dayBox, {backgroundColor: selectedDate?.date === d.date ? COLORS.textColor : COLORS.primary}]}
               onPress={() => {
                 setSelectedDate(d);
                 console.log('OnPress', d, i);

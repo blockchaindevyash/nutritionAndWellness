@@ -50,12 +50,10 @@ const ProgramDetailScreen = ({ navigation, route }) => {
         return (
             <TouchableOpacity
                 style={[styles.card, item.done]}
-                onPress={() => toggleDone(item.id)}
-            >
+                onPress={() => toggleDone(item.id)}>
                 <Text style={[styles.exerciseText, item.done && styles.doneText]}>
                     {item.name}
                 </Text>
-
                 <Text style={{color: COLORS.white}}>{item.done ? "✅" : "⬜"}</Text>
             </TouchableOpacity>
         );

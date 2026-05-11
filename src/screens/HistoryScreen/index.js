@@ -7,6 +7,7 @@ import {
     StatusBar,
     FlatList,
     ActivityIndicator,
+    Platform,
 } from 'react-native';
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { portraitStyles, landscapeStyles } from './styles';
@@ -149,7 +150,7 @@ const HistoryScreen = ({ navigation }) => {
                         </View>
                     )}
                 </View>
-                <View style={[styles.bottomView, {bottom: insets.bottom+40}]}>
+                <View style={[styles.bottomView, {bottom: Platform.OS === 'ios' ? insets.bottom + 40 : insets.bottom}]}>
                     <View style={styles.chatInputView}>
                         <View style={styles.chatInputView1}>
                             <TouchableOpacity style={styles.roundButtonView} onPress={() => onDocumentPress()}>
