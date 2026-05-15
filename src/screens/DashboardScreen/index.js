@@ -162,7 +162,6 @@ const DashboardScreen = ({ navigation }) => {
 
   const getCurrentWeek = () => {
     const today = new Date();
-
     const startOfWeek = new Date(today);
     startOfWeek.setDate(today.getDate() - today.getDay() + 1);
     console.log('Start of week:', JSON.stringify(today.toISOString().split('T')[0]));
@@ -194,8 +193,8 @@ const DashboardScreen = ({ navigation }) => {
         {/* Week Header */}
         <View style={styles.header}>
           {weekDays.map((d, i) => (
-            <TouchableOpacity 
-              key={i} 
+            <TouchableOpacity
+              key={i}
               style={[styles.dayBox, {backgroundColor: selectedDate?.date === d.date ? COLORS.textColor : COLORS.primary}]}
               onPress={() => {
                 setSelectedDate(d);
@@ -208,7 +207,7 @@ const DashboardScreen = ({ navigation }) => {
         </View>
         {weeklyPlan.map((item, index) => {
           return item.date === selectedDate?.date ? (
-            <View>
+            <View key={index}>
               <View style={styles.card}>
                 <Text style={styles.date}>
                   {item.day} - {item.date}

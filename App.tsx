@@ -24,6 +24,8 @@ import NotificationScreen from './src/screens/NotificationScreen';
 import ProgramDetailScreen from './src/screens/ProgramDetailScreen';
 import WorkoutReference from './src/screens/WorkoutReference';
 import MealDetailScreen from './src/screens/MealDetailScreen';
+import DoctorDescription from './src/screens/DoctorDescription';
+import MedicineDetailScreen from './src/screens/MedicineDetailScreen';
 import { Image, Platform, StatusBar, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import {COLORS, Fonts} from './src/utils';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -275,6 +277,16 @@ const App = () => {
           <Stack.Screen
             name="MealDetailScreen"
             component={MealDetailScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="DoctorDescription"
+            component={DoctorDescription}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="MedicineDetailScreen"
+            component={MedicineDetailScreen}
             options={{headerShown: false}}
           />
         </Stack.Navigator>

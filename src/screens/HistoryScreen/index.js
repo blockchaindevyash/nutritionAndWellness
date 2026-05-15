@@ -44,11 +44,11 @@ const HistoryScreen = ({ navigation }) => {
         }, [])
     );
 
-    useFocusEffect(
-        useCallback(() => {
-            onGetChatList();
-        }, [])
-    );
+    // useFocusEffect(
+    //     useCallback(() => {
+    //         onGetChatList();
+    //     }, [])
+    // );
 
     const onGetChatList = async () => {
         try {

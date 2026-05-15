@@ -61,7 +61,7 @@ const MedicalScreen = ({ navigation }) => {
             alert("Please select at least one option");
             return;
         }
-        navigation.navigate('WorkoutReference');
+        navigation.navigate('DoctorDescription');
         // const formData = {
         //     medical: selected,
         // };
