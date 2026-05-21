@@ -11,14 +11,22 @@ export const portraitStyles = StyleSheet.create({
   callLogText: {
     fontSize: normalize(20),
     fontFamily: Fonts.FONTS.PoppinsSemiBold,
-    marginLeft: wp(3),
     color: COLORS.white,
   },
   headerView: {
-    height: '8%', 
-    width: '100%', 
+    height: '8%',
+    width: '100%',
     backgroundColor: COLORS.primary,
-    justifyContent: 'center',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    flexDirection: 'row',
+    paddingHorizontal: wp(4),
+  },
+  addImage: {
+    width: wp(5),
+    height: hp(3),
+    resizeMode: 'contain',
+    tintColor: COLORS.white,
   },
   titleText: {
     fontSize: normalize(16),

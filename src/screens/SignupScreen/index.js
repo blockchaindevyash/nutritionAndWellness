@@ -17,6 +17,7 @@ import { COLORS, Fonts } from '../../utils/index';
 import view from '../../images/view.png';
 import hidden from '../../images/hidden.png';
 import logo from '../../images/logo.png';
+import CountryPicker from 'react-native-country-picker-modal';
 
 const SignupScreen = ({ navigation }) => {
     const orientation = useOrientation(); // Get current orientation
@@ -34,11 +35,37 @@ const SignupScreen = ({ navigation }) => {
     const [apiError, setApiError] = useState(false);
     const [apiErrorMessage, setApiErrorMessage] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const [countryCode, setCountryCode] = useState('91');
+    const [countries, setCountries] = useState(null);
+    const [isCountryPickerVisible, setCountryPickerVisibility] = useState(false);
+    const [number, setNumber] = useState('');
+    const [numberError, setNumberError] = useState(false);
     const styles = isPortrait ? portraitStyles : landscapeStyles;
 
     const onSignupData = async () => {
-        console.log('Signup Click')
-        navigation.navigate('BasicInfoScreen');
+        if (name == '') {
+            setNameError(true);
+        } else if (number == '') {
+            setNumberError(true);
+        } else if (email == '') {
+            setEmailError(true);
+        } else if (password == '') {
+            setPasswordError(true);
+        } else if (confirmPass == '') {
+            setConfirmPassError(true);
+        } else if (password !== confirmPass) {
+            setApiError(true);
+            setApiErrorMessage('Password and Confirm password not match.');
+        } else {
+            console.log('Signup Click')
+            navigation.navigate('BasicInfoScreen', {name: name, email: email, number: countryCode?.startsWith('+') ? countryCode + number : `+${countryCode}${number}`, password: password});
+        }
+    };
+
+    const onSelect = country => {
+        console.log('Get Selected Country', country);
+        setCountryCode(country.callingCode[0]);
+        setCountries(country);
     };
 
     return (
@@ -56,7 +83,7 @@ const SignupScreen = ({ navigation }) => {
                             }}
                             placeholder="Enter Name"
                             placeholderTextColor={COLORS.greyColor}
-                            style={[styles.textInput, { color: COLORS.greyColor }]}
+                            style={[styles.textInput]}
                             keyboardType={'email-address'}
                             textContentType={'none'}
                             autoCapitalize={'none'}
@@ -65,6 +92,47 @@ const SignupScreen = ({ navigation }) => {
                     {nameError && (
                         <Text style={styles.errorText}>
                             {'Please first enter your name.'}
+                        </Text>
+                    )}
+                    <View style={styles.countryCodeStyle}>
+                        <TouchableOpacity
+                            onPress={() =>
+                                setCountryPickerVisibility(!isCountryPickerVisible)
+                            }
+                            style={styles.countryCodeText}>
+                            <Text style={styles.textInput}>
+                                {countryCode?.startsWith('+') ? countryCode : `+${countryCode}`}
+                            </Text>
+                        </TouchableOpacity>
+
+                        {isCountryPickerVisible && (
+                            <CountryPicker
+                                visible={isCountryPickerVisible}
+                                onClose={() => setCountryPickerVisibility(false)}
+                                onSelect={onSelect}
+                                withCloseButton
+                                withCallingCode
+                                withFilter
+                            />
+                        )}
+                        <View style={[styles.textInputView, { width: '75%' }]}>
+                            <TextInput
+                                value={number}
+                                placeholder={'User Phone'}
+                                placeholderTextColor={COLORS.greyColor}
+                                keyboardType={'numeric'}
+                                onChangeText={text => {
+                                    setNumber(text);
+                                    setNumberError(false);
+                                    setApiError(false);
+                                }}
+                                style={[styles.textInput]}
+                            />
+                        </View>
+                    </View>
+                    {numberError && (
+                        <Text style={styles.errorText}>
+                            {'Phone number is required.'}
                         </Text>
                     )}
                     <View style={styles.textInputView}>
@@ -77,7 +145,7 @@ const SignupScreen = ({ navigation }) => {
                             }}
                             placeholder="Enter Email"
                             placeholderTextColor={COLORS.greyColor}
-                            style={[styles.textInput, { color: COLORS.greyColor }]}
+                            style={[styles.textInput]}
                             keyboardType={'email-address'}
                             textContentType={'none'}
                             autoCapitalize={'none'}
@@ -104,7 +172,7 @@ const SignupScreen = ({ navigation }) => {
                             placeholderTextColor={COLORS.greyColor}
                             style={[
                                 styles.textInput,
-                                { width: isPortrait ? '83%' : '90%', color: COLORS.greyColor },
+                                { width: isPortrait ? '83%' : '90%' },
                             ]}
                             secureTextEntry={passwordVisible}
                             textContentType={'none'}
@@ -115,7 +183,7 @@ const SignupScreen = ({ navigation }) => {
                                 setPasswordVisible(!passwordVisible);
                             }}>
                             <Image
-                                style={[styles.eyeIcon, {tintColor: COLORS.greyColor}]}
+                                style={[styles.eyeIcon, { tintColor: COLORS.greyColor }]}
                                 source={passwordVisible ? hidden : view}
                             />
                         </TouchableOpacity>
@@ -141,7 +209,7 @@ const SignupScreen = ({ navigation }) => {
                             placeholderTextColor={COLORS.greyColor}
                             style={[
                                 styles.textInput,
-                                { width: isPortrait ? '83%' : '90%', color: COLORS.greyColor },
+                                { width: isPortrait ? '83%' : '90%' },
                             ]}
                             secureTextEntry={confirmPassVisible}
                             textContentType={'none'}
@@ -152,7 +220,7 @@ const SignupScreen = ({ navigation }) => {
                                 setConfirmPassVisible(!confirmPassVisible);
                             }}>
                             <Image
-                                style={[styles.eyeIcon, {tintColor: COLORS.greyColor}]}
+                                style={[styles.eyeIcon, { tintColor: COLORS.greyColor }]}
                                 source={confirmPassVisible ? hidden : view}
                             />
                         </TouchableOpacity>

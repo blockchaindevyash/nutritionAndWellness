@@ -18,7 +18,7 @@ export const portraitStyles = StyleSheet.create({
   },
   logoImage: {
     width: wp(60),
-    height: hp(26),
+    height: hp(18),
     resizeMode: 'contain',
     alignSelf: 'center',
   },
@@ -49,8 +49,8 @@ export const portraitStyles = StyleSheet.create({
   textInput: {
     marginHorizontal: wp(3),
     fontFamily: Fonts.FONTS.PoppinsMedium,
-    color: COLORS.black,
-    fontSize: hp(2),
+    color: COLORS.white,
+    fontSize: normalize(17),
   },
   forgotPassword: {
     fontFamily: Fonts.FONTS.PoppinsSemiBold,
@@ -131,6 +131,25 @@ export const portraitStyles = StyleSheet.create({
     fontSize: hp(2),
     color: COLORS.primary,
     fontFamily: Fonts.FONTS.PoppinsSemiBold,
+  },
+  countryCodeStyle: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: '100%',
+  },
+  countryCodeText: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '22%',
+    borderWidth: 0.3,
+    borderColor: COLORS.black,
+    borderRadius: 6,
+    height: hp(6),
+    justifyContent: 'center',
+    marginTop: hp(1),
+    backgroundColor: COLORS.primary,
   },
 });
 

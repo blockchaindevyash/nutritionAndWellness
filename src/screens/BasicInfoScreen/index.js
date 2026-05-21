@@ -29,7 +29,8 @@ const genderArray = [
     { id: 2, value: 'Female' },
 ];
 
-const BasicInfoScreen = ({ navigation }) => {
+const BasicInfoScreen = ({navigation, route}) => {
+    const {name, email, number, password} = route.params;
     const orientation = useOrientation(); // Get current orientation
     const isPortrait = orientation === 'portrait';
     const insets = useSafeAreaInsets();
@@ -46,6 +47,21 @@ const BasicInfoScreen = ({ navigation }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [dateModalVisible, setDateModalVisible] = useState(false);
     const styles = isPortrait ? portraitStyles : landscapeStyles;
+
+    const onBasicInfoData = () => {
+        console.log(name);
+        if (dob == null) {
+            setDobError(true);
+        } else if (gender == '') {
+            setGenderError(true);
+        } else if (height == '') {
+            setHeightError(true);
+        } else if (weight == '') {
+            setWeightError(true);
+        } else {
+            navigation.navigate('GoalSelection');
+        }
+    };
 
     return (
         <KeyboardAwareScrollView contentContainerStyle={styles.safeAreaStyle}>
@@ -137,7 +153,6 @@ const BasicInfoScreen = ({ navigation }) => {
                             console.log('gert Value:::', selectedItem?.value);
                         }}
                         renderButton={(selectedItem, isOpen) => {
-                            console.log('Get Response>>>', selectedItem?.value);
                             return (
                                 <View style={[styles.dropdown2BtnStyle2, {marginTop: hp(0.5)}]}>
                                     {gender != '' ? (
@@ -184,6 +199,7 @@ const BasicInfoScreen = ({ navigation }) => {
                             setApiError(false);
                         }}
                         placeholder="Enter Height"
+                        keyboardType='numeric'
                         placeholderTextColor={COLORS.greyColor}
                         style={[styles.textInput, { color: COLORS.greyColor }]}
                     />
@@ -200,6 +216,7 @@ const BasicInfoScreen = ({ navigation }) => {
                             setWeightError(false);
                             setApiError(false);
                         }}
+                        keyboardType='numeric'
                         placeholder="Enter Weight"
                         placeholderTextColor={COLORS.greyColor}
                         style={[styles.textInput, { color: COLORS.greyColor }]}
@@ -217,7 +234,7 @@ const BasicInfoScreen = ({ navigation }) => {
                     <TouchableOpacity
                         style={[styles.buttonView, { opacity: isLoading ? 0.75 : 1 }]}
                         disabled={isLoading}
-                        onPress={() => navigation.navigate('GoalSelection')}>
+                        onPress={() => onBasicInfoData()}>
                         {isLoading ? (
                             <ActivityIndicator size={'large'} color={COLORS.white} />
                         ) : (

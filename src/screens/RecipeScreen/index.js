@@ -41,7 +41,7 @@ const RecipeScreen = ({ navigation, route }) => {
         <Header title={'Recipe'} onPress={() => navigation.goBack()} />
       </View>
       <View style={styles.mainView}>
-        <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: hp(8) }} showsVerticalScrollIndicator={false}>
+        <ScrollView style={styles.container} contentContainerStyle={{paddingBottom: hp(8)}} showsVerticalScrollIndicator={false}>
           <Image style={styles.fullImageStyle} source={item?.image} />
           <View style={styles.infoView}>
             <Text style={styles.dishTitle}>{item?.name}</Text>

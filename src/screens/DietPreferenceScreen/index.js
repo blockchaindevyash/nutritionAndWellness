@@ -83,7 +83,7 @@ const DietPreferenceScreen = ({ navigation }) => {
                 <Header title={'Your Diet Preference'} onPress={() => navigation.goBack()} />
             </View>
             <View style={[styles.container, { backgroundColor: COLORS.backColor }]}>
-                <ScrollView showsVerticalScrollIndicator={false}>
+                <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{paddingBottom: hp(10)}}>
                     <Text style={styles.subtitle}>Select your eating style</Text>
                     {/* Diet Options */}
                     {dietOptions.map((item) => (

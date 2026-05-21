@@ -178,6 +178,39 @@ export const portraitStyles = StyleSheet.create({
     fontFamily: Fonts.FONTS.PoppinsSemiBold,
     color: COLORS.white,
   },
+  supplementCard: {
+    borderRadius: 18,
+    padding: 16,
+    marginBottom: hp(1),
+  },
+  supplementTopRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: hp(1),
+  },
+  supplementName: {
+    color: COLORS.white,
+    fontSize: normalize(17),
+    fontFamily: Fonts.FONTS.PoppinsSemiBold,
+  },
+  supplementTiming: {
+    color: COLORS.white,
+    marginTop: hp(0.5),
+    fontSize: normalize(14),
+    fontFamily: Fonts.FONTS.PoppinsMedium,
+  },
+  dosageBox: {
+    backgroundColor: "rgba(255,255,255,0.2)",
+    paddingVertical: 5,
+    paddingHorizontal: 12,
+    borderRadius: 5,
+  },
+  dosageText: {
+    color: COLORS.white,
+    fontSize: normalize(14),
+    fontFamily: Fonts.FONTS.PoppinsMedium,
+  },
 })
 
 export const landscapeStyles = StyleSheet.create({

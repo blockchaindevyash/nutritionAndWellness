@@ -18,7 +18,8 @@ export const portraitStyles = StyleSheet.create({
   },
   container: {
     width: '90%',
-    marginTop: hp(3)
+    marginTop: hp(2),
+    height: '88%',
   },
   buttonView: {
     width: '100%',
@@ -26,7 +27,7 @@ export const portraitStyles = StyleSheet.create({
     height: hp(6),
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: hp(4),
+    marginTop: hp(2),
     backgroundColor: COLORS.subPrimary,
   },
   signinText: {

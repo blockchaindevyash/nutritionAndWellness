@@ -18,6 +18,7 @@ import dish1 from '../../images/dish1.jpg';
 import dish2 from '../../images/dish2.png';
 import dish3 from '../../images/dish3.jpg';
 import dish4 from '../../images/dish4.jpg';
+import plus from '../../images/plus.png';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { COLORS } from '../../utils';
 
@@ -50,6 +51,9 @@ const HomeScreen = ({navigation}) => {
         <Text style={styles.callLogText}>
           Food Recipes
         </Text>
+        <TouchableOpacity onPress={() => navigation.navigate('CreateRecipeScreen')}>
+          <Image source={plus} style={styles.addImage} />
+        </TouchableOpacity>
       </View>
       <View style={{height: '92%', backgroundColor: COLORS.backColor, padding: 16}}>
         <FlatList

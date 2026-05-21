@@ -11,6 +11,7 @@ import useOrientation from '../../components/OrientationComponent';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { COLORS, Fonts } from '../../utils/index';
 import Header from '../../components/HeaderComponent';
+import { onForgotPasswordApi } from '../../services/Api';
 
 const ForgotPassword = ({ navigation }) => {
     const orientation = useOrientation(); // Get current orientation
@@ -22,8 +23,35 @@ const ForgotPassword = ({ navigation }) => {
     const [isLoading, setIsLoading] = useState(false);
     const styles = isPortrait ? portraitStyles : landscapeStyles;
 
-    const onLoginData = async () => {
-        console.log('Login Click');
+    const onForgotData = async () => {
+        if (email === '') {
+            setEmailError(true);
+        } else {
+            try {
+                setIsLoading(true);
+                let raw = JSON.stringify({
+                    email: email,
+                });
+                console.log('get request>>', raw);
+                const response = await onForgotPasswordApi(raw);
+                console.log('get Repsonse>>', response);
+                if (response.data.success) {
+                    setIsLoading(false);
+                    navigation.goBack();
+                } else {
+                    setApiError(true);
+                    setApiErrorMessage('The selected email is invalid.');
+                    setIsLoading(false);
+                    console.log('get Repsonse>>', response);
+                }
+            } catch (error) {
+                console.log('error::', error.response);
+                setApiError(true);
+                setApiErrorMessage('The selected email is invalid.');
+                setIsLoading(false);
+                
+            }
+        }
     };
 
     return (
@@ -62,7 +90,7 @@ const ForgotPassword = ({ navigation }) => {
                     <TouchableOpacity
                         style={[styles.buttonView, { opacity: isLoading ? 0.75 : 1 }]}
                         disabled={isLoading}
-                        onPress={() => onLoginData()}>
+                        onPress={() => onForgotData()}>
                         {isLoading ? (
                             <ActivityIndicator size={'large'} color={COLORS.white} />
                         ) : (

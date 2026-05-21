@@ -15,6 +15,7 @@ import useOrientation from '../../components/OrientationComponent';
 import Header from '../../components/HeaderComponent';
 import { COLORS } from '../../utils';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { hp } from '../../components/responsive';
 
 const workoutOptions = [
   { id: 1, title: "Home Workout", icon: "🏠" },
@@ -71,7 +72,7 @@ const WorkoutReference = ({ navigation }) => {
                 <Header title={'Workout Reference'} onPress={() => navigation.goBack()} />
             </View>
             <View style={[styles.container, { backgroundColor: COLORS.backColor }]}>
-                <ScrollView showsVerticalScrollIndicator={false}>
+                <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{paddingBottom: hp(10)}}>
                     <Text style={styles.subtitle}>This helps us personalize your workout plan</Text>
                     {workoutOptions.map((item) => {
                         const isSelected = selected.includes(item.title);

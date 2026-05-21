@@ -48,13 +48,13 @@ const DoctorDescriptionScreen = ({ navigation }) => {
     };
 
     const handleContinue = () => {
-        if (!doctorNotes.trim() && !documentFile) {
-            Alert.alert(
-                "Required",
-                "Please add doctor notes or upload report"
-            );
-            return;
-        }
+        // if (!doctorNotes.trim() && !documentFile) {
+        //     Alert.alert(
+        //         "Required",
+        //         "Please add doctor notes or upload report"
+        //     );
+        //     return;
+        // }
         navigation.navigate('MedicineDetailScreen');
     };
 
@@ -97,7 +97,6 @@ const DoctorDescriptionScreen = ({ navigation }) => {
                     medical instructions, or upload prescriptions
                     to generate a personalized fitness & meal plan.
                 </Text>
-
                 {/* Upload Section */}
                 <View style={styles.uploadContainer}>
                     <Text style={styles.uploadTitle}>
@@ -113,7 +112,6 @@ const DoctorDescriptionScreen = ({ navigation }) => {
                             Tap to upload image or PDF
                         </Text>
                     </TouchableOpacity>
-                    
                     {/* Preview */}
                     {documentFile && (
                         <View style={styles.previewCard}>
@@ -132,7 +130,6 @@ const DoctorDescriptionScreen = ({ navigation }) => {
                                     </Text>
                                 </TouchableOpacity>
                             </View>
-
                             {/* Image Preview */}
                             {documentFile.type?.includes("image") && (
                                 <Image
@@ -141,7 +138,6 @@ const DoctorDescriptionScreen = ({ navigation }) => {
                                     resizeMode="cover"
                                 />
                             )}
-
                             {/* PDF Preview */}
                             {documentFile.type?.includes("pdf") && (
                                 <View style={styles.pdfBox}>
@@ -153,11 +149,8 @@ const DoctorDescriptionScreen = ({ navigation }) => {
                         </View>
                     )}
                 </View>
-
                 {/* Doctor Notes Card */}
-                <LinearGradient
-                    colors={["#2e3948", "#323740"]}
-                    style={styles.card}>
+                <View style={styles.card}>
                     <Text style={styles.cardTitle}>
                         Health Notes
                     </Text>
@@ -174,8 +167,7 @@ const DoctorDescriptionScreen = ({ navigation }) => {
                     <Text style={styles.limitText}>
                         {doctorNotes.length}/500
                     </Text>
-                </LinearGradient>
-
+                </View>
                 {/* Suggestions */}
                 <View style={styles.suggestionContainer}>
                     <Text style={styles.suggestionTitle}>

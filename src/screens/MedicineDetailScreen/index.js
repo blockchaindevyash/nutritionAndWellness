@@ -98,13 +98,10 @@ const MedicineDetailScreen = ({ navigation }) => {
                             personalize your meal plan and workout safely.
                         </Text>
                     </View>
-
                     {/* Form Card */}
                     <LinearGradient
                         colors={["#2e3948", "#38414e"]}
-                        style={styles.formCard}
-                    >
-
+                        style={styles.formCard}>
                         {/* Medicine Name */}
                         <View style={styles.inputContainer}>
                             <Text style={styles.label}>
@@ -116,9 +113,9 @@ const MedicineDetailScreen = ({ navigation }) => {
                                 value={medicineName}
                                 onChangeText={setMedicineName}
                                 style={styles.input}
+                                
                             />
                         </View>
-
                         {/* Dosage */}
                         <View style={styles.inputContainer}>
                             <Text style={styles.label}>
@@ -132,7 +129,6 @@ const MedicineDetailScreen = ({ navigation }) => {
                                 style={styles.input}
                             />
                         </View>
-
                         {/* Timing */}
                         <View style={styles.inputContainer}>
                             <Text style={styles.label}>
@@ -146,7 +142,6 @@ const MedicineDetailScreen = ({ navigation }) => {
                                 style={styles.input}
                             />
                         </View>
-
                         {/* Notes */}
                         <View style={styles.inputContainer}>
                             <Text style={styles.label}>
@@ -162,7 +157,6 @@ const MedicineDetailScreen = ({ navigation }) => {
                                 textAlignVertical="top"
                             />
                         </View>
-
                         {/* Add Button */}
                         <TouchableOpacity style={styles.addButton} onPress={addMedicine}>
                             <Text style={styles.addButtonText}>
@@ -170,7 +164,6 @@ const MedicineDetailScreen = ({ navigation }) => {
                             </Text>
                         </TouchableOpacity>
                     </LinearGradient>
-
                     {/* Added Medicines */}
                     {medicineList.length > 0 && (
                         <View style={styles.listContainer}>

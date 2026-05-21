@@ -24,7 +24,7 @@ import { LineChart } from "react-native-gifted-charts"
 
 const weeklyPlan = [
   {
-    date: "2026-05-11",
+    date: "2026-05-18",
     day: "Monday",
     calories: 1500,
     meals: {
@@ -32,6 +32,18 @@ const weeklyPlan = [
       lunch: "2 chapati + lauki sabji + moong dal + salad",
       dinner: "Vegetable soup + paneer (low oil)",
     },
+    supplements: [
+      {
+        name: "Multivitamin",
+        timing: "After Breakfast",
+        dosage: "1 Tablet",
+      },
+      {
+        name: "Omega 3",
+        timing: "After Dinner",
+        dosage: "1 Capsule",
+      },
+    ],
     exercises: [
       "Walking 20 min",
       "Push-ups 3x10",
@@ -40,7 +52,7 @@ const weeklyPlan = [
     ],
   },
   {
-    date: "2026-05-12",
+    date: "2026-05-19",
     day: "Tuesday",
     calories: 1500,
     meals: {
@@ -48,6 +60,18 @@ const weeklyPlan = [
       lunch: "Brown rice + rajma (no onion/garlic) + salad",
       dinner: "2 chapati + tori sabji",
     },
+    supplements: [
+      {
+        name: "Multivitamin",
+        timing: "After Breakfast",
+        dosage: "1 Tablet",
+      },
+      {
+        name: "Omega 3",
+        timing: "After Dinner",
+        dosage: "1 Capsule",
+      },
+    ],
     exercises: [
       "Walking 25 min",
       "Jumping jacks 3x20",
@@ -55,7 +79,7 @@ const weeklyPlan = [
     ],
   },
   {
-    date: "2026-05-13",
+    date: "2026-05-20",
     day: "Wednesday",
     calories: 1450,
     meals: {
@@ -63,6 +87,18 @@ const weeklyPlan = [
       lunch: "2 chapati + chole (no onion/garlic) + curd",
       dinner: "Moong dal khichdi",
     },
+    supplements: [
+      {
+        name: "Multivitamin",
+        timing: "After Breakfast",
+        dosage: "1 Tablet",
+      },
+      {
+        name: "Omega 3",
+        timing: "After Dinner",
+        dosage: "1 Capsule",
+      },
+    ],
     exercises: [
       "Yoga 20 min",
       "Stretching",
@@ -70,7 +106,7 @@ const weeklyPlan = [
     ],
   },
   {
-    date: "2026-05-14",
+    date: "2026-05-21",
     day: "Thursday",
     calories: 1500,
     meals: {
@@ -78,6 +114,18 @@ const weeklyPlan = [
       lunch: "Quinoa + dal + mix veg",
       dinner: "Paneer salad bowl",
     },
+    supplements: [
+      {
+        name: "Multivitamin",
+        timing: "After Breakfast",
+        dosage: "1 Tablet",
+      },
+      {
+        name: "Omega 3",
+        timing: "After Dinner",
+        dosage: "1 Capsule",
+      },
+    ],
     exercises: [
       "Walking 30 min",
       "Squats 3x15",
@@ -85,7 +133,7 @@ const weeklyPlan = [
     ],
   },
   {
-    date: "2026-05-15",
+    date: "2026-05-22",
     day: "Friday",
     calories: 1500,
     meals: {
@@ -93,13 +141,25 @@ const weeklyPlan = [
       lunch: "2 chapati + mix veg + dal",
       dinner: "Soup + sprouts salad",
     },
+    supplements: [
+      {
+        name: "Multivitamin",
+        timing: "After Breakfast",
+        dosage: "1 Tablet",
+      },
+      {
+        name: "Omega 3",
+        timing: "After Dinner",
+        dosage: "1 Capsule",
+      },
+    ],
     exercises: [
       "HIIT 15 min",
       "Plank + abs workout",
     ],
   },
   {
-    date: "2026-05-16",
+    date: "2026-05-23",
     day: "Saturday",
     calories: 1550,
     meals: {
@@ -107,13 +167,25 @@ const weeklyPlan = [
       lunch: "Veg pulao + raita",
       dinner: "Light sabji + 1 chapati",
     },
+    supplements: [
+      {
+        name: "Multivitamin",
+        timing: "After Breakfast",
+        dosage: "1 Tablet",
+      },
+      {
+        name: "Omega 3",
+        timing: "After Dinner",
+        dosage: "1 Capsule",
+      },
+    ],
     exercises: [
       "Walking 40 min",
       "Outdoor activity",
     ],
   },
   {
-    date: "2026-05-17",
+    date: "2026-05-24",
     day: "Sunday",
     calories: 1400,
     meals: {
@@ -121,6 +193,18 @@ const weeklyPlan = [
       lunch: "Light home food (controlled portion)",
       dinner: "Vegetable soup",
     },
+    supplements: [
+      {
+        name: "Multivitamin",
+        timing: "After Breakfast",
+        dosage: "1 Tablet",
+      },
+      {
+        name: "Omega 3",
+        timing: "After Dinner",
+        dosage: "1 Capsule",
+      },
+    ],
     exercises: [
       "Light walk",
       "Stretching",
@@ -238,6 +322,29 @@ const DashboardScreen = ({ navigation }) => {
                   <TouchableOpacity style={styles.workoutButton} onPress={() => navigation.navigate('ProgramDetailScreen', {item: item})}>
                     <Text style={styles.startText}>Start Workout</Text>
                   </TouchableOpacity>
+                </View>
+              </View>
+              <View style={styles.card}>
+                <View style={styles.section}>
+                  <Text style={styles.sectionTitle}>Supplements</Text>
+                  {item.supplements.map((supplement, index) => (
+                    <View style={styles.supplementTopRow}>
+                      <View>
+                        <Text style={styles.supplementName}>
+                          💊 {supplement.name}
+                        </Text>
+                        <Text style={styles.supplementTiming}>
+                          {supplement.timing}
+                        </Text>
+                      </View>
+                      <View style={styles.dosageBox}>
+                        <Text style={styles.dosageText}>
+                          {supplement.dosage}
+                        </Text>
+                      </View>
+
+                    </View>
+                  ))}
                 </View>
               </View>
             </View>

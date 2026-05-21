@@ -36,6 +36,7 @@ export const portraitStyles = StyleSheet.create({
     borderRadius: 10,
     padding: 20,
     marginBottom: 25,
+    backgroundColor: COLORS.primary,
   },
   cardTitle: {
     color: COLORS.white,
@@ -163,14 +164,14 @@ export const portraitStyles = StyleSheet.create({
   },
   button: {
     backgroundColor: "#fc6127",
-    paddingVertical: 16,
-    borderRadius: 10,
+    paddingVertical: 10,
+    borderRadius: 5,
     alignItems: "center",
   },
   buttonText: {
-    color: "#fff",
-    fontSize: 16,
-    fontWeight: "700",
+    color: COLORS.white,
+    fontSize: normalize(17),
+    fontFamily: Fonts.FONTS.PoppinsSemiBold,
   },
   selectedTag: {
     backgroundColor: "#fc6127",

@@ -74,7 +74,7 @@ const GoalSelection = ({ navigation }) => {
             </View>
             <View style={[styles.container, { backgroundColor: COLORS.backColor }]}>
                 <Text style={[styles.titleText, { marginBottom: hp(2), lineHeight: hp(3) }]}>Choose one or more goals to get personalized recommendations</Text>
-                <View style={{ maxHeight: '70%' }}>
+                <View style={{ maxHeight: '81%' }}>
                     <FlatList
                         data={goals}
                         keyExtractor={(item) => item.id.toString()}

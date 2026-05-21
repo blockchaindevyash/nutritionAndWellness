@@ -13,10 +13,12 @@ import React, { useEffect, useState } from 'react';
 import { portraitStyles, landscapeStyles } from './styles';
 import useOrientation from '../../components/OrientationComponent';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { COLORS, Fonts } from '../../utils/index';
 import view from '../../images/view.png';
 import hidden from '../../images/hidden.png';
 import logo from '../../images/logo.png';
+import {onLoginApi} from '../../services/Api';
 
 const LoginScreen = ({ navigation }) => {
     const orientation = useOrientation(); // Get current orientation
@@ -32,8 +34,50 @@ const LoginScreen = ({ navigation }) => {
     const styles = isPortrait ? portraitStyles : landscapeStyles;
 
     const onLoginData = async () => {
-        console.log('Login Click');
-        navigation.navigate('TabStack');
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (email === '') {
+      setEmailError(true);
+    } else if (!emailRegex.test(email)) {
+      setApiError(true);
+      setApiErrorMessage('Please enter valid email address.');
+    } else if (password === '') {
+      setPasswordError(true);
+    } else {
+        try {
+            setIsLoading(true);
+            let raw = JSON.stringify({
+                email: email,
+                password: password,
+            });
+            console.log('get request>>', raw);
+            const response = await onLoginApi(raw);
+            if (response.data.status) {
+                AsyncStorage.setItem('accessToken', response.data.data.access_token);
+                AsyncStorage.setItem('userId', `${response.data.data.user.id}`);
+                setIsLoading(false);
+                navigation.navigate('TabStack');
+            } else {
+                setApiError(true);
+                setApiErrorMessage('Invalid Credentials');
+                setIsLoading(false);
+                console.log('Login response else', response.data);
+            }
+        } catch (err) {
+            console.log('error::', err.response.data.message);
+            if (err.response?.data?.message == 'Please verify your email before logging in.')
+            {
+            setIsLoading(false);
+            navigation.navigate('VerificationScreen', {email: email});
+            } else {
+            setApiError(true);
+            setApiErrorMessage(err?.response?.data?.message ||
+            'Something went wrong. Please try again.');
+            setIsLoading(false);
+            }
+            setIsLoading(false);
+            console.log('Login Error:', err);
+        }
+    }
     };
 
     return (
@@ -51,7 +95,7 @@ const LoginScreen = ({ navigation }) => {
                             }}
                             placeholder="Enter Email"
                             placeholderTextColor={COLORS.greyColor}
-                            style={[styles.textInput, { color: COLORS.greyColor }]}
+                            style={[styles.textInput, {color: COLORS.greyColor}]}
                             keyboardType={'email-address'}
                             textContentType={'none'}
                             autoCapitalize={'none'}

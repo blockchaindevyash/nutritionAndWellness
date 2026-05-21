@@ -80,6 +80,8 @@ const ProgramDetailScreen = ({ navigation, route }) => {
                     data={exercises}
                     keyExtractor={(item) => item.id.toString()}
                     renderItem={renderItem}
+                    showsVerticalScrollIndicator={false}
+                    contentContainerStyle={{paddingBottom: hp(10)}}
                 />
 
                 {/* Bottom Buttons */}

@@ -66,7 +66,7 @@ const ActivityLevelScreen = ({ navigation }) => {
                     <Header title={'Activity Level'} onPress={() => navigation.goBack()}/>
                 </View>
                 <View style={[styles.container, {backgroundColor: COLORS.backColor}]}>
-                    <ScrollView showsVerticalScrollIndicator={false}>
+                    <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{paddingBottom: hp(10)}}>
                         <Text style={styles.subtitle}>How active are you daily?</Text>
                         {activityOptions.map((item) => (
                             <TouchableOpacity

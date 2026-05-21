@@ -139,7 +139,6 @@ const EditScreen = ({ navigation }) => {
                             console.log('gert Value:::', selectedItem?.value);
                         }}
                         renderButton={(selectedItem, isOpen) => {
-                            console.log('Get Response>>>', selectedItem?.value);
                             return (
                                 <View style={[styles.dropdown2BtnStyle2, { marginTop: hp(0.5) }]}>
                                     {gender != '' ? (
