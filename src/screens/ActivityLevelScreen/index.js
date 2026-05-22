@@ -17,6 +17,8 @@ import { COLORS } from '../../utils';
 import Header from '../../components/HeaderComponent';
 import { hp } from '../../components/responsive';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { showMessage } from 'react-native-flash-message';
+import useAuthStore from '../../store/authStore';
 
 const activityOptions = [
   {
@@ -46,12 +48,29 @@ const activityOptions = [
 ];
 
 const ActivityLevelScreen = ({ navigation }) => {
+    const {updateSignupData, activityList} = useAuthStore();
     const orientation = useOrientation(); // Get current orientation
     const isPortrait = orientation === 'portrait';
     const insets = useSafeAreaInsets();
-    const [selectedLevel, setSelectedLevel] = useState(null);
+    const [selectedLevel, setSelectedLevel] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const styles = isPortrait ? portraitStyles : landscapeStyles;
+
+    const handleContinue = () => {
+        if (selectedLevel == '') {
+            showMessage({
+                message: 'Please select at least one option',
+                type: 'danger',
+                duration: 4000,
+                icon: 'danger',
+            });
+        } else {
+            updateSignupData({
+                activity_level: selectedLevel,
+            });
+            navigation.navigate('MedicalScreen');
+        }
+    };
 
     return (
         <View style={styles.safeAreaStyle}>
@@ -68,18 +87,18 @@ const ActivityLevelScreen = ({ navigation }) => {
                 <View style={[styles.container, {backgroundColor: COLORS.backColor}]}>
                     <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{paddingBottom: hp(10)}}>
                         <Text style={styles.subtitle}>How active are you daily?</Text>
-                        {activityOptions.map((item) => (
+                        {activityList.map((item) => (
                             <TouchableOpacity
                                 key={item.id}
                                 style={[
                                 styles.card,
-                                selectedLevel === item.title && styles.selectedCard,
+                                selectedLevel === item.id && styles.selectedCard,
                                 ]}
-                                onPress={() => setSelectedLevel(item.title)}>
+                                onPress={() => setSelectedLevel(item.id)}>
                                 <Text style={styles.cardTitle}>
-                                {item.icon} {item.title}
+                                {item.name}
                                 </Text>
-                                <Text style={styles.cardDesc}>{item.desc}</Text>
+                                <Text style={styles.cardDesc}>{item.description}</Text>
                             </TouchableOpacity>
                         ))}
                     </ScrollView>

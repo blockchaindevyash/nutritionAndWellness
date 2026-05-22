@@ -9,13 +9,15 @@ import {
     Platform,
     PermissionsAndroid,
 } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { portraitStyles, landscapeStyles } from './styles';
 import useOrientation from '../../components/OrientationComponent';
 import Header from '../../components/HeaderComponent';
 import { COLORS } from '../../utils';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { hp } from '../../components/responsive';
+import { showMessage } from 'react-native-flash-message';
+import useAuthStore from '../../store/authStore';
 
 const medicalOptions = [
     { id: 1, title: "None" },
@@ -27,6 +29,7 @@ const medicalOptions = [
 ];
 
 const MedicalScreen = ({ navigation }) => {
+    const {updateSignupData, medicalList} = useAuthStore();
     const orientation = useOrientation(); // Get current orientation
     const isPortrait = orientation === 'portrait';
     const styles = isPortrait ? portraitStyles : landscapeStyles;
@@ -38,52 +41,87 @@ const MedicalScreen = ({ navigation }) => {
     // 🔹 Toggle logic
     const toggleSelect = (item) => {
         let updated = [...selected];
+        // -----------------------------------------
+        // NONE SELECTED
+        // -----------------------------------------
+        if (item.name === "None") {
 
-        if (item.title === "None") {
-            // If "None" selected → clear all others
-            updated = ["None"];
+        updated = [item.id];
+
         } else {
-            // Remove "None" if selecting others
-            updated = updated.filter(v => v !== "None");
 
-            if (updated.includes(item.title)) {
-                updated = updated.filter(v => v !== item.title);
-            } else {
-                updated.push(item.title);
-            }
+        // Remove NONE if any other selected
+        const noneItem = medicalList.find(
+            (v) => v.name === "None"
+        );
+
+        updated = updated.filter(
+            (id) => id !== noneItem?.id
+        );
+
+        // Already Selected
+        if (updated.includes(item.id)) {
+
+            updated = updated.filter(
+            (id) => id !== item.id
+            );
+
+        } else {
+
+            updated.push(item.id);
+
+        }
         }
 
         setSelected(updated);
     };
 
+    const medicalDataList = useMemo(() => {
+
+        const uniqueList = medicalList.filter(
+        (item, index, self) =>
+            index ===
+            self.findIndex(
+            (obj) => obj.name === item.name
+            )
+        );
+
+        return [
+        ...uniqueList,
+        {
+            id: 999,
+            name: "Other",
+        },
+        ];
+
+    }, []);
+
     // 🔹 Next button
     const handleNext = () => {
         if (selected.length === 0) {
-            alert("Please select at least one option");
+            showMessage({
+                message: 'Please select at least one option',
+                type: 'danger',
+                duration: 4000,
+                icon: 'danger',
+            });
             return;
+        } else {
+            console.log("Medical Data:", selected);
+
+            const isSelected = selected.includes(999);
+            updateSignupData({
+                medical_condition: selected,
+                medical_condition_text: isSelected ? otherText : '',
+            });
+            navigation.navigate('DoctorDescription');
         }
-        navigation.navigate('DoctorDescription');
         // const formData = {
         //     medical: selected,
         // };
 
-        // console.log("Medical Data:", formData);
 
         // navigation.navigate("NextScreen", formData);
-    };
-
-    // 🔹 Render Item
-    const renderItem = ({ item }) => {
-        const isSelected = selected.includes(item.title);
-        return (
-            <TouchableOpacity
-                style={[styles.card, isSelected && styles.selectedCard]}
-                onPress={() => toggleSelect(item)}>
-                <Text style={[styles.selectedText]}>
-                    {item.title}
-                </Text>
-            </TouchableOpacity>
-        );
     };
 
     return (
@@ -101,8 +139,8 @@ const MedicalScreen = ({ navigation }) => {
             <View style={[styles.container, { backgroundColor: COLORS.backColor }]}>
                 <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{paddingBottom: hp(10)}}>
                     <Text style={styles.subtitle}>This helps us personalize your diet plan</Text>
-                    {medicalOptions.map((item) => {
-                        const isSelected = selected.includes(item.title);
+                    {medicalDataList.map((item) => {
+                        const isSelected = selected.includes(item.id);
                         return (
                             <View>
                                 <TouchableOpacity
@@ -113,10 +151,10 @@ const MedicalScreen = ({ navigation }) => {
                                     ]}
                                     onPress={() => toggleSelect(item)}>
                                     <Text style={styles.cardTitle}>
-                                        {item.title}
+                                        {item.name}
                                     </Text>
                                 </TouchableOpacity>
-                                {item.title === "Other" && isSelected && (
+                                {item.name === "Other" && isSelected && (
                                     <TextInput
                                         style={styles.input}
                                         placeholder="Enter your condition..."

@@ -18,8 +18,11 @@ import useOrientation from '../../components/OrientationComponent';
 import Header from '../../components/HeaderComponent';
 import { COLORS } from '../../utils';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { showMessage } from "react-native-flash-message";
+import useAuthStore from "../../store/authStore";
 
 const MedicineDetailScreen = ({ navigation }) => {
+    const {updateSignupData} = useAuthStore();
     const orientation = useOrientation();
     const isPortrait = orientation === 'portrait';
     const styles = isPortrait ? portraitStyles : landscapeStyles;
@@ -40,10 +43,10 @@ const MedicineDetailScreen = ({ navigation }) => {
 
         const newMedicine = {
             id: Date.now(),
-            medicineName,
+            medicine_name: medicineName,
             dosage,
             timing,
-            notes,
+            additional_notes: notes,
         };
 
         setMedicineList(prev => [...prev, newMedicine]);
@@ -65,9 +68,25 @@ const MedicineDetailScreen = ({ navigation }) => {
     };
 
     const handleContinue = () => {
-
-        console.log("Medicine List:", medicineList);
-        navigation.navigate('WorkoutReference');
+        if (medicineList.length == 0) {
+            updateSignupData({
+                current_medicine: [{
+                    medicine_name: '',
+                    dosage: '',
+                    timing: '',
+                    additional_notes: '',
+                }]
+            });
+            navigation.navigate('WorkoutReference');
+        } else {
+            updateSignupData({
+                current_medicine: medicineList.map(
+                    ({ id, ...rest }) => rest
+                ),
+            });
+            console.log("Medicine List:", medicineList);
+            navigation.navigate('WorkoutReference');
+        }
         // Alert.alert(
         // "Success",
         // "Medicine details saved successfully"

@@ -17,6 +17,8 @@ import { COLORS } from '../../utils';
 import Header from '../../components/HeaderComponent';
 import { hp } from '../../components/responsive';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { showMessage } from 'react-native-flash-message';
+import useAuthStore from '../../store/authStore';
 
 const goals = [
     { id: 1, title: 'Weight Loss', icon: '🔥' },
@@ -28,6 +30,7 @@ const goals = [
 ];
 
 const GoalSelection = ({ navigation }) => {
+    const {updateSignupData, goalList} = useAuthStore();
     const orientation = useOrientation(); // Get current orientation
     const isPortrait = orientation === 'portrait';
     const insets = useSafeAreaInsets();
@@ -43,19 +46,36 @@ const GoalSelection = ({ navigation }) => {
         }
     };
 
+    const onGoalPress = async () => {
+        console.log(selectedGoals);
+        if (selectedGoals.length == 0) {
+            showMessage({
+                message: 'Please select at least one option',
+                type: 'danger',
+                duration: 4000,
+                icon: 'danger',
+            });
+        } else {
+            updateSignupData({
+                goal: selectedGoals,
+            });
+            navigation.navigate('DietPreferenceScreen')
+        }
+    };
+
     const renderItem = ({ item, index }) => {
         return (
             <TouchableOpacity
-                onPress={() => toggleGoal(item.title)}
+                onPress={() => toggleGoal(item.id)}
                 style={{
-                    backgroundColor: selectedGoals.includes(item.title) ? COLORS.greyColor : COLORS.primary,
+                    backgroundColor: selectedGoals.includes(item.id) ? COLORS.greyColor : COLORS.primary,
                     borderWidth: 0,
                     borderColor: '#00BCD4',
                     padding: 15,
                     borderRadius: 5,
                     marginBottom: 10,
                 }}>
-                <Text style={styles.titleText}>{item.icon} {item.title}</Text>
+                <Text style={styles.titleText}>{item.name}</Text>
             </TouchableOpacity>
         );
     };
@@ -76,16 +96,17 @@ const GoalSelection = ({ navigation }) => {
                 <Text style={[styles.titleText, { marginBottom: hp(2), lineHeight: hp(3) }]}>Choose one or more goals to get personalized recommendations</Text>
                 <View style={{ maxHeight: '81%' }}>
                     <FlatList
-                        data={goals}
+                        data={goalList}
                         keyExtractor={(item) => item.id.toString()}
                         renderItem={renderItem}
                         showsVerticalScrollIndicator={false}
+                        contentContainerStyle={{paddingBottom: hp(8)}}
                     />
                 </View>
                 <TouchableOpacity
                     style={[styles.buttonView, { opacity: isLoading ? 0.75 : 1 }]}
                     disabled={isLoading}
-                    onPress={() => navigation.navigate('DietPreferenceScreen')}>
+                    onPress={() => onGoalPress()}>
                     {isLoading ? (
                         <ActivityIndicator size={'large'} color={COLORS.white} />
                     ) : (

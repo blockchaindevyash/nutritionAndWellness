@@ -23,6 +23,7 @@ import { hp, wp } from '../../components/responsive';
 import SelectDropdown from 'react-native-select-dropdown';
 import down from '../../images/down.png';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import useAuthStore from '../../store/authStore';
 
 const genderArray = [
     { id: 1, value: 'Male' },
@@ -30,7 +31,7 @@ const genderArray = [
 ];
 
 const BasicInfoScreen = ({navigation, route}) => {
-    const {name, email, number, password} = route.params;
+    const {signupData, updateSignupData} = useAuthStore();
     const orientation = useOrientation(); // Get current orientation
     const isPortrait = orientation === 'portrait';
     const insets = useSafeAreaInsets();
@@ -49,7 +50,7 @@ const BasicInfoScreen = ({navigation, route}) => {
     const styles = isPortrait ? portraitStyles : landscapeStyles;
 
     const onBasicInfoData = () => {
-        console.log(name);
+        console.log(signupData);
         if (dob == null) {
             setDobError(true);
         } else if (gender == '') {
@@ -59,6 +60,12 @@ const BasicInfoScreen = ({navigation, route}) => {
         } else if (weight == '') {
             setWeightError(true);
         } else {
+            updateSignupData({
+                dob: moment(dob).format('DD/MM/YYYY'),
+                gender,
+                height,
+                weight,
+            });
             navigation.navigate('GoalSelection');
         }
     };
@@ -190,7 +197,7 @@ const BasicInfoScreen = ({navigation, route}) => {
                             {'Gender is required.'}
                         </Text>
                     )}
-                    <Text style={styles.titleText}>Height</Text>
+                    <Text style={styles.titleText}>{'Height (cm)'}</Text>
                     <TextInput
                         value={height}
                         onChangeText={text => {
@@ -201,14 +208,14 @@ const BasicInfoScreen = ({navigation, route}) => {
                         placeholder="Enter Height"
                         keyboardType='numeric'
                         placeholderTextColor={COLORS.greyColor}
-                        style={[styles.textInput, { color: COLORS.greyColor }]}
+                        style={[styles.textInput]}
                     />
                     {heightError && (
                         <Text style={styles.errorText}>
                             {'Height is required.'}
                         </Text>
                     )}
-                    <Text style={styles.titleText}>Weight</Text>
+                    <Text style={styles.titleText}>{'Weight (km)'}</Text>
                     <TextInput
                         value={weight}
                         onChangeText={text => {
@@ -219,7 +226,7 @@ const BasicInfoScreen = ({navigation, route}) => {
                         keyboardType='numeric'
                         placeholder="Enter Weight"
                         placeholderTextColor={COLORS.greyColor}
-                        style={[styles.textInput, { color: COLORS.greyColor }]}
+                        style={[styles.textInput]}
                     />
                     {weightError && (
                         <Text style={styles.errorText}>

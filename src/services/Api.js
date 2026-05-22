@@ -52,6 +52,17 @@ export const onForgotPasswordApi = async requestData => {
   });
 };
 
+export const onGetWithoutTokenCommonApi = async urlData => {
+  const url = Api.baseUrl1 + urlData;
+  console.log('Get Url:::', url);
+  return new Promise((resolve, reject) => {
+    axios
+      .get(url)
+      .then(res => resolve(res))
+      .catch(err => reject(err));
+  });
+};
+
 export const onGetCommonApi = async urlData => {
   const token = await AsyncStorage.getItem('accessToken');
   const url = Api.baseUrl1 + urlData;

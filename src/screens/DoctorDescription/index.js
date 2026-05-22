@@ -18,8 +18,11 @@ import useOrientation from '../../components/OrientationComponent';
 import Header from '../../components/HeaderComponent';
 import { COLORS } from '../../utils';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { showMessage } from "react-native-flash-message";
+import useAuthStore from "../../store/authStore";
 
 const DoctorDescriptionScreen = ({ navigation }) => {
+    const {updateSignupData} = useAuthStore();
     const orientation = useOrientation();
     const isPortrait = orientation === 'portrait';
     const styles = isPortrait ? portraitStyles : landscapeStyles;
@@ -37,7 +40,12 @@ const DoctorDescriptionScreen = ({ navigation }) => {
                 mode: 'open'
             });
             console.log("Selected File:", result);
-            setDocumentFile(result);
+            let document = {
+                uri: result.uri,
+                type: result.type,
+                name: result.name,
+            };
+            setDocumentFile(document);
         } catch (error) {
             console.log("Document Error:", error);
         }
@@ -48,14 +56,21 @@ const DoctorDescriptionScreen = ({ navigation }) => {
     };
 
     const handleContinue = () => {
-        // if (!doctorNotes.trim() && !documentFile) {
-        //     Alert.alert(
-        //         "Required",
-        //         "Please add doctor notes or upload report"
-        //     );
-        //     return;
-        // }
-        navigation.navigate('MedicineDetailScreen');
+        if (!doctorNotes.trim() && !documentFile) {
+            showMessage({
+                message: 'Please add doctor notes or upload report',
+                type: 'danger',
+                duration: 4000,
+                icon: 'danger',
+            });
+            return;
+        } else {
+            updateSignupData({
+                prescription_file: documentFile,
+                health_note: doctorNotes,
+            });
+            navigation.navigate('MedicineDetailScreen');
+        }
     };
 
     const handleTagPress = (item) => {

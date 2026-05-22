@@ -18,8 +18,10 @@ import view from '../../images/view.png';
 import hidden from '../../images/hidden.png';
 import logo from '../../images/logo.png';
 import CountryPicker from 'react-native-country-picker-modal';
+import useAuthStore from '../../store/authStore';
 
 const SignupScreen = ({ navigation }) => {
+    const {updateSignupData, goalList} = useAuthStore();
     const orientation = useOrientation(); // Get current orientation
     const isPortrait = orientation === 'portrait';
     const [name, setName] = useState('');
@@ -57,6 +59,14 @@ const SignupScreen = ({ navigation }) => {
             setApiError(true);
             setApiErrorMessage('Password and Confirm password not match.');
         } else {
+            updateSignupData({
+                name,
+                email,
+                mobileno: countryCode?.startsWith('+')
+                    ? countryCode + number
+                    : `+${countryCode}${number}`,
+                password,
+            });
             console.log('Signup Click')
             navigation.navigate('BasicInfoScreen', {name: name, email: email, number: countryCode?.startsWith('+') ? countryCode + number : `+${countryCode}${number}`, password: password});
         }

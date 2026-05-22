@@ -17,6 +17,8 @@ import { COLORS } from '../../utils';
 import Header from '../../components/HeaderComponent';
 import { hp } from '../../components/responsive';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { showMessage } from 'react-native-flash-message';
+import useAuthStore from '../../store/authStore';
 
 const dietOptions = [
     { id: 1, title: 'Vegetarian', icon: '🥦', desc: 'Plant-based diet' },
@@ -26,48 +28,31 @@ const dietOptions = [
     { id: 5, title: 'No Onion/Garlic', icon: '🌱', desc: 'Vegetarian without onions/garlic' },
 ];
 
-const allergyOptions = [
-    'Nuts',
-    'Dairy',
-    'Gluten',
-    'None',
-];
-
 const DietPreferenceScreen = ({ navigation }) => {
+    const {updateSignupData, dietList} = useAuthStore();
     const orientation = useOrientation(); // Get current orientation
     const isPortrait = orientation === 'portrait';
     const insets = useSafeAreaInsets();
-    const [selectedDiet, setSelectedDiet] = useState(null);
+    const [selectedDiet, setSelectedDiet] = useState('');
     const [selectedAllergies, setSelectedAllergies] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const styles = isPortrait ? portraitStyles : landscapeStyles;
 
-    const toggleAllergy = (item) => {
-        if (item === 'None') {
-            setSelectedAllergies(['None']);
-            return;
-        }
-
-        if (selectedAllergies.includes(item)) {
-            setSelectedAllergies(selectedAllergies.filter(a => a !== item));
-        } else {
-            setSelectedAllergies([
-                ...selectedAllergies.filter(a => a !== 'None'),
-                item,
-            ]);
-        }
-    };
-
     const handleContinue = () => {
-        const payload = {
-            diet: selectedDiet,
-            allergies: selectedAllergies,
-        };
-
-        console.log('User Data:', payload);
-
-        // Navigate to next screen
-        navigation.navigate('ActivityLevelScreen', payload);
+        console.log('User Data:', selectedDiet);
+        if (selectedDiet == '') {
+            showMessage({
+                message: 'Please select at least one option',
+                type: 'danger',
+                duration: 4000,
+                icon: 'danger',
+            });
+        } else {
+            updateSignupData({
+                diet: selectedDiet,
+            });
+            navigation.navigate('ActivityLevelScreen');
+        }
     };
 
     return (
@@ -86,42 +71,25 @@ const DietPreferenceScreen = ({ navigation }) => {
                 <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{paddingBottom: hp(10)}}>
                     <Text style={styles.subtitle}>Select your eating style</Text>
                     {/* Diet Options */}
-                    {dietOptions.map((item) => (
+                    {dietList.map((item) => (
                         <TouchableOpacity
                             key={item.id}
                             style={[
                                 styles.card,
-                                selectedDiet === item.title && styles.selectedCard,
+                                selectedDiet === item.id && styles.selectedCard,
                             ]}
-                            onPress={() => setSelectedDiet(item.title)}>
+                            onPress={() => setSelectedDiet(item.id)}>
                             <Text style={styles.cardTitle}>
-                                {item.icon} {item.title}
+                                {item.name}
                             </Text>
-                            <Text style={styles.cardDesc}>{item.desc}</Text>
+                            <Text style={styles.cardDesc}>{item.description}</Text>
                         </TouchableOpacity>
                     ))}
-                    {/* <Text style={styles.sectionTitle}>⚠️ Allergies (Optional)</Text>
-                    <View style={styles.allergyContainer}>
-                        {allergyOptions.map((item, index) => (
-                            <TouchableOpacity
-                                key={index}
-                                style={[
-                                    styles.allergyItem,
-                                    selectedAllergies.includes(item) && styles.selectedAllergy,
-                                ]}
-                                onPress={() => toggleAllergy(item)}>
-                                <Text style={styles.checkbox}>
-                                    {selectedAllergies.includes(item) ? '☑' : '☐'}
-                                </Text>
-                                <Text style={styles.allergyText}>{item}</Text>
-                            </TouchableOpacity>
-                        ))}
-                    </View> */}
                 </ScrollView>
                 <TouchableOpacity
                     style={[styles.buttonView, { opacity: isLoading ? 0.75 : 1 }]}
                     disabled={isLoading}
-                    onPress={() => navigation.navigate('ActivityLevelScreen')}>
+                    onPress={() => handleContinue()}>
                     {isLoading ? (
                         <ActivityIndicator size={'large'} color={COLORS.white} />
                     ) : (
