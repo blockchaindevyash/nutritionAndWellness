@@ -55,9 +55,9 @@ const ChangePassword = ({ navigation }) => {
         let raw = JSON.stringify({
           old_password: password,
           new_password: newPassword,
-          new_password_confirmation: confirmPassword
+          confirm_password: confirmPassword
         });
-        const response = await onAddCommonJsonApi('reset-password', raw);
+        const response = await onAddCommonJsonApi('user/change-password', raw);
         console.log('get Repsonse>>', response.data);
         if (response.data.success) {
           showMessage({
@@ -70,6 +70,7 @@ const ChangePassword = ({ navigation }) => {
           setNewPassword('');
           setConfirmPassword('');
           setIsLoading(false);
+          navigation.goBack();
         }
       }
     } catch(err) {

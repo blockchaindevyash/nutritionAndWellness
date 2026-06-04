@@ -28,7 +28,7 @@ export const onRegistrationApi = async requestData => {
     axios
       .post(url, requestData, {
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'multipart/form-data',
           Accept: 'application/json',
         },
       })
@@ -45,6 +45,22 @@ export const onForgotPasswordApi = async requestData => {
         headers: {
           'Content-Type': 'application/json',
           Accept: 'application/json',
+        },
+      })
+      .then(res => resolve(res))
+      .catch(err => reject(err));
+  });
+};
+
+export const onDeleteCommonApi = async urlData => {
+  const token = await AsyncStorage.getItem('accessToken');
+  const url = Api.baseUrl1 + urlData;
+  console.log('Get  Url:::', url);
+  return new Promise((resolve, reject) => {
+    axios
+      .delete(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
         },
       })
       .then(res => resolve(res))

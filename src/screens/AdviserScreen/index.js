@@ -1,14 +1,14 @@
 import {
-    Text,
-    View,
-    TextInput,
-    TouchableOpacity,
-    Image,
-    ScrollView,
-    ActivityIndicator,
-    Platform,
-    PermissionsAndroid,
-    FlatList,
+  Text,
+  View,
+  TextInput,
+  TouchableOpacity,
+  Image,
+  ScrollView,
+  ActivityIndicator,
+  Platform,
+  PermissionsAndroid,
+  FlatList,
 } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { portraitStyles, landscapeStyles } from './styles';
@@ -25,24 +25,20 @@ const wellnessData = [
     title: "Meal Advice",
     icon: "🥗",
     color: ["#ff9966", "#ff5e62"],
-
     description:
       "Personalized meal guidance for healthy weight management and better metabolism.",
-
     recommendations: [
       "Eat high-fiber breakfast daily",
       "Add protein in every meal",
       "Eat seasonal vegetables",
       "Prefer home-cooked food",
     ],
-
     avoid: [
       "Processed sugar",
       "Deep fried food",
       "Late night meals",
       "Cold drinks with meals",
     ],
-
     schedule: [
       {
         time: "8:00 AM",
@@ -60,7 +56,6 @@ const wellnessData = [
         desc: "Soup + paneer + vegetables",
       },
     ],
-
     goal: "1500 Calories Daily",
   },
   {
@@ -69,24 +64,20 @@ const wellnessData = [
     title: "Drink Advice",
     icon: "🥤",
     color: ["#36D1DC", "#5B86E5"],
-
     description:
       "Hydration and healthy drink recommendations to improve digestion and energy.",
-
     recommendations: [
       "Drink 3L water daily",
       "Take green tea after lunch",
       "Drink coconut water twice weekly",
       "Start day with warm water",
     ],
-
     avoid: [
       "Soft drinks",
       "Energy drinks",
       "Extra sugar beverages",
       "Excess caffeine",
     ],
-
     schedule: [
       {
         time: "7:00 AM",
@@ -104,7 +95,6 @@ const wellnessData = [
         desc: "Green tea without sugar",
       },
     ],
-
     goal: "3 Liters Water Daily",
   },
   {
@@ -113,24 +103,20 @@ const wellnessData = [
     title: "Supplement & Vitamin",
     icon: "💊",
     color: ["#7F00FF", "#E100FF"],
-
     description:
       "Daily supplement guidance to improve immunity, bone health, and energy.",
-
     recommendations: [
       "Take multivitamin after breakfast",
       "Take Omega 3 after dinner",
       "Vitamin D once daily",
       "Calcium before sleep",
     ],
-
     avoid: [
       "Taking supplements on empty stomach",
       "Overdose vitamins",
       "Skipping water intake",
       "Mixing medicines without advice",
     ],
-
     schedule: [
       {
         time: "9:00 AM",
@@ -148,7 +134,6 @@ const wellnessData = [
         desc: "Before bedtime",
       },
     ],
-
     goal: "Daily Supplement Routine",
   },
   {
@@ -157,24 +142,20 @@ const wellnessData = [
     title: "Exercise Advice",
     icon: "🏋️",
     color: ["#11998e", "#38ef7d"],
-
     description:
       "Exercise guidance to improve fitness, stamina, and weight control.",
-
     recommendations: [
       "Walk 30 min daily",
       "Stretch every morning",
       "Strength workout 3x/week",
       "Practice breathing exercises",
     ],
-
     avoid: [
       "Overtraining",
       "Skipping warm-up",
       "Heavy workout after meals",
       "Poor posture exercise",
     ],
-
     schedule: [
       {
         time: "7:00 AM",
@@ -192,7 +173,6 @@ const wellnessData = [
         desc: "Light body stretching",
       },
     ],
-
     goal: "45 Min Daily Activity",
   },
   {
@@ -201,24 +181,20 @@ const wellnessData = [
     title: "Sleep & Snore Advice",
     icon: "😴",
     color: ["#654ea3", "#eaafc8"],
-
     description:
       "Sleep improvement tips for better recovery, energy, and snoring reduction.",
-
     recommendations: [
       "Sleep before 11 PM",
       "Use side sleeping position",
       "Maintain dark room",
       "Meditate before sleep",
     ],
-
     avoid: [
       "Screen time before sleep",
       "Heavy dinner late night",
       "Caffeine after evening",
       "Irregular sleep timing",
     ],
-
     schedule: [
       {
         time: "8:00 PM",
@@ -236,72 +212,71 @@ const wellnessData = [
         desc: "Proper dark & quiet room",
       },
     ],
-
     goal: "7-8 Hours Sleep",
   },
 ];
 
 const AdviserScreen = ({ navigation }) => {
-    const orientation = useOrientation(); // Get current orientation
-    const isPortrait = orientation === 'portrait';
-    const insets = useSafeAreaInsets();
-    const [selectedLevel, setSelectedLevel] = useState(null);
-    const [isLoading, setIsLoading] = useState(false);
-    const styles = isPortrait ? portraitStyles : landscapeStyles;
+  const orientation = useOrientation(); // Get current orientation
+  const isPortrait = orientation === 'portrait';
+  const insets = useSafeAreaInsets();
+  const [selectedLevel, setSelectedLevel] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const styles = isPortrait ? portraitStyles : landscapeStyles;
 
-    return (
-        <View style={styles.safeAreaStyle}>
-            <View
-                style={{
-                    width: '100%',
-                    paddingTop: insets.top,
-                    backgroundColor: COLORS.primary,
-                }}
-            />
-            <View style={styles.headerView}>
-                <Header title={'Wellness Adviser'} onPress={() => navigation.goBack()} />
+  return (
+    <View style={styles.safeAreaStyle}>
+      <View
+        style={{
+          width: '100%',
+          paddingTop: insets.top,
+          backgroundColor: COLORS.primary,
+        }}
+      />
+      <View style={styles.headerView}>
+        <Header title={'Wellness Adviser'} onPress={() => navigation.goBack()} />
+      </View>
+      <View style={[styles.container, { backgroundColor: COLORS.backColor }]}>
+        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: hp(10) }}>
+          <Text style={styles.subtitle}>Personalized health guidance based on your lifestyle, medical conditions, diet, and fitness goals.</Text>
+          {wellnessData.map((item) => (
+            <View key={item.id} style={styles.card}>
+              <View style={styles.topRow}>
+                <View style={styles.iconContainer}>
+                  <Text style={styles.icon}>
+                    {item.icon}
+                  </Text>
+                </View>
+                <TouchableOpacity style={styles.viewButton} onPress={() =>
+                  navigation.navigate(
+                    "AdviserDetailScreen",
+                    { details: item }
+                  )
+                }>
+                  <Text style={styles.viewButtonText}>
+                    View Details
+                  </Text>
+                </TouchableOpacity>
+              </View>
+              {/* Title */}
+              <Text style={styles.cardTitle}>
+                {item.title}
+              </Text>
+              {/* Tips */}
+              <View style={styles.tipsContainer}>
+                {item.recommendations.map((tip, index) => (
+                  <View key={index} style={styles.tipRow}>
+                    <View style={styles.dot} />
+                    <Text style={styles.tipText}>{tip}</Text>
+                  </View>
+                ))}
+              </View>
             </View>
-            <View style={[styles.container, { backgroundColor: COLORS.backColor }]}>
-                <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{paddingBottom: hp(10)}}>
-                    <Text style={styles.subtitle}>Personalized health guidance based on your lifestyle, medical conditions, diet, and fitness goals.</Text>
-                    {wellnessData.map((item) => (
-                        <View key={item.id} style={styles.card}>
-                            <View style={styles.topRow}>
-                                <View style={styles.iconContainer}>
-                                    <Text style={styles.icon}>
-                                        {item.icon}
-                                    </Text>
-                                </View>
-                                <TouchableOpacity style={styles.viewButton} onPress={() =>
-    navigation.navigate(
-      "AdviserDetailScreen",
-      { details: item }
-    )
-  }>
-                                    <Text style={styles.viewButtonText}>
-                                        View Details
-                                    </Text>
-                                </TouchableOpacity>
-                            </View>
-                            {/* Title */}
-                            <Text style={styles.cardTitle}>
-                                {item.title}
-                            </Text>
-                            {/* Tips */}
-                            <View style={styles.tipsContainer}>
-                                {item.recommendations.map((tip, index) => (
-                                    <View key={index} style={styles.tipRow}>
-                                        <View style={styles.dot} />
-                                        <Text style={styles.tipText}>{tip}</Text>
-                                    </View>
-                                ))}
-                            </View>
-                        </View>
-                    ))}
-                </ScrollView>
-            </View>
-        </View>
-    );
+          ))}
+        </ScrollView>
+      </View>
+    </View>
+  );
 };
 
 export default AdviserScreen;

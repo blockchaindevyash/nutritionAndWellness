@@ -13,7 +13,7 @@ import React, { useEffect, useState } from 'react';
 import { portraitStyles, landscapeStyles } from './styles';
 import useOrientation from '../../components/OrientationComponent';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { COLORS, Fonts } from '../../utils/index';
 import view from '../../images/view.png';
 import hidden from '../../images/hidden.png';
@@ -67,7 +67,8 @@ const LoginScreen = ({ navigation }) => {
             if (err.response?.data?.message == 'Please verify your email before logging in.')
             {
             setIsLoading(false);
-            navigation.navigate('VerificationScreen', {email: email});
+            setApiError(true);
+            setApiErrorMessage('Please verify your email before logging in.');
             } else {
             setApiError(true);
             setApiErrorMessage(err?.response?.data?.message ||
@@ -160,6 +161,7 @@ const LoginScreen = ({ navigation }) => {
                         style={[styles.buttonView, { opacity: isLoading ? 0.75 : 1 }]}
                         disabled={isLoading}
                         onPress={() => onLoginData()}>
+                        {/* onPress={() => navigation.navigate('TabStack')}> */}
                         {isLoading ? (
                             <ActivityIndicator size={'large'} color={COLORS.white} />
                         ) : (

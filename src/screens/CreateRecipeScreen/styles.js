@@ -154,6 +154,13 @@ export const portraitStyles = StyleSheet.create({
     resizeMode: 'contain',
     tintColor: COLORS.greyColor,
   },
+  errorText: {
+    fontSize: normalize(16),
+    color: COLORS.errorColor,
+    fontFamily: Fonts.FONTS.PoppinsMedium,
+    marginTop: hp(1),
+    marginLeft: wp(1),
+  },
 });
 
 export const landscapeStyles = StyleSheet.create({

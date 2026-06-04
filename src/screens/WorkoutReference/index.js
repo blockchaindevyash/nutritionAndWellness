@@ -20,14 +20,14 @@ import { showMessage } from 'react-native-flash-message';
 import useAuthStore from '../../store/authStore';
 
 const workoutOptions = [
-  { id: 1, title: "Home Workout", icon: "🏠" },
-  { id: 2, title: "Gym", icon: "🏋️" },
-  { id: 3, title: "No Equipment", icon: "🚫" },
-  { id: 4, title: "Other", icon: "✍️" }, // ✅ NEW
+    { id: 1, title: "Home Workout", icon: "🏠" },
+    { id: 2, title: "Gym", icon: "🏋️" },
+    { id: 3, title: "No Equipment", icon: "🚫" },
+    { id: 4, title: "Other", icon: "✍️" }, // ✅ NEW
 ];
 
 const WorkoutReference = ({ navigation }) => {
-    const {updateSignupData, workoutList, signupData} = useAuthStore();
+    const { updateSignupData, workoutList, signupData } = useAuthStore();
     const orientation = useOrientation(); // Get current orientation
     const isPortrait = orientation === 'portrait';
     const styles = isPortrait ? portraitStyles : landscapeStyles;
@@ -42,7 +42,7 @@ const WorkoutReference = ({ navigation }) => {
     };
 
     // 🔹 Next button
-    const handleNext = () => {
+    const handleNext = async () => {
         if (selected.length === 0) {
             showMessage({
                 message: 'Please select at least one option',
@@ -55,8 +55,51 @@ const WorkoutReference = ({ navigation }) => {
             updateSignupData({
                 workout_reference: selected,
             });
-
             console.log("Medical Data:", signupData);
+            try {
+                setIsLoading(true);
+                var formdata = new FormData();
+                formdata.append("name", signupData?.name);
+                formdata.append("mobileno", signupData?.mobileno);
+                formdata.append("email", signupData?.email);
+                formdata.append("password", signupData?.password);
+                formdata.append("confirm_password", signupData?.password);
+                formdata.append("dob", signupData?.dob);
+                formdata.append("gender", signupData?.gender);
+                formdata.append("height", signupData?.height);
+                formdata.append("weight", signupData?.weight);
+                formdata.append("goal", signupData?.goal);
+                formdata.append("diet", signupData?.diet);
+                formdata.append("activity_level", signupData?.activity_level);
+                formdata.append("medical_condition", signupData?.medical_condition);
+                formdata.append("medical_condition_text", signupData?.medical_condition_text);
+                formdata.append("prescription_file", signupData?.prescription_file);
+                formdata.append("health_note", signupData?.health_note);
+                formdata.append("current_medicine", signupData?.current_medicine);
+                formdata.append("workout_reference", selected);
+
+                const responseData = await onRegistrationApi(formdata);
+                if (responseData.data.status) {
+                    setIsLoading(false);
+                    showMessage({
+                        message: responseData.data.message,
+                        type: 'success',
+                        duration: 6000,
+                        icon: 'success',
+                    });
+                    navigation.replace('LoginScreen');
+                } else {
+                    setApiError(true);
+                    setApiErrorMessage('Invalid Credentials');
+                    setIsLoading(false);
+                    console.log('onRegistrationApi response else', responseData.data);
+                }
+            } catch (err) {
+                setApiError(true);
+                setApiErrorMessage(err?.response?.data?.message ||
+                    'Something went wrong. Please try again.');
+                setIsLoading(false);
+            }
             // navigation.navigate('TabStack');
         }
         // const formData = {
@@ -80,7 +123,7 @@ const WorkoutReference = ({ navigation }) => {
                 <Header title={'Workout Reference'} onPress={() => navigation.goBack()} />
             </View>
             <View style={[styles.container, { backgroundColor: COLORS.backColor }]}>
-                <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{paddingBottom: hp(10)}}>
+                <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: hp(10) }}>
                     <Text style={styles.subtitle}>This helps us personalize your workout plan</Text>
                     {workoutList.map((item) => {
                         return (
