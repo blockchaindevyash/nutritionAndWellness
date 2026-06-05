@@ -10,7 +10,7 @@ import {
     PermissionsAndroid,
     FlatList,
 } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { portraitStyles, landscapeStyles } from './styles';
 import useOrientation from '../../components/OrientationComponent';
 import { COLORS } from '../../utils';
@@ -19,6 +19,8 @@ import { hp } from '../../components/responsive';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { showMessage } from 'react-native-flash-message';
 import useAuthStore from '../../store/authStore';
+import { onAddCommonFormApi, onGetCommonApi } from '../../services/Api';
+import { useFocusEffect } from '@react-navigation/native';
 
 const dietOptions = [
     { id: 1, title: 'Vegetarian', icon: '🥦', desc: 'Plant-based diet' },
@@ -28,17 +30,26 @@ const dietOptions = [
     { id: 5, title: 'No Onion/Garlic', icon: '🌱', desc: 'Vegetarian without onions/garlic' },
 ];
 
-const DietPreferenceScreen = ({ navigation }) => {
-    const {updateSignupData, dietList} = useAuthStore();
+const DietPreferenceScreen = ({ navigation, route }) => {
+    const { updateSignupData, dietList, profileData, updateProfileData } = useAuthStore();
     const orientation = useOrientation(); // Get current orientation
     const isPortrait = orientation === 'portrait';
     const insets = useSafeAreaInsets();
     const [selectedDiet, setSelectedDiet] = useState('');
-    const [selectedAllergies, setSelectedAllergies] = useState([]);
+    const [fromAccount, setFromAccount] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const styles = isPortrait ? portraitStyles : landscapeStyles;
 
-    const handleContinue = () => {
+    useFocusEffect(
+        useCallback(() => {
+            if (route.params?.item) {
+                setSelectedDiet(route.params.item.diet?.id);
+                setFromAccount(true);
+            }
+        }, [])
+    );
+
+    const handleContinue = async () => {
         console.log('User Data:', selectedDiet);
         if (selectedDiet == '') {
             showMessage({
@@ -48,10 +59,106 @@ const DietPreferenceScreen = ({ navigation }) => {
                 icon: 'danger',
             });
         } else {
-            updateSignupData({
-                diet: selectedDiet,
-            });
-            navigation.navigate('ActivityLevelScreen');
+            if (fromAccount) {
+                try {
+                    setIsLoading(true);
+                    const imageUrl = profileData.prescription_file;
+                    const extension = imageUrl.split(".").pop().toLowerCase();
+                    let mimeType = "image/png";
+                    switch (extension) {
+                    case "jpg":
+                    case "jpeg":
+                        mimeType = "image/jpeg";
+                        break;
+
+                    case "png":
+                        mimeType = "image/png";
+                        break;
+
+                    case "webp":
+                        mimeType = "image/webp";
+                        break;
+
+                    // PDF
+                    case "pdf":
+                        mimeType = "application/pdf";
+                        break;
+                    }
+                    const imageFile = {
+                        uri: imageUrl,
+                        type: mimeType,
+                        name: imageUrl.split('/').pop(),
+                    };
+                    const goalIds = profileData?.goal.map(item => item.id);
+                    const medicalIds = profileData?.medical_condition.map(item => item.id);
+                    console.log('Profile Data for API:', goalIds, medicalIds, profileData?.current_medicine);
+                    var formdata = new FormData();
+                    formdata.append("name", profileData?.name);
+                    formdata.append("dob", profileData?.dob);
+                    formdata.append("gender", profileData?.gender);
+                    formdata.append("height", profileData?.height);
+                    formdata.append("weight", profileData?.weight);
+                    // formdata.append("goal", goalIds);
+                    formdata.append("diet", selectedDiet);
+                    formdata.append("activity_level", profileData?.activity_level?.id);
+                    // formdata.append("medical_condition", medicalIds);
+                    formdata.append("medical_condition_text", profileData?.medical_condition_text);
+                    formdata.append("prescription_file", imageFile);
+                    formdata.append("health_note", profileData?.health_note);
+                    // formdata.append("current_medicine", profileData?.current_medicine);
+                    goalIds.forEach(id => {
+                        formdata.append("goal[]", id);
+                    });
+
+                    medicalIds.forEach(id => {
+                        formdata.append("medical_condition[]", id);
+                    });
+
+                    profileData?.current_medicine?.forEach((medicine, index) => {
+                        formdata.append(`current_medicine[${index}][medicine_name]`, medicine.medicine_name);
+                        formdata.append(`current_medicine[${index}][dosage]`, medicine.dosage);
+                        formdata.append(`current_medicine[${index}][timing]`, medicine.timing);
+                        formdata.append(`current_medicine[${index}][additional_notes]`, medicine.additional_notes);
+                    });
+                    formdata.append("workout_reference", profileData?.workout_reference?.id);
+
+                    const response = await onAddCommonFormApi('user/profile', formdata);
+                    if (response.data.status) {
+                        showMessage({
+                            message: 'Profile updated successfully',
+                            type: 'success',
+                            duration: 4000,
+                            icon: 'success',
+                        });
+                        const profileRes = await onGetCommonApi('user/profile');
+                        updateProfileData(profileRes.data.data);
+                        setIsLoading(false);
+                        navigation.goBack();
+                    } else {
+                        showMessage({
+                            message: response.data.message,
+                            type: 'danger',
+                            duration: 4000,
+                            icon: 'danger',
+                        });
+                        setIsLoading(false);
+                    }
+                } catch (error) {
+                    showMessage({
+                        message: 'Error updating profile',
+                        type: 'danger',
+                        duration: 4000,
+                        icon: 'danger',
+                    });
+                    setIsLoading(false);
+                    console.log('Error saving profile data:', error.response || error);
+                }
+            } else {
+                updateSignupData({
+                    diet: selectedDiet,
+                });
+                navigation.navigate('ActivityLevelScreen');
+            }
         }
     };
 
@@ -68,7 +175,7 @@ const DietPreferenceScreen = ({ navigation }) => {
                 <Header title={'Your Diet Preference'} onPress={() => navigation.goBack()} />
             </View>
             <View style={[styles.container, { backgroundColor: COLORS.backColor }]}>
-                <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{paddingBottom: hp(10)}}>
+                <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: hp(10) }}>
                     <Text style={styles.subtitle}>Select your eating style</Text>
                     {/* Diet Options */}
                     {dietList.map((item) => (
@@ -93,7 +200,7 @@ const DietPreferenceScreen = ({ navigation }) => {
                     {isLoading ? (
                         <ActivityIndicator size={'large'} color={COLORS.white} />
                     ) : (
-                        <Text style={styles.signinText}>Next</Text>
+                        <Text style={styles.signinText}>{fromAccount ? 'Save' : 'Next'}</Text>
                     )}
                 </TouchableOpacity>
             </View>

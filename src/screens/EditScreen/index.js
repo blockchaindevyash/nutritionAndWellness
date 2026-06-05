@@ -15,7 +15,6 @@ import React, { useEffect, useState } from 'react';
 import { portraitStyles, landscapeStyles } from './styles';
 import useOrientation from '../../components/OrientationComponent';
 import { COLORS } from '../../utils';
-import pencil from '../../images/pencil.png';
 import user from '../../images/user.png';
 import rightArrow from '../../images/rightArrow.png';
 import { hp, wp } from '../../components/responsive';
@@ -25,6 +24,9 @@ import SelectDropdown from 'react-native-select-dropdown';
 import down from '../../images/down.png';
 import Header from '../../components/HeaderComponent';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import useAuthStore from '../../store/authStore';
+import { showMessage } from 'react-native-flash-message';
+import { onAddCommonFormApi, onGetCommonApi } from '../../services/Api';
 
 const genderArray = [
     { id: 1, value: 'Male' },
@@ -32,10 +34,12 @@ const genderArray = [
 ];
 
 const EditScreen = ({ navigation }) => {
+    const {profileData, updateProfileData} = useAuthStore();
     const orientation = useOrientation(); // Get current orientation
     const isPortrait = orientation === 'portrait';
     const insets = useSafeAreaInsets();
     const [name, setName] = useState('');
+    const [nameError, setNameError] = useState(false);
     const [dob, setDob] = useState(null);
     const [dobError, setDobError] = useState(false);
     const [gender, setGender] = useState('');
@@ -47,6 +51,111 @@ const EditScreen = ({ navigation }) => {
     const [dateModalVisible, setDateModalVisible] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const styles = isPortrait ? portraitStyles : landscapeStyles;
+
+    const onSaveProfileData = async () => {
+        if (name == '') {
+            setNameError(true);
+        } else if (dob == null) {
+            setDobError(true);
+        } else if (gender == '') {
+            setGenderError(true);
+        } else if (height == '') {
+            setHeightError(true);
+        } else if (weight == '') {
+            setWeightError(true);
+        } else {
+            try {
+                setIsLoading(true);
+                const imageUrl = profileData.prescription_file;
+                const extension = imageUrl.split(".").pop().toLowerCase();
+                let mimeType = "image/png";
+                switch (extension) {
+                case "jpg":
+                case "jpeg":
+                    mimeType = "image/jpeg";
+                    break;
+
+                case "png":
+                    mimeType = "image/png";
+                    break;
+
+                case "webp":
+                    mimeType = "image/webp";
+                    break;
+
+                // PDF
+                case "pdf":
+                    mimeType = "application/pdf";
+                    break;
+                }
+                const imageFile = {
+                    uri: imageUrl,
+                    type: mimeType,
+                    name: imageUrl.split('/').pop(),
+                };
+                const goalIds = profileData?.goal.map(item => item.id);
+                const medicalIds = profileData?.medical_condition.map(item => item.id);
+                var formdata = new FormData();
+                formdata.append("name", name);
+                formdata.append("dob", dob);
+                formdata.append("gender", gender);
+                formdata.append("height", height);
+                formdata.append("weight", weight);
+                // formdata.append("goal", goalIds);
+                formdata.append("diet", profileData?.diet?.id);
+                formdata.append("activity_level", profileData?.activity_level?.id);
+                // formdata.append("medical_condition", medicalIds);
+                formdata.append("medical_condition_text", profileData?.medical_condition_text);
+                formdata.append("prescription_file", imageFile);
+                formdata.append("health_note", profileData?.health_note);
+                // formdata.append("current_medicine", profileData?.current_medicine);
+                goalIds.forEach(id => {
+                    formdata.append("goal[]", id);
+                });
+                medicalIds.forEach(id => {
+                    formdata.append("medical_condition[]", id);
+                });
+                profileData?.current_medicine?.forEach((medicine, index) => {
+                    formdata.append(`current_medicine[${index}][medicine_name]`, medicine.medicine_name);
+                    formdata.append(`current_medicine[${index}][dosage]`, medicine.dosage);
+                    formdata.append(`current_medicine[${index}][timing]`, medicine.timing);
+                    formdata.append(`current_medicine[${index}][additional_notes]`, medicine.additional_notes);
+                });
+                formdata.append("workout_reference", profileData?.workout_reference?.id);
+
+                const response = await onAddCommonFormApi('user/profile', formdata);
+                if (response.data.status) {
+                    showMessage({
+                        message: 'Profile updated successfully',
+                        type: 'success',
+                        duration: 4000,
+                        icon: 'success',
+                    });
+                    setIsLoading(false);
+                    const profileRes = await onGetCommonApi('user/profile');
+                    updateProfileData(profileRes.data.data);
+                    navigation.goBack();
+                } else {
+                    showMessage({
+                        message: response.data.message,
+                        type: 'danger',
+                        duration: 4000,
+                        icon: 'danger',
+                    });
+                    setIsLoading(false);
+                }
+            } catch (error) {
+                showMessage({
+                    message: 'Error updating profile',
+                    type: 'danger',
+                    duration: 4000,
+                    icon: 'danger',
+                });
+                setIsLoading(false);
+                console.log('Error saving profile data:', error);
+            }
+        }
+    };
 
     return (
         <View style={styles.safeAreaStyle}>
@@ -61,6 +170,7 @@ const EditScreen = ({ navigation }) => {
                 <Header title={'Edit Profile'} onPress={() => navigation.goBack()} />
             </View>
             <View style={styles.editTextInputView}>
+                <>
                 <View style={styles.textInputView}>
                     <Text style={styles.titleText}>Name</Text>
                     <TextInput
@@ -76,6 +186,11 @@ const EditScreen = ({ navigation }) => {
                         autoCapitalize={'none'}
                     />
                 </View>
+                {nameError && (
+                    <Text style={styles.errorText}>
+                        {'name is required.'}
+                    </Text>
+                )}
                 <View style={styles.textInputView}>
                     <Text style={styles.titleText}>Date of Birth</Text>
                     <Text
@@ -129,6 +244,11 @@ const EditScreen = ({ navigation }) => {
                         </Modal>
                     )}
                 </View>
+                {dobError && (
+                    <Text style={styles.errorText}>
+                        {'Date of birth is required.'}
+                    </Text>
+                )}
                 <View style={styles.textInputView}>
                     <Text style={styles.titleText}>Gender</Text>
                     <SelectDropdown
@@ -172,6 +292,11 @@ const EditScreen = ({ navigation }) => {
                         dropdownStyle={styles.dropdown2DropdownStyle}
                     />
                 </View>
+                {genderError && (
+                    <Text style={styles.errorText}>
+                        {'Gender is required.'}
+                    </Text>
+                )}
                 <View style={styles.textInputView}>
                     <Text style={styles.titleText}>Height</Text>
                     <TextInput
@@ -184,6 +309,11 @@ const EditScreen = ({ navigation }) => {
                         style={[styles.textInput, { color: COLORS.greyColor, width: '100%' }]}
                     />
                 </View>
+                {heightError && (
+                    <Text style={styles.errorText}>
+                        {'Height is required.'}
+                    </Text>
+                )}
                 <View style={styles.textInputView}>
                     <Text style={styles.titleText}>Weight</Text>
                     <TextInput
@@ -196,7 +326,13 @@ const EditScreen = ({ navigation }) => {
                         style={[styles.textInput, { color: COLORS.greyColor, width: '100%' }]}
                     />
                 </View>
-                <TouchableOpacity style={styles.logoutButton} onPress={() => navigation.navigate('LoginScreen')}>
+                {weightError && (
+                    <Text style={styles.errorText}>
+                        {'Weight is required.'}
+                    </Text>
+                )}
+                </>
+                <TouchableOpacity style={styles.logoutButton} onPress={() => onSaveProfileData()}>
                     <Text style={styles.logoutText}>Save</Text>
                 </TouchableOpacity>
             </View>

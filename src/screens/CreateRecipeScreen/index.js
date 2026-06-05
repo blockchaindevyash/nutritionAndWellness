@@ -28,6 +28,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import ImagePicker from "react-native-image-crop-picker";
 import { onAddCommonFormApi } from '../../services/Api';
 import { useFocusEffect } from '@react-navigation/native';
+import { showMessage } from 'react-native-flash-message';
 
 const CreateRecipeScreen = ({ navigation, route }) => {
     const orientation = useOrientation(); // Get current orientation
@@ -159,7 +160,7 @@ const CreateRecipeScreen = ({ navigation, route }) => {
                 setErrorMessage(err?.response?.data?.message ||
                     'Something went wrong. Please try again.');
                 setIsLoading(false);
-                console.log('onRegistrationApi Error:', err.response);
+                console.log('onRegistrationApi Error:', err);
             }
         }
     };

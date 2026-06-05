@@ -18,8 +18,11 @@ import user from '../../images/user.png';
 import rightArrow from '../../images/rightArrow.png';
 import { hp, wp } from '../../components/responsive';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import useAuthStore from '../../store/authStore';
+import moment from 'moment';
 
 const AccountScreen = ({ navigation }) => {
+    const {profileData} = useAuthStore();
     const orientation = useOrientation(); // Get current orientation
     const isPortrait = orientation === 'portrait';
     const insets = useSafeAreaInsets();
@@ -32,6 +35,13 @@ const AccountScreen = ({ navigation }) => {
     const [isLoading, setIsLoading] = useState(false);
     const styles = isPortrait ? portraitStyles : landscapeStyles;
 
+    const calculateAge = (dob) => {
+        return moment().diff(
+            moment(dob, "DD/MM/YYYY"),
+            "years"
+        );
+    };
+
     return (
         <View style={styles.safeAreaStyle}>
             <View
@@ -41,36 +51,13 @@ const AccountScreen = ({ navigation }) => {
                     backgroundColor: COLORS.primary,
                 }}
             />
+            <ScrollView contentContainerStyle={{paddingBottom: hp(5)}}>
             <View style={styles.editTextInputView}>
-                {/* <View style={styles.textInputView}>
-                    <Text style={styles.titleText}>Name</Text>
-                    <View style={{
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                    }}>
-                        <TextInput
-                            value={name}
-                            onChangeText={text => {
-                                setName(text);
-                            }}
-                            placeholder="Enter Name"
-                            placeholderTextColor={COLORS.greyColor}
-                            style={[styles.textInput, { color: COLORS.greyColor }]}
-                            keyboardType={'email-address'}
-                            textContentType={'none'}
-                            autoCapitalize={'none'}
-                        />
-                        <TouchableOpacity>
-                            <Image style={styles.editImage} source={pencil} />
-                        </TouchableOpacity>
-                    </View>
-                </View> */}
                 <View style={styles.optionView1}>
                     <View style={{flexDirection: 'row', alignItems: 'center'}}>
                     <Image style={{width: wp(10), height: hp(6), resizeMode: 'contain', tintColor: COLORS.white}} source={user} />
                     <View style={{marginLeft: wp(3)}}>
-                        <Text style={styles.detailText}>John Doe</Text>
+                        <Text style={styles.detailText}>{profileData?.name}</Text>
                         <Text style={styles.detailText1}>Edit Profile</Text>
                     </View>
                     </View>
@@ -81,23 +68,31 @@ const AccountScreen = ({ navigation }) => {
                 <View style={styles.detailView}>
                     <View style={styles.optionView}>
                         <Text style={styles.detailText}>Age</Text>
-                        <Text style={styles.detailText1}>25</Text>
+                        <Text style={styles.detailText1}>{calculateAge(profileData?.dob)}</Text>
                     </View>
                     <View style={styles.optionView}>
                         <Text style={styles.detailText}>Height</Text>
-                        <Text style={styles.detailText1}>170 cm</Text>
+                        <Text style={styles.detailText1}>{profileData?.height} cm</Text>
                     </View>
                     <View style={styles.optionView}>
                         <Text style={styles.detailText}>Weight</Text>
-                        <Text style={styles.detailText1}>60 kg</Text>
+                        <Text style={styles.detailText1}>{profileData?.weight}</Text>
                     </View>
                 </View>
-                <TouchableOpacity style={styles.optionView} onPress={() => navigation.navigate('DietPreferenceScreen')}>
+                <TouchableOpacity style={styles.optionView} onPress={() => navigation.navigate('DietPreferenceScreen', {item: profileData})}>
                     <Text style={styles.detailText}>Diet</Text>
                     <Image style={styles.editImage} source={rightArrow} />
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.optionView} onPress={() => navigation.navigate('GoalSelection')}>
+                <TouchableOpacity style={styles.optionView} onPress={() => navigation.navigate('GoalSelection', {item: profileData})}>
                     <Text style={styles.detailText}>Goals</Text>
+                    <Image style={styles.editImage} source={rightArrow} />
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.optionView} onPress={() => navigation.navigate('ActivityLevelScreen', {item: profileData})}>
+                    <Text style={styles.detailText}>Activity Level</Text>
+                    <Image style={styles.editImage} source={rightArrow} />
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.optionView} onPress={() => navigation.navigate('MedicalScreen', {item: profileData})}>
+                    <Text style={styles.detailText}>Medical Conditions</Text>
                     <Image style={styles.editImage} source={rightArrow} />
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.optionView} onPress={() => navigation.navigate('ChangePassword')}>
@@ -124,6 +119,7 @@ const AccountScreen = ({ navigation }) => {
                     <Text style={styles.logoutText}>Logout</Text>
                 </TouchableOpacity>
             </View>
+            </ScrollView>
         </View>
     );
 };

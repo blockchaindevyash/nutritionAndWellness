@@ -128,6 +128,13 @@ export const portraitStyles = StyleSheet.create({
     resizeMode: 'contain',
     tintColor: COLORS.greyColor,
   },
+  errorText: {
+    fontSize: normalize(15),
+    color: COLORS.errorColor,
+    fontFamily: Fonts.FONTS.PoppinsMedium,
+    marginTop: hp(1),
+    marginLeft: wp(1),
+  },
 });
 
 export const landscapeStyles = StyleSheet.create({
@@ -226,5 +233,12 @@ export const landscapeStyles = StyleSheet.create({
     height: hp(2.5),
     resizeMode: 'contain',
     tintColor: COLORS.white,
+  },
+  errorText: {
+    fontSize: normalize(15),
+    color: COLORS.errorColor,
+    fontFamily: Fonts.FONTS.PoppinsMedium,
+    marginTop: hp(1),
+    marginLeft: wp(1),
   },
 })

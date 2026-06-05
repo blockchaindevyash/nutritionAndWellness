@@ -35,6 +35,8 @@ const WorkoutReference = ({ navigation }) => {
     const [selected, setSelected] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const [otherText, setOtherText] = useState("");
+    const [apiErrorMessage, setApiErrorMessage] = useState('');
+    const [apiError, setApiError] = useState(false);
 
     // 🔹 Toggle logic
     const toggleSelect = (item) => {
@@ -68,14 +70,26 @@ const WorkoutReference = ({ navigation }) => {
                 formdata.append("gender", signupData?.gender);
                 formdata.append("height", signupData?.height);
                 formdata.append("weight", signupData?.weight);
-                formdata.append("goal", signupData?.goal);
+                // formdata.append("goal", signupData?.goal);
                 formdata.append("diet", signupData?.diet);
                 formdata.append("activity_level", signupData?.activity_level);
-                formdata.append("medical_condition", signupData?.medical_condition);
+                // formdata.append("medical_condition", signupData?.medical_condition);
                 formdata.append("medical_condition_text", signupData?.medical_condition_text);
                 formdata.append("prescription_file", signupData?.prescription_file);
                 formdata.append("health_note", signupData?.health_note);
-                formdata.append("current_medicine", signupData?.current_medicine);
+                // formdata.append("current_medicine", signupData?.current_medicine);
+                signupData?.goal?.forEach(id => {
+                    formdata.append("goal[]", id);
+                });
+                signupData?.medical_condition?.forEach(id => {
+                    formdata.append("medical_condition[]", id);
+                });
+                signupData?.current_medicine?.forEach((medicine, index) => {
+                    formdata.append(`current_medicine[${index}][medicine_name]`, medicine.medicine_name);
+                    formdata.append(`current_medicine[${index}][dosage]`, medicine.dosage);
+                    formdata.append(`current_medicine[${index}][timing]`, medicine.timing);
+                    formdata.append(`current_medicine[${index}][additional_notes]`, medicine.additional_notes);
+                });
                 formdata.append("workout_reference", selected);
 
                 const responseData = await onRegistrationApi(formdata);
@@ -89,15 +103,27 @@ const WorkoutReference = ({ navigation }) => {
                     });
                     navigation.replace('LoginScreen');
                 } else {
-                    setApiError(true);
-                    setApiErrorMessage('Invalid Credentials');
+                    showMessage({
+                        message: responseData.data.message,
+                        type: 'danger',
+                        duration: 4000,
+                        icon: 'danger',
+                    });
+                    // setApiError(true);
+                    // setApiErrorMessage('Invalid Credentials');
                     setIsLoading(false);
                     console.log('onRegistrationApi response else', responseData.data);
                 }
             } catch (err) {
-                setApiError(true);
-                setApiErrorMessage(err?.response?.data?.message ||
-                    'Something went wrong. Please try again.');
+                showMessage({
+                    message: err?.response?.data?.message || 'Something went wrong. Please try again.',
+                    type: 'danger',
+                    duration: 4000,
+                    icon: 'danger',
+                });
+                // setApiError(true);
+                // setApiErrorMessage(err?.response?.data?.message ||
+                //     'Something went wrong. Please try again.');
                 setIsLoading(false);
             }
             // navigation.navigate('TabStack');
