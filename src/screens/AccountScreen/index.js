@@ -95,6 +95,10 @@ const AccountScreen = ({ navigation }) => {
                     <Text style={styles.detailText}>Medical Conditions</Text>
                     <Image style={styles.editImage} source={rightArrow} />
                 </TouchableOpacity>
+                <TouchableOpacity style={styles.optionView} onPress={() => navigation.navigate('DoctorDescription', {item: profileData})}>
+                    <Text style={styles.detailText}>Doctor Description</Text>
+                    <Image style={styles.editImage} source={rightArrow} />
+                </TouchableOpacity>
                 <TouchableOpacity style={styles.optionView} onPress={() => navigation.navigate('ChangePassword')}>
                     <Text style={styles.detailText}>Change Password</Text>
                     <Image style={styles.editImage} source={rightArrow} />

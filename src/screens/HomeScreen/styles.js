@@ -139,7 +139,7 @@ export const portraitStyles = StyleSheet.create({
   emptyText: {
     fontSize: hp(2.5),
     fontFamily: Fonts.FONTS.PoppinsMedium,
-    color: COLORS.black,
+    color: COLORS.white,
   },
 })
 

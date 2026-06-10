@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import {
     View,
     Text,
@@ -10,6 +10,7 @@ import {
     Platform,
     Image,
     Alert,
+    ActivityIndicator,
 } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
 import { pick } from '@react-native-documents/picker'
@@ -20,9 +21,11 @@ import { COLORS } from '../../utils';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { showMessage } from "react-native-flash-message";
 import useAuthStore from "../../store/authStore";
+import { useFocusEffect } from "@react-navigation/native";
+import { onAddCommonFormApi, onGetCommonApi } from "../../services/Api";
 
-const DoctorDescriptionScreen = ({ navigation }) => {
-    const {updateSignupData} = useAuthStore();
+const DoctorDescriptionScreen = ({navigation, route}) => {
+    const {updateSignupData, profileData, updateProfileData} = useAuthStore();
     const orientation = useOrientation();
     const isPortrait = orientation === 'portrait';
     const styles = isPortrait ? portraitStyles : landscapeStyles;
@@ -30,6 +33,40 @@ const DoctorDescriptionScreen = ({ navigation }) => {
     const [doctorNotes, setDoctorNotes] = useState("");
     const [documentFile, setDocumentFile] = useState(null);
     const [selectedTags, setSelectedTags] = useState([]);
+    const [fromAccount, setFromAccount] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+
+    useFocusEffect(
+        useCallback(() => {
+            if (route.params?.item) {
+                const imageUrl = profileData.prescription_file;
+                const extension = imageUrl.split(".").pop().toLowerCase();
+                let mimeType = "image/png";
+                switch (extension) {
+                    case "jpg":
+                    case "jpeg":
+                        mimeType = "image/jpeg";
+                        break;
+                    case "png":
+                        mimeType = "image/png";
+                        break;
+                    case "webp":
+                        mimeType = "image/webp";
+                        break;
+                    case "pdf":
+                        mimeType = "application/pdf";
+                        break;
+                }
+                setDocumentFile({
+                    uri: imageUrl,
+                    type: mimeType,
+                    name: imageUrl.split('/').pop(),
+                });
+                setDoctorNotes(profileData.health_note || "");
+                setFromAccount(true);
+            }
+        }, [])
+    );
 
     // ----------------------------
     // Pick Document
@@ -55,7 +92,7 @@ const DoctorDescriptionScreen = ({ navigation }) => {
         setDocumentFile(null);
     };
 
-    const handleContinue = () => {
+    const handleContinue = async () => {
         if (!doctorNotes.trim() && !documentFile) {
             showMessage({
                 message: 'Please add doctor notes or upload report',
@@ -65,11 +102,75 @@ const DoctorDescriptionScreen = ({ navigation }) => {
             });
             return;
         } else {
-            updateSignupData({
-                prescription_file: documentFile,
-                health_note: doctorNotes,
-            });
-            navigation.navigate('MedicineDetailScreen');
+            if (fromAccount) {
+                try {
+                    setIsLoading(true);
+                    const goalIds = profileData?.goal.map(item => item.id);
+                    const medicalIds = profileData?.medical_condition.map(item => item.id);
+                    console.log('Profile Data for API:', goalIds, profileData?.current_medicine);
+                    var formdata = new FormData();
+                    formdata.append("name", profileData?.name);
+                    formdata.append("dob", profileData?.dob);
+                    formdata.append("gender", profileData?.gender);
+                    formdata.append("height", profileData?.height);
+                    formdata.append("weight", profileData?.weight);
+                    formdata.append("diet", profileData?.diet?.id);
+                    formdata.append("activity_level", profileData?.activity_level?.id);
+                    formdata.append("medical_condition_text", profileData?.medical_condition_text);
+                    formdata.append("prescription_file", documentFile);
+                    formdata.append("health_note", doctorNotes);
+                    goalIds.forEach(id => {
+                        formdata.append("goal[]", id);
+                    });
+                    medicalIds.forEach(id => {
+                        formdata.append("medical_condition[]", id);
+                    });
+                    profileData?.current_medicine?.forEach((medicine, index) => {
+                        formdata.append(`current_medicine[${index}][medicine_name]`, medicine.medicine_name);
+                        formdata.append(`current_medicine[${index}][dosage]`, medicine.dosage);
+                        formdata.append(`current_medicine[${index}][timing]`, medicine.timing);
+                        formdata.append(`current_medicine[${index}][additional_notes]`, medicine.additional_notes);
+                    });
+                    formdata.append("workout_reference", profileData?.workout_reference?.id);
+
+                    const response = await onAddCommonFormApi('user/profile', formdata);
+                    if (response.data.status) {
+                        showMessage({
+                            message: 'Profile updated successfully',
+                            type: 'success',
+                            duration: 4000,
+                            icon: 'success',
+                        });
+                        const profileRes = await onGetCommonApi('user/profile');
+                        updateProfileData(profileRes.data.data);
+                        setIsLoading(false);
+                        navigation.goBack();
+                    } else {
+                        showMessage({
+                            message: response.data.message,
+                            type: 'danger',
+                            duration: 4000,
+                            icon: 'danger',
+                        });
+                        setIsLoading(false);
+                    }
+                } catch (error) {
+                    showMessage({
+                        message: 'Error updating profile',
+                        type: 'danger',
+                        duration: 4000,
+                        icon: 'danger',
+                    });
+                    setIsLoading(false);
+                    console.log('Error saving profile data:', error.response || error);
+                }
+            } else {
+                updateSignupData({
+                    prescription_file: documentFile,
+                    health_note: doctorNotes,
+                });
+                navigation.navigate('MedicineDetailScreen');
+            }
         }
     };
 
@@ -222,10 +323,13 @@ const DoctorDescriptionScreen = ({ navigation }) => {
             <View style={styles.footer}>
                 <TouchableOpacity
                     style={styles.button}
+                    disabled={isLoading}
                     onPress={handleContinue}>
-                    <Text style={styles.buttonText}>
-                        Next
-                    </Text>
+                        {isLoading ? (
+                            <ActivityIndicator size={'large'} color={COLORS.white} />
+                        ) : (
+                            <Text style={styles.buttonText}>Next</Text>
+                        )}
                 </TouchableOpacity>
             </View>
             </View>

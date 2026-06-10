@@ -30,6 +30,7 @@ const SplashScreen = ({ navigation }) => {
 
     const onGetDataList = async () => {
         try {
+            // navigation.navigate('TabStack');
             const accessToken = await AsyncStorage.getItem('accessToken');
             console.log('Access Token:', accessToken);
             const goalRes = await onGetWithoutTokenCommonApi('goals');

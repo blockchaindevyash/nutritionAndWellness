@@ -68,9 +68,9 @@ const MealDetailScreen = ({ navigation, route }) => {
                                 colors={["#fc6127", "#faa181"]}
                                 style={styles.mealCard}>
                                 <View style={{padding: 15}}>
-                                <Text style={styles.mealTitle}>{meal.title}</Text>
-                                <Text style={styles.mealDesc}>{meal.data}</Text>
-                                <Text style={styles.kcalText}>{meal.kcal} kcal</Text>
+                                    <Text style={styles.mealTitle}>{meal.title}</Text>
+                                    <Text style={styles.mealDesc}>{meal.data}</Text>
+                                    <Text style={styles.kcalText}>{meal.kcal} kcal</Text>
                                 </View>
                             </LinearGradient>
                         ))}

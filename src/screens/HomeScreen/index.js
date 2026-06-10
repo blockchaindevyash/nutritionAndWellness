@@ -100,7 +100,7 @@ const HomeScreen = ({ navigation }) => {
           <Image source={plus} style={styles.addImage} />
         </TouchableOpacity>
       </View>
-      <View style={{ height: '92%', backgroundColor: COLORS.backColor, padding: 16 }}>
+      <View style={{height: '92%', backgroundColor: COLORS.backColor, padding: 16}}>
         <FlatList
           data={recipeList}
           numColumns={2}
@@ -119,7 +119,7 @@ const HomeScreen = ({ navigation }) => {
             </View>
           )}
           renderItem={({ item }) => (
-            <TouchableOpacity style={styles.dishCard} onPress={() => navigation.navigate('RecipeScreen', { item: item })}>
+            <TouchableOpacity style={styles.dishCard} onPress={() => navigation.navigate('RecipeScreen', {item: item})}>
               <Image source={{uri: item.recipe_image_url}} style={styles.dishImage} />
               <Text style={styles.cardTitle}>{item.recipe_name}</Text>
             </TouchableOpacity>

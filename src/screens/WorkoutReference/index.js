@@ -45,9 +45,9 @@ const WorkoutReference = ({ navigation }) => {
 
     // 🔹 Next button
     const handleNext = async () => {
-        if (selected.length === 0) {
+        if (selected == '') {
             showMessage({
-                message: 'Please select at least one option',
+                message: 'Please select atleast one workout option',
                 type: 'danger',
                 duration: 4000,
                 icon: 'danger',

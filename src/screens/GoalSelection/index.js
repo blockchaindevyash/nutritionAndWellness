@@ -79,16 +79,12 @@ const GoalSelection = ({ navigation, route }) => {
                         case "jpeg":
                             mimeType = "image/jpeg";
                             break;
-
                         case "png":
                             mimeType = "image/png";
                             break;
-
                         case "webp":
                             mimeType = "image/webp";
                             break;
-
-                        // PDF
                         case "pdf":
                             mimeType = "application/pdf";
                             break;

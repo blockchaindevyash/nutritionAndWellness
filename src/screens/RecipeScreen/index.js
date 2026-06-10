@@ -117,7 +117,6 @@ const RecipeScreen = ({ navigation, route }) => {
             </View>
             <View style={styles.headerRowView}>
               <Text style={styles.dishTitle}>{item?.recipe_name}</Text>
-              
             </View>
             <View style={styles.infoRow}>
               <View style={styles.infoCard}>

@@ -31,16 +31,13 @@ const MedicineDetailScreen = ({ navigation }) => {
     const [dosage, setDosage] = useState("");
     const [timing, setTiming] = useState("");
     const [notes, setNotes] = useState("");
-
     const [medicineList, setMedicineList] = useState([]);
 
     const addMedicine = () => {
-
         if (!medicineName.trim()) {
             Alert.alert("Required", "Please enter medicine name");
             return;
         }
-
         const newMedicine = {
             id: Date.now(),
             medicine_name: medicineName,
@@ -48,10 +45,7 @@ const MedicineDetailScreen = ({ navigation }) => {
             timing,
             additional_notes: notes,
         };
-
         setMedicineList(prev => [...prev, newMedicine]);
-
-        // Clear fields
         setMedicineName("");
         setDosage("");
         setTiming("");
@@ -59,11 +53,9 @@ const MedicineDetailScreen = ({ navigation }) => {
     };
 
     const removeMedicine = (id) => {
-
         const updated = medicineList.filter(
             item => item.id !== id
         );
-
         setMedicineList(updated);
     };
 
@@ -91,7 +83,6 @@ const MedicineDetailScreen = ({ navigation }) => {
         // "Success",
         // "Medicine details saved successfully"
         // );
-
         // navigation.navigate("NextScreen", { medicineList });
     };
 
@@ -132,7 +123,6 @@ const MedicineDetailScreen = ({ navigation }) => {
                                 value={medicineName}
                                 onChangeText={setMedicineName}
                                 style={styles.input}
-                                
                             />
                         </View>
                         {/* Dosage */}

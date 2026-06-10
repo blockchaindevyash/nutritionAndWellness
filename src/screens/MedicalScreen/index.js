@@ -32,7 +32,7 @@ const medicalOptions = [
 ];
 
 const MedicalScreen = ({ navigation, route }) => {
-    const {updateSignupData, medicalList, profileData, updateProfileData} = useAuthStore();
+    const { updateSignupData, medicalList, profileData, updateProfileData } = useAuthStore();
     const orientation = useOrientation(); // Get current orientation
     const isPortrait = orientation === 'portrait';
     const styles = isPortrait ? portraitStyles : landscapeStyles;
@@ -58,34 +58,24 @@ const MedicalScreen = ({ navigation, route }) => {
         // NONE SELECTED
         // -----------------------------------------
         if (item.name === "None") {
-
-        updated = [item.id];
-
+            updated = [item.id];
         } else {
-
-        // Remove NONE if any other selected
-        const noneItem = medicalList.find(
-            (v) => v.name === "None"
-        );
-
-        updated = updated.filter(
-            (id) => id !== noneItem?.id
-        );
-
-        // Already Selected
-        if (updated.includes(item.id)) {
-
-            updated = updated.filter(
-            (id) => id !== item.id
+            // Remove NONE if any other selected
+            const noneItem = medicalList.find(
+                (v) => v.name === "None"
             );
-
-        } else {
-
-            updated.push(item.id);
-
+            updated = updated.filter(
+                (id) => id !== noneItem?.id
+            );
+            // Already Selected
+            if (updated.includes(item.id)) {
+                updated = updated.filter(
+                    (id) => id !== item.id
+                );
+            } else {
+                updated.push(item.id);
+            }
         }
-        }
-
         setSelected(updated);
     };
 
@@ -101,97 +91,92 @@ const MedicalScreen = ({ navigation, route }) => {
             return;
         } else {
             if (fromAccount) {
-                            try {
-                                setIsLoading(true);
-                                const imageUrl = profileData.prescription_file;
-                                const extension = imageUrl.split(".").pop().toLowerCase();
-                                let mimeType = "image/png";
-                                switch (extension) {
-                                    case "jpg":
-                                    case "jpeg":
-                                        mimeType = "image/jpeg";
-                                        break;
-            
-                                    case "png":
-                                        mimeType = "image/png";
-                                        break;
-            
-                                    case "webp":
-                                        mimeType = "image/webp";
-                                        break;
-            
-                                    // PDF
-                                    case "pdf":
-                                        mimeType = "application/pdf";
-                                        break;
-                                }
-                                const imageFile = {
-                                    uri: imageUrl,
-                                    type: mimeType,
-                                    name: imageUrl.split('/').pop(),
-                                };
-                                const goalIds = profileData?.goal.map(item => item.id);
-                                // const medicalIds = profileData?.medical_condition.map(item => item.id);
-                                console.log('Profile Data for API:', goalIds, profileData?.current_medicine);
-                                var formdata = new FormData();
-                                formdata.append("name", profileData?.name);
-                                formdata.append("dob", profileData?.dob);
-                                formdata.append("gender", profileData?.gender);
-                                formdata.append("height", profileData?.height);
-                                formdata.append("weight", profileData?.weight);
-                                formdata.append("diet", profileData?.diet?.id);
-                                formdata.append("activity_level", profileData?.activity_level?.id);
-                                formdata.append("medical_condition_text", profileData?.medical_condition_text);
-                                formdata.append("prescription_file", imageFile);
-                                formdata.append("health_note", profileData?.health_note);
-                                goalIds.forEach(id => {
-                                    formdata.append("goal[]", id);
-                                });
-            
-                                selected.forEach(id => {
-                                    formdata.append("medical_condition[]", id);
-                                });
-            
-                                profileData?.current_medicine?.forEach((medicine, index) => {
-                                    formdata.append(`current_medicine[${index}][medicine_name]`, medicine.medicine_name);
-                                    formdata.append(`current_medicine[${index}][dosage]`, medicine.dosage);
-                                    formdata.append(`current_medicine[${index}][timing]`, medicine.timing);
-                                    formdata.append(`current_medicine[${index}][additional_notes]`, medicine.additional_notes);
-                                });
-                                formdata.append("workout_reference", profileData?.workout_reference?.id);
-            
-                                const response = await onAddCommonFormApi('user/profile', formdata);
-                                if (response.data.status) {
-                                    showMessage({
-                                        message: 'Profile updated successfully',
-                                        type: 'success',
-                                        duration: 4000,
-                                        icon: 'success',
-                                    });
-                                    const profileRes = await onGetCommonApi('user/profile');
-                                    updateProfileData(profileRes.data.data);
-                                    setIsLoading(false);
-                                    navigation.goBack();
-                                } else {
-                                    showMessage({
-                                        message: response.data.message,
-                                        type: 'danger',
-                                        duration: 4000,
-                                        icon: 'danger',
-                                    });
-                                    setIsLoading(false);
-                                }
-                            } catch (error) {
-                                showMessage({
-                                    message: 'Error updating profile',
-                                    type: 'danger',
-                                    duration: 4000,
-                                    icon: 'danger',
-                                });
-                                setIsLoading(false);
-                                console.log('Error saving profile data:', error.response || error);
-                            }
-                        } else {
+                try {
+                    setIsLoading(true);
+                    const imageUrl = profileData.prescription_file;
+                    const extension = imageUrl.split(".").pop().toLowerCase();
+                    let mimeType = "image/png";
+                    switch (extension) {
+                        case "jpg":
+                        case "jpeg":
+                            mimeType = "image/jpeg";
+                            break;
+                        case "png":
+                            mimeType = "image/png";
+                            break;
+                        case "webp":
+                            mimeType = "image/webp";
+                            break;
+                        // PDF
+                        case "pdf":
+                            mimeType = "application/pdf";
+                            break;
+                    }
+                    const imageFile = {
+                        uri: imageUrl,
+                        type: mimeType,
+                        name: imageUrl.split('/').pop(),
+                    };
+                    const goalIds = profileData?.goal.map(item => item.id);
+                    // const medicalIds = profileData?.medical_condition.map(item => item.id);
+                    console.log('Profile Data for API:', goalIds, profileData?.current_medicine);
+                    var formdata = new FormData();
+                    formdata.append("name", profileData?.name);
+                    formdata.append("dob", profileData?.dob);
+                    formdata.append("gender", profileData?.gender);
+                    formdata.append("height", profileData?.height);
+                    formdata.append("weight", profileData?.weight);
+                    formdata.append("diet", profileData?.diet?.id);
+                    formdata.append("activity_level", profileData?.activity_level?.id);
+                    formdata.append("medical_condition_text", otherText);
+                    formdata.append("prescription_file", imageFile);
+                    formdata.append("health_note", profileData?.health_note);
+                    goalIds.forEach(id => {
+                        formdata.append("goal[]", id);
+                    });
+                    selected.forEach(id => {
+                        formdata.append("medical_condition[]", id);
+                    });
+                    profileData?.current_medicine?.forEach((medicine, index) => {
+                        formdata.append(`current_medicine[${index}][medicine_name]`, medicine.medicine_name);
+                        formdata.append(`current_medicine[${index}][dosage]`, medicine.dosage);
+                        formdata.append(`current_medicine[${index}][timing]`, medicine.timing);
+                        formdata.append(`current_medicine[${index}][additional_notes]`, medicine.additional_notes);
+                    });
+                    formdata.append("workout_reference", profileData?.workout_reference?.id);
+
+                    const response = await onAddCommonFormApi('user/profile', formdata);
+                    if (response.data.status) {
+                        showMessage({
+                            message: 'Profile updated successfully',
+                            type: 'success',
+                            duration: 4000,
+                            icon: 'success',
+                        });
+                        const profileRes = await onGetCommonApi('user/profile');
+                        updateProfileData(profileRes.data.data);
+                        setIsLoading(false);
+                        navigation.goBack();
+                    } else {
+                        showMessage({
+                            message: response.data.message,
+                            type: 'danger',
+                            duration: 4000,
+                            icon: 'danger',
+                        });
+                        setIsLoading(false);
+                    }
+                } catch (error) {
+                    showMessage({
+                        message: 'Error updating profile',
+                        type: 'danger',
+                        duration: 4000,
+                        icon: 'danger',
+                    });
+                    setIsLoading(false);
+                    console.log('Error saving profile data:', error.response || error);
+                }
+            } else {
                 console.log("Medical Data:", selected);
                 updateSignupData({
                     medical_condition: selected,
@@ -221,7 +206,7 @@ const MedicalScreen = ({ navigation, route }) => {
                 <Header title={'Medical Conditions'} onPress={() => navigation.goBack()} />
             </View>
             <View style={[styles.container, { backgroundColor: COLORS.backColor }]}>
-                <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{paddingBottom: hp(10)}}>
+                <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: hp(10) }}>
                     <Text style={styles.subtitle}>This helps us personalize your diet plan</Text>
                     {medicalList.map((item) => {
                         const isSelected = selected.includes(item.id);
