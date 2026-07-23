@@ -16,6 +16,7 @@ import useOrientation from '../../components/OrientationComponent';
 import Header from '../../components/HeaderComponent';
 import { COLORS } from '../../utils';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { hp } from '../../components/responsive';
 
 const ProgramDetailScreen = ({ navigation, route }) => {
     const orientation = useOrientation(); // Get current orientation

@@ -272,7 +272,7 @@ const DoctorDescriptionScreen = ({navigation, route}) => {
                     </Text>
                     <TextInput
                         placeholder={`Example:\n• Avoid sugar\n• Low sodium diet\n• Daily walking recommended\n• Thyroid-friendly foods`}
-                        placeholderTextColor="#eee"
+                        placeholderTextColor="#b5b2b2"
                         multiline
                         value={doctorNotes}
                         onChangeText={setDoctorNotes}

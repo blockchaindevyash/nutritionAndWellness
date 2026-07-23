@@ -77,7 +77,7 @@ export const portraitStyles = StyleSheet.create({
   logoutText: {
     fontSize: normalize(18),
     fontFamily: Fonts.FONTS.PoppinsSemiBold,
-    color: COLORS.white,
+    color: '#fff',
   },
   detailView: {
     width: '100%',

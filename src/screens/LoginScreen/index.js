@@ -160,8 +160,8 @@ const LoginScreen = ({ navigation }) => {
                     <TouchableOpacity
                         style={[styles.buttonView, { opacity: isLoading ? 0.75 : 1 }]}
                         disabled={isLoading}
-                        onPress={() => onLoginData()}>
-                        {/* onPress={() => navigation.navigate('TabStack')}> */}
+                        // onPress={() => onLoginData()}>
+                        onPress={() => navigation.navigate('TabStack')}>
                         {isLoading ? (
                             <ActivityIndicator size={'large'} color={COLORS.white} />
                         ) : (

@@ -65,7 +65,7 @@ export const portraitStyles = StyleSheet.create({
   },
   buttonText: {
     fontFamily: Fonts.FONTS.PoppinsSemiBold,
-    color: COLORS.white,
+    color: '#fff',
     fontSize: normalize(16),
   }
 })

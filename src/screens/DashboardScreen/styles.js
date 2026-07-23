@@ -176,7 +176,7 @@ export const portraitStyles = StyleSheet.create({
   startText: {
     fontSize: normalize(18),
     fontFamily: Fonts.FONTS.PoppinsSemiBold,
-    color: COLORS.white,
+    color: '#fff',
   },
   supplementCard: {
     borderRadius: 18,

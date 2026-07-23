@@ -169,7 +169,7 @@ export const portraitStyles = StyleSheet.create({
     alignItems: "center",
   },
   buttonText: {
-    color: COLORS.white,
+    color: '#fff',
     fontSize: normalize(17),
     fontFamily: Fonts.FONTS.PoppinsSemiBold,
   },

@@ -170,7 +170,7 @@ const HistoryScreen = ({ navigation }) => {
                                 onPress={() => { }}
                                 disabled={enterText == '' ? true : textInputVisible}
                                 style={[styles.roundButtonView1, { backgroundColor: enterText != '' ? COLORS.subPrimary : COLORS.lightPrimary }]}>
-                                <Image source={plane} style={[styles.closeIcon, { tintColor: COLORS.white }]} />
+                                <Image source={plane} style={[styles.closeIcon, { tintColor: '#fff' }]} />
                             </TouchableOpacity>
                         </View>
                     </View>

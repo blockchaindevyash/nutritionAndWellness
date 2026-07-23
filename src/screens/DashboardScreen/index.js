@@ -24,7 +24,7 @@ import { LineChart } from "react-native-gifted-charts"
 
 const weeklyPlan = [
   {
-    date: "2026-05-18",
+    date: "2026-07-20",
     day: "Monday",
     calories: 1500,
     meals: {
@@ -52,7 +52,7 @@ const weeklyPlan = [
     ],
   },
   {
-    date: "2026-05-19",
+    date: "2026-07-21",
     day: "Tuesday",
     calories: 1500,
     meals: {
@@ -79,7 +79,7 @@ const weeklyPlan = [
     ],
   },
   {
-    date: "2026-05-20",
+    date: "2026-07-22",
     day: "Wednesday",
     calories: 1450,
     meals: {
@@ -106,7 +106,7 @@ const weeklyPlan = [
     ],
   },
   {
-    date: "2026-05-21",
+    date: "2026-07-23",
     day: "Thursday",
     calories: 1500,
     meals: {
@@ -133,7 +133,7 @@ const weeklyPlan = [
     ],
   },
   {
-    date: "2026-05-22",
+    date: "2026-07-24",
     day: "Friday",
     calories: 1500,
     meals: {
@@ -159,7 +159,7 @@ const weeklyPlan = [
     ],
   },
   {
-    date: "2026-05-23",
+    date: "2026-07-25",
     day: "Saturday",
     calories: 1550,
     meals: {
@@ -185,7 +185,7 @@ const weeklyPlan = [
     ],
   },
   {
-    date: "2026-05-24",
+    date: "2026-07-26",
     day: "Sunday",
     calories: 1400,
     meals: {

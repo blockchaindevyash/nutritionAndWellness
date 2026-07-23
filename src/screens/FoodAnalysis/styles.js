@@ -83,7 +83,7 @@ export const portraitStyles = StyleSheet.create({
   analysisText: {
     fontSize: normalize(18),
     fontFamily: Fonts.FONTS.PoppinsSemiBold,
-    color: COLORS.white,
+    color: '#fff',
   },
   foodImage: {
     width: '100%',

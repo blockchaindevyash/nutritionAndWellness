@@ -64,7 +64,7 @@ export const portraitStyles = StyleSheet.create({
   },
   signinText: {
     fontFamily: Fonts.FONTS.PoppinsBold,
-    color: COLORS.white,
+    color: '#fff',
     fontSize: hp(2.2),
   },
   signupView: {
@@ -74,7 +74,7 @@ export const portraitStyles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: hp(1),
-    backgroundColor: COLORS.white,
+    backgroundColor: '#fff',
     borderWidth: 0.4,
     borderColor: COLORS.greyColor,
   },
@@ -102,8 +102,8 @@ export const portraitStyles = StyleSheet.create({
     resizeMode: 'contain',
   },
   logoImage: {
-    width: wp(60),
-    height: hp(26),
+    width: wp(40),
+    height: hp(22),
     resizeMode: 'contain',
     alignSelf: 'center',
   },

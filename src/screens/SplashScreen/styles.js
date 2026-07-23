@@ -12,8 +12,8 @@ export const portraitStyles = StyleSheet.create({
     backgroundColor: COLORS.backColor,
   },
   logoImage: {
-    width: wp(80),
-    height: hp(35),
+    width: wp(50),
+    height: hp(28),
     resizeMode: 'contain',
   }
 })

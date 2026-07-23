@@ -32,7 +32,7 @@ export const portraitStyles = StyleSheet.create({
   },
   signinText: {
     fontFamily: Fonts.FONTS.PoppinsBold,
-    color: COLORS.white,
+    color: '#fff',
     fontSize: hp(2.2),
   },
   subtitle: {
@@ -141,7 +141,7 @@ export const landscapeStyles = StyleSheet.create({
   },
   signinText: {
     fontFamily: Fonts.FONTS.PoppinsBold,
-    color: COLORS.white,
+    color: '#fff',
     fontSize: hp(2.2),
   },
   titleText: {

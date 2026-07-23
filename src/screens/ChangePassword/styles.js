@@ -78,7 +78,7 @@ export const portraitStyles = StyleSheet.create({
   },
   signinText: {
     fontFamily: Fonts.FONTS.PoppinsSemiBold,
-    color: COLORS.white,
+    color: '#fff',
     fontSize: hp(2.2),
   },
   logoImage: {
@@ -171,7 +171,7 @@ export const landscapeStyles = StyleSheet.create({
   },
   signinText: {
     fontFamily: Fonts.FONTS.PoppinsMedium,
-    color: COLORS.white,
+    color: '#fff',
     fontSize: hp(2.2),
   },
   logoImage: {
