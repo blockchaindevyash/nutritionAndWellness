@@ -65,7 +65,7 @@ const MealDetailScreen = ({ navigation, route }) => {
                         {mealCards.map((meal, index) => (
                             <LinearGradient
                                 key={index}
-                                colors={["#fc6127", "#faa181"]}
+                                colors={["#79B433", "#a7db68"]}
                                 style={styles.mealCard}>
                                 <View style={{padding: 15}}>
                                     <Text style={styles.mealTitle}>{meal.title}</Text>

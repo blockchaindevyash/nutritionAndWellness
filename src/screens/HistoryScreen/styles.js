@@ -304,7 +304,7 @@ export const portraitStyles = StyleSheet.create({
     fontSize: normalize(20),
     fontFamily: Fonts.FONTS.PoppinsSemiBold,
     marginLeft: wp(3),
-    color: COLORS.white,
+    color: COLORS.secondary,
   },
   headerView: {
     height: '8%', 

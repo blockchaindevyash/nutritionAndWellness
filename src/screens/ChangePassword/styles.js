@@ -82,9 +82,10 @@ export const portraitStyles = StyleSheet.create({
     fontSize: hp(2.2),
   },
   logoImage: {
-    width: wp(40),
-    height: hp(20),
+    width: wp(35),
+    height: hp(17),
     resizeMode: 'contain',
+    marginTop: hp(3),
   },
   errorText: {
     fontSize: hp(1.8),

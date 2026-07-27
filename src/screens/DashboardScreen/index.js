@@ -363,11 +363,11 @@ const DashboardScreen = ({ navigation }) => {
             thickness={5}
             hideRules
             hideYAxisText
-            yAxisColor={COLORS.subPrimary}
+            yAxisColor={COLORS.secondary}
             showVerticalLines
             verticalLinesColor="rgba(14,164,164,0.5)"
-            xAxisColor={COLORS.subPrimary}
-            color={COLORS.subPrimary}
+            xAxisColor={COLORS.secondary}
+            color={COLORS.secondary}
             dataPointColor={COLORS.white}
           />
         </View>

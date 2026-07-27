@@ -29,7 +29,7 @@ export const portraitStyles = StyleSheet.create({
     overflow: "hidden",
     borderWidth: 2,
     borderStyle: "dashed",
-    borderColor: "#fc6127",
+    borderColor: COLORS.secondary,
   },
   recipeImage: {
     width: "100%",

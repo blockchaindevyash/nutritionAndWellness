@@ -138,8 +138,7 @@ const DoctorDescriptionScreen = ({navigation, route}) => {
                         showMessage({
                             message: 'Profile updated successfully',
                             type: 'success',
-                            duration: 4000,
-                            icon: 'success',
+                            duration: 4000,                            icon: 'success',
                         });
                         const profileRes = await onGetCommonApi('user/profile');
                         updateProfileData(profileRes.data.data);

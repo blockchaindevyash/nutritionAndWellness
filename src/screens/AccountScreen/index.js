@@ -58,24 +58,24 @@ const AccountScreen = ({ navigation }) => {
                     <Image style={{width: wp(10), height: hp(6), resizeMode: 'contain', tintColor: COLORS.white}} source={user} />
                     <View style={{marginLeft: wp(3)}}>
                         <Text style={styles.detailText}>{profileData?.name}</Text>
-                        <Text style={styles.detailText1}>Edit Profile</Text>
+                        <Text style={[styles.detailText1, {color: COLORS.greyColor}]}>Edit Profile</Text>
                     </View>
                     </View>
                     <TouchableOpacity onPress={() => navigation.navigate('EditScreen')}>
-                        <Image style={styles.editImage} source={pencil} />
+                        <Image style={[styles.editImage, {tintColor: COLORS.secondary}]} source={pencil} />
                     </TouchableOpacity>
                 </View>
                 <View style={styles.detailView}>
                     <View style={styles.optionView}>
-                        <Text style={styles.detailText}>Age</Text>
+                        <Text style={[styles.detailText,{color: COLORS.secondary}]}>Age</Text>
                         <Text style={styles.detailText1}>{calculateAge(profileData?.dob)}</Text>
                     </View>
                     <View style={styles.optionView}>
-                        <Text style={styles.detailText}>Height</Text>
+                        <Text style={[styles.detailText,{color: COLORS.secondary}]}>Height</Text>
                         <Text style={styles.detailText1}>{profileData?.height} cm</Text>
                     </View>
                     <View style={styles.optionView}>
-                        <Text style={styles.detailText}>Weight</Text>
+                        <Text style={[styles.detailText,{color: COLORS.secondary}]}>Weight</Text>
                         <Text style={styles.detailText1}>{profileData?.weight}</Text>
                     </View>
                 </View>

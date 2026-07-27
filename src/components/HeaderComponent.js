@@ -24,7 +24,7 @@ const Header = ({title, onPress}) => {
                 <TouchableOpacity onPress={onPress}>
                     <Image style={styles.backIcon} source={backArrow} />
                 </TouchableOpacity>
-                <Text style={[styles.titleHeader, { color: COLORS.white }]}>
+                <Text style={[styles.titleHeader, { color: COLORS.secondary }]}>
                     {title}
                 </Text>
             </View>
@@ -69,7 +69,7 @@ const portraitStyles = StyleSheet.create({
         width: wp(6),
         height: hp(4),
         resizeMode: 'contain',
-        tintColor: COLORS.white,
+        tintColor: COLORS.secondary,
     },
     bellButtonView: {
         width: wp(13),

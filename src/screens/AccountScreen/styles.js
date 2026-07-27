@@ -50,7 +50,7 @@ export const portraitStyles = StyleSheet.create({
   detailText1: {
     fontSize: normalize(16),
     fontFamily: Fonts.FONTS.PoppinsMedium,
-    color: COLORS.greyColor,
+    color: COLORS.secondary,
   },
   optionView: {
     width: '100%',

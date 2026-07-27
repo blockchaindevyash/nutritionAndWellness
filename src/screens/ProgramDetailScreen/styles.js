@@ -23,7 +23,7 @@ export const portraitStyles = StyleSheet.create({
   },
   subtitle: {
     marginVertical: 10,
-    color: COLORS.subPrimary,
+    color: COLORS.secondary,
     fontFamily: Fonts.FONTS.PoppinsSemiBold,
     fontSize: normalize(18),
   },

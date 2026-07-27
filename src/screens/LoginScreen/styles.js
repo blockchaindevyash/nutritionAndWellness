@@ -48,7 +48,7 @@ export const portraitStyles = StyleSheet.create({
   },
   forgotPassword: {
     fontFamily: Fonts.FONTS.PoppinsSemiBold,
-    color: COLORS.white,
+    color: COLORS.secondary,
     fontSize: hp(2),
     textAlign: 'right',
     marginTop: hp(1),
@@ -80,7 +80,7 @@ export const portraitStyles = StyleSheet.create({
   },
   signupText: {
     fontFamily: Fonts.FONTS.PoppinsSemiBold,
-    color: COLORS.black,
+    color: COLORS.secondary,
     fontSize: hp(2.2),
   },
   haveAnAccount: {

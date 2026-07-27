@@ -36,7 +36,7 @@ export const portraitStyles = StyleSheet.create({
   cardTitle: {
     fontSize: normalize(16),
     fontFamily: Fonts.FONTS.PoppinsMedium,
-    color: COLORS.white,
+    color: COLORS.secondary,
   },
   topRow: {
     flexDirection: "row",
@@ -62,13 +62,14 @@ export const portraitStyles = StyleSheet.create({
     borderRadius: 5,
   },
   viewButtonText: {
-    color: COLORS.white,
-    fontWeight: "700",
+    color: COLORS.secondary,
+    fontFamily: Fonts.FONTS.PoppinsSemiBold,
+    fontSize: normalize(14),
   },
   cardTitle: {
-    color: COLORS.white,
+    color: COLORS.secondary,
     fontSize: 24,
-    fontWeight: "700",
+    fontFamily: Fonts.FONTS.PoppinsSemiBold,
     marginTop: 20,
     marginBottom: 20,
   },
@@ -130,7 +131,7 @@ export const landscapeStyles = StyleSheet.create({
   cardTitle: {
     fontSize: normalize(16),
     fontFamily: Fonts.FONTS.PoppinsMedium,
-    color: COLORS.white,
+    color: COLORS.secondary,
   },
   topRow: {
     flexDirection: "row",
@@ -155,8 +156,9 @@ export const landscapeStyles = StyleSheet.create({
     borderRadius: 5,
   },
   viewButtonText: {
-    color: COLORS.white,
-    fontWeight: "700",
+    color: COLORS.secondary,
+    fontFamily: Fonts.FONTS.PoppinsSemiBold,
+    fontSize: normalize(14),
   },
   cardTitle: {
     color: COLORS.white,

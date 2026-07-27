@@ -39,7 +39,7 @@ export const portraitStyles = StyleSheet.create({
     backgroundColor: COLORS.primary,
   },
   cardTitle: {
-    color: COLORS.white,
+    color: COLORS.secondary,
     fontSize: normalize(18),
     fontFamily: Fonts.FONTS.PoppinsSemiBold,
     marginBottom: 15,
@@ -57,7 +57,7 @@ export const portraitStyles = StyleSheet.create({
   limitText: {
     alignSelf: "flex-end",
     marginTop: 8,
-    color: "#fff",
+    color: COLORS.white,
     opacity: 0.8,
     fontFamily: Fonts.FONTS.PoppinsRegular,
   },
@@ -67,13 +67,14 @@ export const portraitStyles = StyleSheet.create({
   },
   uploadTitle: {
     fontSize: 18,
-    fontWeight: "700",
+    fontFamily: Fonts.FONTS.PoppinsSemiBold,
     marginBottom: 12,
-    color: COLORS.white,
+    color: COLORS.secondary,
   },
   uploadBox: {
     borderWidth: 2,
     borderStyle: "dashed",
+    borderColor: COLORS.secondary,
     borderRadius: 18,
     paddingVertical: 30,
     alignItems: "center",
@@ -138,7 +139,7 @@ export const portraitStyles = StyleSheet.create({
     fontSize: normalize(18),
     fontFamily: Fonts.FONTS.PoppinsSemiBold,
     marginBottom: 15,
-    color: COLORS.white,
+    color: COLORS.secondary,
   },
   tagsContainer: {
     flexDirection: "row",
@@ -226,14 +227,14 @@ export const landscapeStyles = StyleSheet.create({
     backgroundColor: "rgba(255,255,255,0.15)",
     borderRadius: 15,
     padding: 15,
-    color: "#fff",
+    color: COLORS.white,
     fontSize: 15,
     lineHeight: 24,
   },
   limitText: {
     alignSelf: "flex-end",
     marginTop: 8,
-    color: "#fff",
+    color: COLORS.white,
     opacity: 0.8,
   },
   uploadContainer: {

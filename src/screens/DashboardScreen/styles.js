@@ -22,7 +22,7 @@ export const portraitStyles = StyleSheet.create({
   greeting: {
     fontSize: normalize(18),
     fontFamily: Fonts.FONTS.PoppinsSemiBold,
-    color: COLORS.white,
+    color: COLORS.secondary,
   },
   subText: {
     color: COLORS.white,
@@ -156,7 +156,7 @@ export const portraitStyles = StyleSheet.create({
   sectionTitle: {
     fontSize: normalize(20),
     fontFamily: Fonts.FONTS.PoppinsSemiBold,
-    color: COLORS.white,
+    color: COLORS.secondary,
     marginBottom: 10,
   },
   exerciseText: {
@@ -236,7 +236,7 @@ export const landscapeStyles = StyleSheet.create({
     color: COLORS.white,
   },
   subText: {
-    color: COLORS.white,
+    color: COLORS.secondary,
     fontFamily: Fonts.FONTS.PoppinsMedium,
     fontSize: normalize(14),
     marginBottom: 16,

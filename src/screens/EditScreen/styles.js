@@ -82,7 +82,7 @@ export const portraitStyles = StyleSheet.create({
   logoutText: {
     fontSize: normalize(18),
     fontFamily: Fonts.FONTS.PoppinsSemiBold,
-    color: COLORS.white,
+    color: '#fff',
   },
   detailView: {
     width: '100%',
@@ -102,6 +102,7 @@ export const portraitStyles = StyleSheet.create({
     color: COLORS.greyColor,
     fontFamily: Fonts.FONTS.PoppinsMedium,
     fontSize: hp(2.1),
+    paddingLeft: wp(2),
   },
   dropdownView: {
     flexDirection: 'row',

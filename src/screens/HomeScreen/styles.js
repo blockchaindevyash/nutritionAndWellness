@@ -11,7 +11,7 @@ export const portraitStyles = StyleSheet.create({
   callLogText: {
     fontSize: normalize(20),
     fontFamily: Fonts.FONTS.PoppinsSemiBold,
-    color: COLORS.white,
+    color: COLORS.secondary,
   },
   headerView: {
     height: '8%',
@@ -26,7 +26,7 @@ export const portraitStyles = StyleSheet.create({
     width: wp(5),
     height: hp(3),
     resizeMode: 'contain',
-    tintColor: COLORS.white,
+    tintColor: COLORS.secondary,
   },
   titleText: {
     fontSize: normalize(16),
@@ -139,7 +139,7 @@ export const portraitStyles = StyleSheet.create({
   emptyText: {
     fontSize: hp(2.5),
     fontFamily: Fonts.FONTS.PoppinsMedium,
-    color: COLORS.white,
+    color: COLORS.secondary,
   },
 })
 
