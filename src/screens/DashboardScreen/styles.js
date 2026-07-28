@@ -17,10 +17,10 @@ export const portraitStyles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: COLORS.backColor,
-    padding: 16,
+    padding: wp(4),
   },
   greeting: {
-    fontSize: normalize(18),
+    fontSize: normalize(20),
     fontFamily: Fonts.FONTS.PoppinsSemiBold,
     color: COLORS.secondary,
   },
@@ -28,13 +28,59 @@ export const portraitStyles = StyleSheet.create({
     color: COLORS.white,
     fontFamily: Fonts.FONTS.PoppinsMedium,
     fontSize: normalize(14),
-    marginBottom: 16,
+    marginBottom: hp(2),
+  },
+  stepCard: {
+    backgroundColor: COLORS.primary,
+    padding: wp(4),
+    borderRadius: 10,
+    marginBottom: hp(2),
+    borderWidth: 1,
+    borderColor: COLORS.primary,
+  },
+  stepHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: hp(1),
+  },
+  stepTitle: {
+    fontSize: normalize(16),
+    color: COLORS.white,
+    fontFamily: Fonts.FONTS.PoppinsSemiBold,
+  },
+  stepBadge: {
+    fontSize: normalize(14),
+    color: COLORS.secondary,
+    fontFamily: Fonts.FONTS.PoppinsSemiBold,
+  },
+  stepCount: {
+    fontSize: normalize(32),
+    color: COLORS.white,
+    fontFamily: Fonts.FONTS.PoppinsSemiBold,
+    marginBottom: hp(0.5),
+  },
+  stepGoalText: {
+    fontSize: normalize(13),
+    color: 'rgba(255,255,255,0.72)',
+    fontFamily: Fonts.FONTS.PoppinsMedium,
+    marginBottom: hp(1.5),
+  },
+  stepProgressBar: {
+    height: hp(1),
+    backgroundColor: 'rgba(255,255,255,0.12)',
+    borderRadius: hp(1),
+    overflow: 'hidden',
+  },
+  stepProgressFill: {
+    height: '100%',
+    backgroundColor: COLORS.secondary,
   },
   card: {
     backgroundColor: COLORS.primary,
-    padding: 16,
-    borderRadius: 5,
-    marginBottom: 14,
+    padding: wp(4),
+    borderRadius: 10,
+    marginBottom: hp(1.75),
   },
   bigText: {
     fontSize: normalize(18),
@@ -43,10 +89,11 @@ export const portraitStyles = StyleSheet.create({
     marginBottom: 10,
   },
   button: {
-    marginTop: 10,
+    marginTop: hp(1),
     backgroundColor: COLORS.subPrimary,
-    padding: 6,
-    borderRadius: 5,
+    paddingVertical: hp(1.2),
+    paddingHorizontal: wp(3),
+    borderRadius: 10,
     alignItems: 'center',
   },
   buttonText: {
@@ -56,8 +103,8 @@ export const portraitStyles = StyleSheet.create({
   },
   tipCard: {
     backgroundColor: COLORS.primary,
-    padding: 12 ,
-    borderRadius: 5,
+    padding: wp(3),
+    borderRadius: 10,
   },
   tipText: {
     fontSize: normalize(12),
@@ -79,7 +126,7 @@ export const portraitStyles = StyleSheet.create({
   dishImage: {
     width: '100%',
     height: hp(23),
-    borderRadius: 8,
+    borderRadius: 10,
   },
   cardTitle: {
     fontSize: normalize(18),
@@ -93,7 +140,7 @@ export const portraitStyles = StyleSheet.create({
     backgroundColor: COLORS.primary,
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 8,
+    borderRadius: 10,
   },
   header: {
     flexDirection: "row",
@@ -106,11 +153,11 @@ export const portraitStyles = StyleSheet.create({
   dayBox: {
     alignItems: "center",
     backgroundColor: COLORS.primary,
-    padding: hp(1),
-    borderRadius: 5,
+    padding: hp(1.2),
+    borderRadius: 10,
   },
   date: {
-    marginBottom: 10,
+    marginBottom: hp(1),
     fontFamily: Fonts.FONTS.PoppinsSemiBold,
     fontSize: normalize(15),
     color: COLORS.white,
@@ -157,7 +204,7 @@ export const portraitStyles = StyleSheet.create({
     fontSize: normalize(20),
     fontFamily: Fonts.FONTS.PoppinsSemiBold,
     color: COLORS.secondary,
-    marginBottom: 10,
+    marginBottom: hp(1),
   },
   exerciseText: {
     fontSize: normalize(16),
@@ -169,8 +216,8 @@ export const portraitStyles = StyleSheet.create({
     backgroundColor: COLORS.subPrimary,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 6,
-    borderRadius: 5,
+    paddingVertical: hp(1),
+    borderRadius: 10,
     marginTop: hp(2),
   },
   startText: {
@@ -179,8 +226,8 @@ export const portraitStyles = StyleSheet.create({
     color: '#fff',
   },
   supplementCard: {
-    borderRadius: 18,
-    padding: 16,
+    borderRadius: 10,
+    padding: wp(4),
     marginBottom: hp(1),
   },
   supplementTopRow: {
@@ -202,9 +249,9 @@ export const portraitStyles = StyleSheet.create({
   },
   dosageBox: {
     backgroundColor: "rgba(255,255,255,0.2)",
-    paddingVertical: 5,
-    paddingHorizontal: 12,
-    borderRadius: 5,
+    paddingVertical: hp(0.75),
+    paddingHorizontal: wp(3),
+    borderRadius: 10,
   },
   dosageText: {
     color: COLORS.white,
@@ -228,24 +275,70 @@ export const landscapeStyles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: COLORS.backColor,
-    padding: 16,
+    padding: wp(4),
   },
   greeting: {
-    fontSize: normalize(18),
+    fontSize: normalize(20),
     fontFamily: Fonts.FONTS.PoppinsSemiBold,
-    color: COLORS.white,
+    color: COLORS.secondary,
   },
   subText: {
-    color: COLORS.secondary,
+    color: COLORS.white,
     fontFamily: Fonts.FONTS.PoppinsMedium,
     fontSize: normalize(14),
-    marginBottom: 16,
+    marginBottom: hp(2),
+  },
+  stepCard: {
+    backgroundColor: 'rgba(121, 180, 51, 0.15)',
+    padding: wp(4),
+    borderRadius: 10,
+    marginBottom: hp(2),
+    borderWidth: 1,
+    borderColor: 'rgba(121, 180, 51, 0.28)',
+  },
+  stepHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: hp(1),
+  },
+  stepTitle: {
+    fontSize: normalize(16),
+    color: COLORS.white,
+    fontFamily: Fonts.FONTS.PoppinsSemiBold,
+  },
+  stepBadge: {
+    fontSize: normalize(14),
+    color: COLORS.secondary,
+    fontFamily: Fonts.FONTS.PoppinsSemiBold,
+  },
+  stepCount: {
+    fontSize: normalize(32),
+    color: COLORS.white,
+    fontFamily: Fonts.FONTS.PoppinsSemiBold,
+    marginBottom: hp(0.5),
+  },
+  stepGoalText: {
+    fontSize: normalize(13),
+    color: 'rgba(255,255,255,0.72)',
+    fontFamily: Fonts.FONTS.PoppinsMedium,
+    marginBottom: hp(1.5),
+  },
+  stepProgressBar: {
+    height: hp(1),
+    backgroundColor: 'rgba(255,255,255,0.12)',
+    borderRadius: hp(1),
+    overflow: 'hidden',
+  },
+  stepProgressFill: {
+    height: '100%',
+    backgroundColor: COLORS.secondary,
   },
   card: {
     backgroundColor: COLORS.primary,
-    padding: 16,
-    borderRadius: 5,
-    marginBottom: 14,
+    padding: wp(4),
+    borderRadius: 10,
+    marginBottom: hp(1.75),
   },
   bigText: {
     fontSize: normalize(18),
@@ -254,10 +347,11 @@ export const landscapeStyles = StyleSheet.create({
     marginBottom: 10,
   },
   button: {
-    marginTop: 10,
+    marginTop: hp(1),
     backgroundColor: COLORS.subPrimary,
-    padding: 6,
-    borderRadius: 5,
+    paddingVertical: hp(1.2),
+    paddingHorizontal: wp(3),
+    borderRadius: 10,
     alignItems: 'center',
   },
   buttonText: {
@@ -267,8 +361,8 @@ export const landscapeStyles = StyleSheet.create({
   },
   tipCard: {
     backgroundColor: COLORS.primary,
-    padding: 12 ,
-    borderRadius: 5,
+    padding: wp(3),
+    borderRadius: 10,
   },
   tipText: {
     fontSize: normalize(12),
@@ -290,7 +384,7 @@ export const landscapeStyles = StyleSheet.create({
   dishImage: {
     width: '100%',
     height: hp(23),
-    borderRadius: 8,
+    borderRadius: 10,
   },
   cardTitle: {
     fontSize: normalize(18),
@@ -304,7 +398,7 @@ export const landscapeStyles = StyleSheet.create({
     backgroundColor: COLORS.primary,
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 8,
+    borderRadius: 10,
   },
   header: {
     flexDirection: "row",
@@ -317,11 +411,11 @@ export const landscapeStyles = StyleSheet.create({
   dayBox: {
     alignItems: "center",
     backgroundColor: COLORS.primary,
-    padding: hp(1),
+    padding: hp(1.2),
     borderRadius: 5,
   },
   date: {
-    marginBottom: 10,
+    marginBottom: hp(1),
     fontFamily: Fonts.FONTS.PoppinsSemiBold,
     fontSize: normalize(15),
     color: COLORS.white,
@@ -345,7 +439,7 @@ export const landscapeStyles = StyleSheet.create({
     width: '100%',
     paddingVertical: hp(2),
     backgroundColor: COLORS.primary,
-    borderRadius: 8,
+    borderRadius: 10,
     marginVertical: hp(2),
     paddingHorizontal: wp(3),
   }

@@ -5698,6 +5698,13 @@ react-is@^19.1.0:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-19.2.4.tgz#a080758243c572ccd4a63386537654298c99d135"
   integrity sha512-W+EWGn2v0ApPKgKKCy/7s7WHXkboGcsrXE+2joLyVxkbyVQfO3MUEaUQDHoSmb8TFFrSKYa9mw64WZHNHSDzYA==
 
+react-native-accurate-step-counter@^2.0.4:
+  version "2.0.4"
+  resolved "https://registry.yarnpkg.com/react-native-accurate-step-counter/-/react-native-accurate-step-counter-2.0.4.tgz#6d9252bf6fc39cd8727e5f08db87f80696ffd633"
+  integrity sha512-DHYboQ15QwKw2JUAwDgLG2aEvwYEewaUVL9sWXW4g6O74BtZ+3zKG7FaeBbl9hAfm3yHfD6Vwce+G3/ShSj7Ug==
+  dependencies:
+    react-native-shake "^4.0.2"
+
 react-native-country-picker-modal@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/react-native-country-picker-modal/-/react-native-country-picker-modal-2.0.0.tgz#005421303349a81fedf5975e465405bb4b7312d5"
@@ -5770,6 +5777,16 @@ react-native-select-dropdown@^4.0.1:
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/react-native-select-dropdown/-/react-native-select-dropdown-4.0.1.tgz#5789bdf60742f8ca881391e6f47a5b285ee407d8"
   integrity sha512-t4se17kALFcPb9wMbxig5dS1BE3pWRC6HPuFlM0J2Y6yhB1GsLqboy6an6R9rML8pRuGIJIxL29cbwEvPQwKxQ==
+
+react-native-shake@^4.0.2:
+  version "4.0.2"
+  resolved "https://registry.yarnpkg.com/react-native-shake/-/react-native-shake-4.0.2.tgz#6ea91049a87709c0917d79d3478f60089dfeb86f"
+  integrity sha512-2niPeI2d5blkbtOwHZ9aoPEue5Uas2IViZKc3jMJ7NIycSQKBw/gRhEYl4mNagCOF6zD6b30lQRBEqhCZvkAoA==
+
+react-native-shake@^6.10.0:
+  version "6.10.0"
+  resolved "https://registry.yarnpkg.com/react-native-shake/-/react-native-shake-6.10.0.tgz#d81b3d000aa88450d9e89829e6024c1720d07260"
+  integrity sha512-L8LQimvIcTH2nVHCrIyYb+NdyvLrPvhzO9E28ZKnCbhvPrNAD8NbplPlj0fS/KrnFagUy2lL+DAbDHImSGZhTA==
 
 react-native-svg@^15.15.4:
   version "15.15.4"

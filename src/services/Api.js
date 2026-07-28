@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 
 export default class Api {
-  static baseUrl1 = 'https://soap.medendx.com/api/';
+  static baseUrl1 = 'https://nutriwellness.medendx.com/api/';
 }
 
 export const onLoginApi = async requestData => {

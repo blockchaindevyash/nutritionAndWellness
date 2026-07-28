@@ -21,10 +21,11 @@ import dish4 from '../../images/dish4.jpg';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { COLORS } from '../../utils';
 import { LineChart } from "react-native-gifted-charts"
+import { startCounter, stopCounter } from 'react-native-accurate-step-counter';
 
 const weeklyPlan = [
   {
-    date: "2026-07-20",
+    date: "2026-07-27",
     day: "Monday",
     calories: 1500,
     meals: {
@@ -52,7 +53,7 @@ const weeklyPlan = [
     ],
   },
   {
-    date: "2026-07-21",
+    date: "2026-07-28",
     day: "Tuesday",
     calories: 1500,
     meals: {
@@ -79,7 +80,7 @@ const weeklyPlan = [
     ],
   },
   {
-    date: "2026-07-22",
+    date: "2026-07-29",
     day: "Wednesday",
     calories: 1450,
     meals: {
@@ -106,7 +107,7 @@ const weeklyPlan = [
     ],
   },
   {
-    date: "2026-07-23",
+    date: "2026-07-30",
     day: "Thursday",
     calories: 1500,
     meals: {
@@ -133,7 +134,7 @@ const weeklyPlan = [
     ],
   },
   {
-    date: "2026-07-24",
+    date: "2026-07-31",
     day: "Friday",
     calories: 1500,
     meals: {
@@ -159,7 +160,7 @@ const weeklyPlan = [
     ],
   },
   {
-    date: "2026-07-25",
+    date: "2026-08-01",
     day: "Saturday",
     calories: 1550,
     meals: {
@@ -185,7 +186,7 @@ const weeklyPlan = [
     ],
   },
   {
-    date: "2026-07-26",
+    date: "2026-08-02",
     day: "Sunday",
     calories: 1400,
     meals: {
@@ -235,6 +236,9 @@ const DashboardScreen = ({ navigation }) => {
   const styles = isPortrait ? portraitStyles : landscapeStyles;
   const insets = useSafeAreaInsets();
   const [selectedDate, setSelectedDate] = useState(null);
+  const [steps, setSteps] = useState(0);
+  const stepGoal = 10000;
+  const progress = stepGoal > 0 ? Math.min(steps / stepGoal, 1) : 0;
 
   useEffect(() => {
     const today = new Date();
@@ -242,6 +246,35 @@ const DashboardScreen = ({ navigation }) => {
       day: today.toLocaleDateString('en-US', { weekday: 'short' }),
       date: today.toISOString().split('T')[0],
     });
+  }, []);
+
+  useEffect(() => {
+    if (Platform.OS !== 'android') {
+      console.warn('Step counter is only supported on Android.');
+      return;
+    }
+
+    const config = {
+      default_threshold: 15.0,
+      default_delay: 150000000,
+      cheatInterval: 3000,
+      onStepCountChange: (stepCount) => { setSteps(stepCount) },
+      onCheat: () => { console.log("User is Cheating") }
+    }
+
+    try {
+      startCounter(config);
+    } catch (error) {
+      console.warn('Unable to start step counter:', error);
+    }
+
+    return () => {
+      try {
+        stopCounter();
+      } catch (error) {
+        console.warn('Unable to stop step counter:', error);
+      }
+    }
   }, []);
 
   const getCurrentWeek = () => {
@@ -274,6 +307,19 @@ const DashboardScreen = ({ navigation }) => {
       <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: hp(8) }} showsVerticalScrollIndicator={false}>
         <Text style={styles.greeting}>👋 Good Morning, Yash</Text>
         <Text style={styles.subText}>You're doing great today!</Text>
+
+        <View style={styles.stepCard}>
+          <View style={styles.stepHeader}>
+            <Text style={styles.stepTitle}>Today's Steps</Text>
+            <Text style={styles.stepBadge}>{steps}</Text>
+          </View>
+          <Text style={styles.stepCount}>{steps.toLocaleString()}</Text>
+          <Text style={styles.stepGoalText}>{`${steps.toLocaleString()} / ${stepGoal.toLocaleString()} steps`}</Text>
+          <View style={styles.stepProgressBar}>
+            <View style={[styles.stepProgressFill, { width: `${progress * 100}%` }]} />
+          </View>
+        </View>
+
         {/* Week Header */}
         <View style={styles.header}>
           {weekDays.map((d, i) => (
