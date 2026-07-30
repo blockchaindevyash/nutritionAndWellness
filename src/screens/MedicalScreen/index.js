@@ -82,13 +82,7 @@ const MedicalScreen = ({ navigation, route }) => {
     // 🔹 Next button
     const handleNext = async () => {
         if (selected.length === 0) {
-            showMessage({
-                message: 'Please select at least one option',
-                type: 'danger',
-                duration: 4000,
-                icon: 'danger',
-            });
-            return;
+            navigation.navigate('DoctorDescription');
         } else {
             if (fromAccount) {
                 try {

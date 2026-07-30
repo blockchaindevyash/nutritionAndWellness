@@ -11,7 +11,7 @@ import {
     Modal,
     TouchableWithoutFeedback,
 } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { portraitStyles, landscapeStyles } from './styles';
 import useOrientation from '../../components/OrientationComponent';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -24,6 +24,7 @@ import SelectDropdown from 'react-native-select-dropdown';
 import down from '../../images/down.png';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import useAuthStore from '../../store/authStore';
+import { useFocusEffect } from '@react-navigation/native';
 
 const genderArray = [
     { id: 1, value: 'Male' },
@@ -48,6 +49,17 @@ const BasicInfoScreen = ({navigation, route}) => {
     const [isLoading, setIsLoading] = useState(false);
     const [dateModalVisible, setDateModalVisible] = useState(false);
     const styles = isPortrait ? portraitStyles : landscapeStyles;
+
+     useFocusEffect(
+            useCallback(() => {
+                if (signupData?.dob != '') {
+                    setDob(signupData?.dob ? moment(signupData?.dob, 'DD/MM/YYYY').toDate() : null);
+                    setGender(signupData?.gender);
+                    setHeight(signupData?.height);
+                    setWeight(signupData?.weight);
+                }
+            }, [signupData?.dob])
+        );
 
     const onBasicInfoData = () => {
         console.log(signupData);
@@ -215,7 +227,7 @@ const BasicInfoScreen = ({navigation, route}) => {
                             {'Height is required.'}
                         </Text>
                     )}
-                    <Text style={styles.titleText}>{'Weight (km)'}</Text>
+                    <Text style={styles.titleText}>{'Weight (kg)'}</Text>
                     <TextInput
                         value={weight}
                         onChangeText={text => {

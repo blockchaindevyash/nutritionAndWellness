@@ -17,7 +17,7 @@ import { COLORS, Fonts } from '../../utils/index';
 import view from '../../images/view.png';
 import hidden from '../../images/hidden.png';
 import logo from '../../images/logo.png';
-import CountryPicker from 'react-native-country-picker-modal';
+import CountryPicker, { DEFAULT_THEME } from 'react-native-country-picker-modal';
 import useAuthStore from '../../store/authStore';
 
 const SignupScreen = ({ navigation }) => {
@@ -37,7 +37,7 @@ const SignupScreen = ({ navigation }) => {
     const [apiError, setApiError] = useState(false);
     const [apiErrorMessage, setApiErrorMessage] = useState('');
     const [isLoading, setIsLoading] = useState(false);
-    const [countryCode, setCountryCode] = useState('91');
+    const [countryCode, setCountryCode] = useState('+1');
     const [countries, setCountries] = useState(null);
     const [isCountryPickerVisible, setCountryPickerVisibility] = useState(false);
     const [number, setNumber] = useState('');
@@ -74,7 +74,7 @@ const SignupScreen = ({ navigation }) => {
 
     const onSelect = country => {
         console.log('Get Selected Country', country);
-        setCountryCode(country.callingCode[0]);
+        setCountryCode(`+${country.callingCode[0]}`);
         setCountries(country);
     };
 
@@ -123,6 +123,7 @@ const SignupScreen = ({ navigation }) => {
                                 withCloseButton
                                 withCallingCode
                                 withFilter
+                                theme={{ ...DEFAULT_THEME, onBackgroundTextColor: '#000000' }}
                             />
                         )}
                         <View style={[styles.textInputView, { width: '75%' }]}>

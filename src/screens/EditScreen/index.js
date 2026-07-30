@@ -52,6 +52,16 @@ const EditScreen = ({ navigation }) => {
     const [isLoading, setIsLoading] = useState(false);
     const styles = isPortrait ? portraitStyles : landscapeStyles;
 
+    useEffect(() => {
+        if (profileData) {
+            setName(profileData?.name || '');
+            setDob(profileData?.dob || null);
+            setGender(profileData?.gender || '');
+            setHeight(profileData?.height || '');
+            setWeight(profileData?.weight || '');
+        }
+    }, [profileData]);
+
     const onSaveProfileData = async () => {
         if (name == '') {
             setNameError(true);
@@ -74,15 +84,12 @@ const EditScreen = ({ navigation }) => {
                 case "jpeg":
                     mimeType = "image/jpeg";
                     break;
-
                 case "png":
                     mimeType = "image/png";
                     break;
-
                 case "webp":
                     mimeType = "image/webp";
                     break;
-
                 // PDF
                 case "pdf":
                     mimeType = "application/pdf";
@@ -180,7 +187,7 @@ const EditScreen = ({ navigation }) => {
                         }}
                         placeholder="Enter Name"
                         placeholderTextColor={COLORS.greyColor}
-                        style={[styles.textInput, { color: COLORS.greyColor, width: '100%' }]}
+                        style={[styles.textInput, { color: COLORS.white, width: '100%' }]}
                         keyboardType={'email-address'}
                         textContentType={'none'}
                         autoCapitalize={'none'}
@@ -196,7 +203,7 @@ const EditScreen = ({ navigation }) => {
                     <Text
                         style={[
                             styles.textInput,
-                            { width: '100%', color: COLORS.greyColor },
+                            { width: '100%', color: COLORS.white },
                         ]}
                         onPress={() => setDateModalVisible(!dateModalVisible)}>
                         {dob != null ? moment(dob).format('DD/MM/YYYY') : 'DD/MM/YYYY'}
@@ -306,7 +313,7 @@ const EditScreen = ({ navigation }) => {
                         }}
                         placeholder="Enter Height"
                         placeholderTextColor={COLORS.greyColor}
-                        style={[styles.textInput, { color: COLORS.greyColor, width: '100%' }]}
+                        style={[styles.textInput, { color: COLORS.white, width: '100%' }]}
                     />
                 </View>
                 {heightError && (
@@ -323,7 +330,7 @@ const EditScreen = ({ navigation }) => {
                         }}
                         placeholder="Enter Weight"
                         placeholderTextColor={COLORS.greyColor}
-                        style={[styles.textInput, { color: COLORS.greyColor, width: '100%' }]}
+                        style={[styles.textInput, { color: COLORS.white, width: '100%' }]}
                     />
                 </View>
                 {weightError && (

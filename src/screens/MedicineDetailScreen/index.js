@@ -183,7 +183,7 @@ const MedicineDetailScreen = ({ navigation }) => {
                                 <View key={item.id} style={styles.medicineCard}>
                                     <View style={{ flex: 1 }}>
                                         <Text style={styles.medicineName}>
-                                            💊 {item.medicineName}
+                                            💊 {item.medicine_name}
                                         </Text>
                                         {!!item.dosage && (
                                             <Text style={styles.detailText}>

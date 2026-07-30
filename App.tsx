@@ -43,6 +43,7 @@ import recipeBook from './src/images/recipeBook.png';
 import user from './src/images/user.png';
 import chat from './src/images/messenger.png';
 import trend from './src/images/trend.png';
+import FlashMessage from 'react-native-flash-message';
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -308,6 +309,7 @@ const App = () => {
             options={{headerShown: false}}
           />
         </Stack.Navigator>
+        <FlashMessage position={'top'} />
       </NavigationContainer>
     </>
   );

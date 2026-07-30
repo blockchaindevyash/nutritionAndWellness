@@ -22,7 +22,7 @@ import useAuthStore from '../../store/authStore';
 import moment from 'moment';
 
 const AccountScreen = ({ navigation }) => {
-    const {profileData} = useAuthStore();
+    const {profileData, updateProfileData, updateSignupData} = useAuthStore();
     const orientation = useOrientation(); // Get current orientation
     const isPortrait = orientation === 'portrait';
     const insets = useSafeAreaInsets();
@@ -37,9 +37,40 @@ const AccountScreen = ({ navigation }) => {
 
     const calculateAge = (dob) => {
         return moment().diff(
-            moment(dob, "DD/MM/YYYY"),
+            moment(dob, "YYYY-MM-DD"),
             "years"
         );
+    };
+
+    const onLogout = async () => {
+        // Clear user data from AsyncStorage
+        AsyncStorage.removeItem('accessToken');
+        AsyncStorage.removeItem('userId');
+        updateProfileData(null);
+        updateSignupData({
+            name: "",
+            email: "",
+            mobileno: "",
+            password: "",
+            dob: "",
+            gender: "",
+            height: "",
+            weight: "",
+            goal: [],
+            diet: "",
+            activity_level: "",
+            medical_condition: [],
+            medical_condition_text: "",
+            prescription_file: null,
+            health_note: "",
+            current_medicine: [],
+            workout_reference: "",
+        });
+        // Navigate to the login screen
+        navigation.reset({
+            index: 0,
+            routes: [{ name: 'LoginScreen' }],
+        });
     };
 
     return (
@@ -76,7 +107,7 @@ const AccountScreen = ({ navigation }) => {
                     </View>
                     <View style={styles.optionView}>
                         <Text style={[styles.detailText,{color: COLORS.secondary}]}>Weight</Text>
-                        <Text style={styles.detailText1}>{profileData?.weight}</Text>
+                        <Text style={styles.detailText1}>{profileData?.weight} kg</Text>
                     </View>
                 </View>
                 <TouchableOpacity style={styles.optionView} onPress={() => navigation.navigate('DietPreferenceScreen', {item: profileData})}>

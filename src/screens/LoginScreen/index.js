@@ -19,8 +19,10 @@ import view from '../../images/view.png';
 import hidden from '../../images/hidden.png';
 import logo from '../../images/logo.png';
 import {onLoginApi} from '../../services/Api';
+import useAuthStore from '../../store/authStore';
 
 const LoginScreen = ({ navigation }) => {
+    const { updateProfileData } = useAuthStore();
     const orientation = useOrientation(); // Get current orientation
     const isPortrait = orientation === 'portrait';
     const [email, setEmail] = useState('');
@@ -52,8 +54,10 @@ const LoginScreen = ({ navigation }) => {
             console.log('get request>>', raw);
             const response = await onLoginApi(raw);
             if (response.data.status) {
+                console.log('Login response:', response.data);
                 AsyncStorage.setItem('accessToken', response.data.data.access_token);
                 AsyncStorage.setItem('userId', `${response.data.data.user.id}`);
+                updateProfileData(response.data.data.user);
                 setIsLoading(false);
                 navigation.navigate('TabStack');
             } else {
@@ -96,7 +100,7 @@ const LoginScreen = ({ navigation }) => {
                             }}
                             placeholder="Enter Email"
                             placeholderTextColor={COLORS.greyColor}
-                            style={[styles.textInput, {color: COLORS.greyColor}]}
+                            style={[styles.textInput, {color: COLORS.white}]}
                             keyboardType={'email-address'}
                             textContentType={'none'}
                             autoCapitalize={'none'}
@@ -123,7 +127,7 @@ const LoginScreen = ({ navigation }) => {
                             placeholderTextColor={COLORS.greyColor}
                             style={[
                                 styles.textInput,
-                                { width: isPortrait ? '83%' : '90%', color: COLORS.greyColor },
+                                { width: isPortrait ? '83%' : '90%', color: COLORS.white },
                             ]}
                             secureTextEntry={passwordVisible}
                             textContentType={'none'}
@@ -160,8 +164,8 @@ const LoginScreen = ({ navigation }) => {
                     <TouchableOpacity
                         style={[styles.buttonView, { opacity: isLoading ? 0.75 : 1 }]}
                         disabled={isLoading}
-                        // onPress={() => onLoginData()}>
-                        onPress={() => navigation.navigate('TabStack')}>
+                        onPress={() => onLoginData()}>
+                        {/* onPress={() => navigation.navigate('TabStack')}> */}
                         {isLoading ? (
                             <ActivityIndicator size={'large'} color={COLORS.white} />
                         ) : (

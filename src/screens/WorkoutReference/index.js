@@ -8,6 +8,7 @@ import {
     FlatList,
     Platform,
     PermissionsAndroid,
+    ActivityIndicator,
 } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { portraitStyles, landscapeStyles } from './styles';
@@ -18,6 +19,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { hp } from '../../components/responsive';
 import { showMessage } from 'react-native-flash-message';
 import useAuthStore from '../../store/authStore';
+import { onRegistrationApi } from '../../services/Api';
 
 const workoutOptions = [
     { id: 1, title: "Home Workout", icon: "🏠" },
@@ -75,7 +77,9 @@ const WorkoutReference = ({ navigation }) => {
                 formdata.append("activity_level", signupData?.activity_level);
                 // formdata.append("medical_condition", signupData?.medical_condition);
                 formdata.append("medical_condition_text", signupData?.medical_condition_text);
-                formdata.append("prescription_file", signupData?.prescription_file);
+                if (signupData.prescription_file != null) {
+                    formdata.append("prescription_file", signupData?.prescription_file);
+                }
                 formdata.append("health_note", signupData?.health_note);
                 // formdata.append("current_medicine", signupData?.current_medicine);
                 signupData?.goal?.forEach(id => {
@@ -96,7 +100,7 @@ const WorkoutReference = ({ navigation }) => {
                 if (responseData.data.status) {
                     setIsLoading(false);
                     showMessage({
-                        message: responseData.data.message,
+                        message: 'Registration successful. Please login to continue.',
                         type: 'success',
                         duration: 6000,
                         icon: 'success',
@@ -115,6 +119,7 @@ const WorkoutReference = ({ navigation }) => {
                     console.log('onRegistrationApi response else', responseData.data);
                 }
             } catch (err) {
+                console.log('onRegistrationApi error', err?.response || err);
                 showMessage({
                     message: err?.response?.data?.message || 'Something went wrong. Please try again.',
                     type: 'danger',

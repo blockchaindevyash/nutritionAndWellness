@@ -99,7 +99,7 @@ export const portraitStyles = StyleSheet.create({
     // borderRadius: 12,
   },
   dropdownItemTxtStyle: {
-    color: COLORS.greyColor,
+    color: COLORS.white,
     fontFamily: Fonts.FONTS.PoppinsMedium,
     fontSize: hp(2.1),
     paddingLeft: wp(2),

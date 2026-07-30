@@ -3,4 +3,6 @@ plugins { id("com.facebook.react.settings") }
 extensions.configure(com.facebook.react.ReactSettingsExtension){ ex -> ex.autolinkLibrariesFromCommand() }
 rootProject.name = 'AiHealthCare'
 include ':app'
+include ':react-native-accurate-step-counter'
+project(':react-native-accurate-step-counter').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-accurate-step-counter/android')
 includeBuild('../node_modules/@react-native/gradle-plugin')

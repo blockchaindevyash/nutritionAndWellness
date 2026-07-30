@@ -32,7 +32,7 @@ const goals = [
 ];
 
 const GoalSelection = ({ navigation, route }) => {
-    const { updateSignupData, goalList, profileData, updateProfileData } = useAuthStore();
+    const { signupData, updateSignupData, goalList, profileData, updateProfileData } = useAuthStore();
     const orientation = useOrientation(); // Get current orientation
     const isPortrait = orientation === 'portrait';
     const insets = useSafeAreaInsets();
@@ -44,10 +44,13 @@ const GoalSelection = ({ navigation, route }) => {
     useFocusEffect(
         useCallback(() => {
             if (route.params?.item) {
-                setSelectedGoals(profileData?.goal.map(item => item.id) || []);
+                setSelectedGoals(profileData?.goal?.map(item => item.id) || []);
                 setFromAccount(true);
+            } else {
+                setSelectedGoals(signupData?.goal || []);
+                setFromAccount(false);
             }
-        }, [])
+        }, [route.params?.item, profileData?.goal, signupData?.goal])
     );
 
     const toggleGoal = (goal) => {
@@ -59,7 +62,7 @@ const GoalSelection = ({ navigation, route }) => {
     };
 
     const onGoalPress = async () => {
-        console.log(selectedGoals);
+        console.log(selectedGoals.length);
         if (selectedGoals.length == 0) {
             showMessage({
                 message: 'Please select at least one option',

@@ -239,6 +239,8 @@ const DashboardScreen = ({ navigation }) => {
   const [steps, setSteps] = useState(0);
   const stepGoal = 10000;
   const progress = stepGoal > 0 ? Math.min(steps / stepGoal, 1) : 0;
+  const progressPercent = `${Math.round(progress * 100)}%`;
+  const stepsRemaining = Math.max(stepGoal - steps, 0);
 
   useEffect(() => {
     const today = new Date();
@@ -249,11 +251,6 @@ const DashboardScreen = ({ navigation }) => {
   }, []);
 
   useEffect(() => {
-    if (Platform.OS !== 'android') {
-      console.warn('Step counter is only supported on Android.');
-      return;
-    }
-
     const config = {
       default_threshold: 15.0,
       default_delay: 150000000,
@@ -262,11 +259,37 @@ const DashboardScreen = ({ navigation }) => {
       onCheat: () => { console.log("User is Cheating") }
     }
 
-    try {
-      startCounter(config);
-    } catch (error) {
-      console.warn('Unable to start step counter:', error);
-    }
+    const start = async () => {
+      if (Platform.OS === 'android' && Platform.Version >= 29) {
+        try {
+          const granted = await PermissionsAndroid.request(
+            PermissionsAndroid.PERMISSIONS.ACTIVITY_RECOGNITION,
+            {
+              title: 'Activity Permission',
+              message: 'App needs access to your activity to count steps.',
+              buttonNeutral: 'Ask Me Later',
+              buttonNegative: 'Cancel',
+              buttonPositive: 'OK',
+            }
+          );
+          if (granted !== PermissionsAndroid.RESULTS.GRANTED) {
+            console.warn('Activity recognition permission denied');
+            return;
+          }
+        } catch (err) {
+          console.warn('Permission request error', err);
+          return;
+        }
+      }
+
+      try {
+        startCounter(config);
+      } catch (error) {
+        console.warn('Unable to start step counter:', error);
+      }
+    };
+
+    start();
 
     return () => {
       try {
@@ -309,14 +332,40 @@ const DashboardScreen = ({ navigation }) => {
         <Text style={styles.subText}>You're doing great today!</Text>
 
         <View style={styles.stepCard}>
-          <View style={styles.stepHeader}>
-            <Text style={styles.stepTitle}>Today's Steps</Text>
-            <Text style={styles.stepBadge}>{steps}</Text>
+          <View style={styles.stepCardHeader}>
+            <View>
+              <Text style={styles.stepTitle}>Today's Steps</Text>
+              <Text style={styles.stepSubTitle}>Progress toward your daily walking goal</Text>
+            </View>
+            <View style={styles.stepBadgeWrapper}>
+              <Text style={styles.stepBadge}>{progressPercent}</Text>
+            </View>
           </View>
-          <Text style={styles.stepCount}>{steps.toLocaleString()}</Text>
-          <Text style={styles.stepGoalText}>{`${steps.toLocaleString()} / ${stepGoal.toLocaleString()} steps`}</Text>
+
+          <View style={styles.stepCountSection}>
+            <View style={styles.stepCountDetails}>
+              <Text style={styles.stepCount}>{steps.toLocaleString()}</Text>
+              <Text style={styles.stepGoalText}>{`${stepGoal.toLocaleString()} target`}</Text>
+            </View>
+            <View style={styles.stepCounterBadge}>
+              <Text style={styles.stepCounterLabel}>Remaining</Text>
+              <Text style={styles.stepCounterValue}>{stepsRemaining.toLocaleString()}</Text>
+            </View>
+          </View>
+
           <View style={styles.stepProgressBar}>
             <View style={[styles.stepProgressFill, { width: `${progress * 100}%` }]} />
+          </View>
+
+          <View style={styles.stepMetaRow}>
+            <View style={styles.stepMetaItem}>
+              <Text style={styles.stepMetaLabel}>Live Tracking</Text>
+              <Text style={styles.stepMetaValue}>Active</Text>
+            </View>
+            <View style={styles.stepMetaItem}>
+              <Text style={styles.stepMetaLabel}>Goal Status</Text>
+              <Text style={styles.stepMetaValue}>{progressPercent}</Text>
+            </View>
           </View>
         </View>
 

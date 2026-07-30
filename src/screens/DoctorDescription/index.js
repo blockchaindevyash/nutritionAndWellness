@@ -14,6 +14,7 @@ import {
 } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
 import { pick } from '@react-native-documents/picker'
+import ImagePicker from 'react-native-image-crop-picker';
 import { portraitStyles, landscapeStyles } from './styles';
 import useOrientation from '../../components/OrientationComponent';
 import Header from '../../components/HeaderComponent';
@@ -88,19 +89,34 @@ const DoctorDescriptionScreen = ({navigation, route}) => {
         }
     };
 
+    const takePhoto = async () => {
+        try {
+            const result = await ImagePicker.openCamera({
+                cropping: false,
+                mediaType: 'photo',
+                compressImageQuality: 0.8,
+            });
+            console.log('Camera result:', result);
+            const document = {
+                uri: result.path,
+                type: result.mime || 'image/jpeg',
+                name: result.filename || `camera-${Date.now()}.jpg`,
+            };
+            setDocumentFile(document);
+        } catch (error) {
+            if (error.code !== 'E_PICKER_CANCELLED') {
+                console.log('Camera Error:', error);
+            }
+        }
+    };
+
     const removeFile = () => {
         setDocumentFile(null);
     };
 
     const handleContinue = async () => {
         if (!doctorNotes.trim() && !documentFile) {
-            showMessage({
-                message: 'Please add doctor notes or upload report',
-                type: 'danger',
-                duration: 4000,
-                icon: 'danger',
-            });
-            return;
+            navigation.navigate('MedicineDetailScreen');
         } else {
             if (fromAccount) {
                 try {
@@ -217,16 +233,20 @@ const DoctorDescriptionScreen = ({navigation, route}) => {
                     <Text style={styles.uploadTitle}>
                         Upload Prescription / Report
                     </Text>
-                    <TouchableOpacity
-                        style={styles.uploadBox}
-                        onPress={() => pickDocument()}>
-                        <Text style={styles.uploadIcon}>
-                            📄
-                        </Text>
-                        <Text style={styles.uploadText}>
-                            Tap to upload image or PDF
-                        </Text>
-                    </TouchableOpacity>
+                    <View style={styles.uploadOptionsRow}>
+                        <TouchableOpacity
+                            style={styles.uploadOptionBox}
+                            onPress={() => pickDocument()}>
+                            <Text style={styles.uploadIcon}>📄</Text>
+                            <Text style={styles.uploadText}>Upload File</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={styles.uploadOptionBox}
+                            onPress={() => takePhoto()}>
+                            <Text style={styles.uploadIcon}>📷</Text>
+                            <Text style={styles.uploadText}>Use Camera</Text>
+                        </TouchableOpacity>
+                    </View>
                     {/* Preview */}
                     {documentFile && (
                         <View style={styles.previewCard}>
@@ -271,7 +291,7 @@ const DoctorDescriptionScreen = ({navigation, route}) => {
                     </Text>
                     <TextInput
                         placeholder={`Example:\n• Avoid sugar\n• Low sodium diet\n• Daily walking recommended\n• Thyroid-friendly foods`}
-                        placeholderTextColor="#b5b2b2"
+                        placeholderTextColor="#eee"
                         multiline
                         value={doctorNotes}
                         onChangeText={setDoctorNotes}

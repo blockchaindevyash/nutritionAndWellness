@@ -32,20 +32,20 @@ const SplashScreen = ({ navigation }) => {
         try {
             // navigation.navigate('TabStack');
             const accessToken = await AsyncStorage.getItem('accessToken');
-            // console.log('Access Token:', accessToken);
-            // const goalRes = await onGetWithoutTokenCommonApi('goals');
-            // updateGoalData(goalRes.data.data);
-            // const dietsRes = await onGetWithoutTokenCommonApi('diets');
-            // updateDietData(dietsRes.data.data);
-            // const activityRes = await onGetWithoutTokenCommonApi('activity-levels');
-            // updateActivityData(activityRes.data.data);
-            // const medicalRes = await onGetWithoutTokenCommonApi('medical-conditions');
-            // updateMedicalData(medicalRes.data.data);
-            // const workoutRes = await onGetWithoutTokenCommonApi('workout-references');
-            // updateWorkoutData(workoutRes.data.data);
+            console.log('Access Token:', accessToken);
+            const goalRes = await onGetWithoutTokenCommonApi('goals');
+            updateGoalData(goalRes.data.data.items);
+            const dietsRes = await onGetWithoutTokenCommonApi('diets');
+            updateDietData(dietsRes.data.data.items);
+            const activityRes = await onGetWithoutTokenCommonApi('activity-levels');
+            updateActivityData(activityRes.data.data.items);
+            const medicalRes = await onGetWithoutTokenCommonApi('medical-conditions');
+            updateMedicalData(medicalRes.data.data.items);
+            const workoutRes = await onGetWithoutTokenCommonApi('workout-references');
+            updateWorkoutData(workoutRes.data.data.items);
             if (accessToken != null) {
                 const profileRes = await onGetCommonApi('user/profile');
-                updateProfileData(profileRes.data.data);
+                updateProfileData(profileRes.data.data.user);
                 navigation.navigate('TabStack');
             } else {
                 navigation.navigate('LoginScreen');
