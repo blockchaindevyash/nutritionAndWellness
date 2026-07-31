@@ -135,7 +135,7 @@ const GoalSelection = ({ navigation, route }) => {
                             icon: 'success',
                         });
                         const profileRes = await onGetCommonApi('user/profile');
-                        updateProfileData(profileRes.data.data);
+                        updateProfileData(profileRes.data.data.user);
                         setIsLoading(false);
                         navigation.goBack();
                     } else {

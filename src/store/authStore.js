@@ -9,6 +9,7 @@ const useAuthStore = create((set) => ({
         email: "",
         mobileno: "",
         password: "",
+        verify_phone: false,
 
         // User Info
         dob: "",

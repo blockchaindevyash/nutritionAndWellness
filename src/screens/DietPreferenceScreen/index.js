@@ -19,7 +19,7 @@ import { hp } from '../../components/responsive';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { showMessage } from 'react-native-flash-message';
 import useAuthStore from '../../store/authStore';
-import { onAddCommonFormApi, onGetCommonApi } from '../../services/Api';
+import { onAddCommonFormApi, onEditCommonFormApi, onGetCommonApi } from '../../services/Api';
 import { useFocusEffect } from '@react-navigation/native';
 
 const dietOptions = [
@@ -31,7 +31,7 @@ const dietOptions = [
 ];
 
 const DietPreferenceScreen = ({ navigation, route }) => {
-    const { updateSignupData, dietList, profileData, updateProfileData } = useAuthStore();
+    const { updateSignupData, dietList, profileData, updateProfileData, signupData } = useAuthStore();
     const orientation = useOrientation(); // Get current orientation
     const isPortrait = orientation === 'portrait';
     const insets = useSafeAreaInsets();
@@ -43,10 +43,12 @@ const DietPreferenceScreen = ({ navigation, route }) => {
     useFocusEffect(
         useCallback(() => {
             if (route.params?.item) {
-                setSelectedDiet(route.params.item.diet?.id);
+                setSelectedDiet(route.params.item.diet?.id || '');
                 setFromAccount(true);
+            } else {
+                setSelectedDiet(signupData?.diet || '');
             }
-        }, [])
+        }, [route.params?.item, profileData?.diet, signupData?.diet])
     );
 
     const handleContinue = async () => {
@@ -62,8 +64,9 @@ const DietPreferenceScreen = ({ navigation, route }) => {
             if (fromAccount) {
                 try {
                     setIsLoading(true);
+                    console.log('Profile Data before API call:', profileData);
                     const imageUrl = profileData.prescription_file;
-                    const extension = imageUrl.split(".").pop().toLowerCase();
+                    const extension = imageUrl ? imageUrl.split(".").pop().toLowerCase() : null;
                     let mimeType = "image/png";
                     switch (extension) {
                     case "jpg":
@@ -87,10 +90,10 @@ const DietPreferenceScreen = ({ navigation, route }) => {
                     const imageFile = {
                         uri: imageUrl,
                         type: mimeType,
-                        name: imageUrl.split('/').pop(),
+                        name: imageUrl ? imageUrl.split('/').pop() : null,
                     };
-                    const goalIds = profileData?.goal.map(item => item.id);
-                    const medicalIds = profileData?.medical_condition.map(item => item.id);
+                    const goalIds = profileData?.goals.map(item => item.id);
+                    const medicalIds = profileData?.medical_conditions.map(item => item.id);
                     console.log('Profile Data for API:', goalIds, medicalIds, profileData?.current_medicine);
                     var formdata = new FormData();
                     formdata.append("name", profileData?.name);
@@ -100,11 +103,13 @@ const DietPreferenceScreen = ({ navigation, route }) => {
                     formdata.append("weight", profileData?.weight);
                     // formdata.append("goal", goalIds);
                     formdata.append("diet", selectedDiet);
-                    formdata.append("activity_level", profileData?.activity_level?.id);
+                    formdata.append("activity_level", profileData?.activity_level?.id || '');
                     // formdata.append("medical_condition", medicalIds);
-                    formdata.append("medical_condition_text", profileData?.medical_condition_text);
-                    formdata.append("prescription_file", imageFile);
-                    formdata.append("health_note", profileData?.health_note);
+                    formdata.append("medical_condition_text", profileData?.medical_condition_text || '');
+                    if (profileData.prescription_file) {
+                        formdata.append("prescription_file", imageFile);
+                    }
+                    formdata.append("health_note", profileData?.health_note || '');
                     // formdata.append("current_medicine", profileData?.current_medicine);
                     goalIds.forEach(id => {
                         formdata.append("goal[]", id);
@@ -114,15 +119,16 @@ const DietPreferenceScreen = ({ navigation, route }) => {
                         formdata.append("medical_condition[]", id);
                     });
 
-                    profileData?.current_medicine?.forEach((medicine, index) => {
+                    profileData?.medicines?.forEach((medicine, index) => {
                         formdata.append(`current_medicine[${index}][medicine_name]`, medicine.medicine_name);
                         formdata.append(`current_medicine[${index}][dosage]`, medicine.dosage);
                         formdata.append(`current_medicine[${index}][timing]`, medicine.timing);
                         formdata.append(`current_medicine[${index}][additional_notes]`, medicine.additional_notes);
                     });
-                    formdata.append("workout_reference", profileData?.workout_reference?.id);
+                    formdata.append("workout_reference", profileData?.workout_reference?.id || '');
 
-                    const response = await onAddCommonFormApi('user/profile', formdata);
+                    const response = await onEditCommonFormApi('user/profile', formdata);
+                    console.log('Profile Update Response:', response.data);
                     if (response.data.status) {
                         showMessage({
                             message: 'Profile updated successfully',
@@ -131,7 +137,7 @@ const DietPreferenceScreen = ({ navigation, route }) => {
                             icon: 'success',
                         });
                         const profileRes = await onGetCommonApi('user/profile');
-                        updateProfileData(profileRes.data.data);
+                        updateProfileData(profileRes.data.data.user);
                         setIsLoading(false);
                         navigation.goBack();
                     } else {

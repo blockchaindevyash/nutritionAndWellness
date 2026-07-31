@@ -32,7 +32,7 @@ const medicalOptions = [
 ];
 
 const MedicalScreen = ({ navigation, route }) => {
-    const { updateSignupData, medicalList, profileData, updateProfileData } = useAuthStore();
+    const { updateSignupData, medicalList, profileData, updateProfileData, signupData } = useAuthStore();
     const orientation = useOrientation(); // Get current orientation
     const isPortrait = orientation === 'portrait';
     const styles = isPortrait ? portraitStyles : landscapeStyles;
@@ -47,8 +47,11 @@ const MedicalScreen = ({ navigation, route }) => {
             if (route.params?.item) {
                 setSelected(profileData?.medical_condition.map(item => item.id) || []);
                 setFromAccount(true);
+            } else {
+                setSelected(signupData?.medical_condition);
+                setOtherText(signupData?.medical_condition_text || "");
             }
-        }, [])
+        }, [route.params?.item, profileData?.medical_condition, signupData?.medical_condition])
     );
 
     // 🔹 Toggle logic
@@ -148,7 +151,7 @@ const MedicalScreen = ({ navigation, route }) => {
                             icon: 'success',
                         });
                         const profileRes = await onGetCommonApi('user/profile');
-                        updateProfileData(profileRes.data.data);
+                        updateProfileData(profileRes.data.data.user);
                         setIsLoading(false);
                         navigation.goBack();
                     } else {

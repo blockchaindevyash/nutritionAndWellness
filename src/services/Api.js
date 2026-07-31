@@ -146,6 +146,23 @@ export const onAddCommonFormApi = async (dataUrl, requestData) => {
   });
 };
 
+export const onEditCommonFormApi = async (dataUrl, requestData) => {
+  const token = await AsyncStorage.getItem('accessToken');
+  const url = Api.baseUrl1 + dataUrl;
+  console.log('Get Login Url:::', url);
+  return new Promise((resolve, reject) => {
+    axios
+      .patch(url, requestData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then(res => resolve(res))
+      .catch(err => reject(err));
+  });
+};
+
 export const onEditCommonJsonApi = async (dataUrl, requestData) => {
   const token = await AsyncStorage.getItem('accessToken');
   const url = Api.baseUrl1 + dataUrl;

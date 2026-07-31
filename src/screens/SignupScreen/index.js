@@ -21,7 +21,7 @@ import CountryPicker, { DEFAULT_THEME } from 'react-native-country-picker-modal'
 import useAuthStore from '../../store/authStore';
 
 const SignupScreen = ({ navigation }) => {
-    const {updateSignupData, goalList} = useAuthStore();
+    const {updateSignupData, goalList, signupData} = useAuthStore();
     const orientation = useOrientation(); // Get current orientation
     const isPortrait = orientation === 'portrait';
     const [name, setName] = useState('');
@@ -68,7 +68,11 @@ const SignupScreen = ({ navigation }) => {
                 password,
             });
             console.log('Signup Click')
-            navigation.navigate('BasicInfoScreen', {name: name, email: email, number: countryCode?.startsWith('+') ? countryCode + number : `+${countryCode}${number}`, password: password});
+            if (signupData?.verify_phone) {
+                navigation.navigate('BasicInfoScreen', {name: name, email: email, number: countryCode?.startsWith('+') ? countryCode + number : `+${countryCode}${number}`, password: password});
+            } else {
+                navigation.navigate('PhoneVerificationScreen');
+            }
         }
     };
 
@@ -134,6 +138,7 @@ const SignupScreen = ({ navigation }) => {
                                 keyboardType={'numeric'}
                                 onChangeText={text => {
                                     setNumber(text);
+                                    updateSignupData({verify_phone: false});
                                     setNumberError(false);
                                     setApiError(false);
                                 }}

@@ -26,7 +26,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import { onAddCommonFormApi, onGetCommonApi } from "../../services/Api";
 
 const DoctorDescriptionScreen = ({navigation, route}) => {
-    const {updateSignupData, profileData, updateProfileData} = useAuthStore();
+    const {updateSignupData, profileData, updateProfileData, signupData} = useAuthStore();
     const orientation = useOrientation();
     const isPortrait = orientation === 'portrait';
     const styles = isPortrait ? portraitStyles : landscapeStyles;
@@ -65,8 +65,11 @@ const DoctorDescriptionScreen = ({navigation, route}) => {
                 });
                 setDoctorNotes(profileData.health_note || "");
                 setFromAccount(true);
+            } else {
+                setDocumentFile(signupData?.prescription_file);
+                setDoctorNotes(signupData?.health_note);
             }
-        }, [])
+        }, [route.params?.item, profileData?.prescription_file, signupData?.prescription_file])
     );
 
     // ----------------------------
@@ -157,7 +160,7 @@ const DoctorDescriptionScreen = ({navigation, route}) => {
                             duration: 4000,                            icon: 'success',
                         });
                         const profileRes = await onGetCommonApi('user/profile');
-                        updateProfileData(profileRes.data.data);
+                        updateProfileData(profileRes.data.data.user);
                         setIsLoading(false);
                         navigation.goBack();
                     } else {

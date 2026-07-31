@@ -93,7 +93,7 @@ const BasicInfoScreen = ({navigation, route}) => {
             />
             <View style={[styles.container, { backgroundColor: COLORS.backColor }]}>
                 <View style={styles.headerView}>
-                    <Header title={'Basic Information'} onPress={() => navigation.goBack()} />
+                    <Header title={'Basic Information'} onPress={() => {signupData?.verify_phone ? navigation.navigate('SignupScreen') : navigation.goBack()}} />
                 </View>
                 <View style={styles.mainView}>
                     <Text style={styles.titleText}>Date of Birth</Text>

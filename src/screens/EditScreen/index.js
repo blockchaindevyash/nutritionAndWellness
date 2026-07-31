@@ -140,7 +140,7 @@ const EditScreen = ({ navigation }) => {
                     });
                     setIsLoading(false);
                     const profileRes = await onGetCommonApi('user/profile');
-                    updateProfileData(profileRes.data.data);
+                    updateProfileData(profileRes.data.data.user);
                     navigation.goBack();
                 } else {
                     showMessage({

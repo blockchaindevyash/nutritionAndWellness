@@ -29,6 +29,7 @@ import MedicineDetailScreen from './src/screens/MedicineDetailScreen';
 import CreateRecipeScreen from './src/screens/CreateRecipeScreen';
 import AdviserScreen from './src/screens/AdviserScreen';
 import AdviserDetailScreen from './src/screens/AdviserDetailScreen';
+import PhoneVerificationScreen from './src/screens/PhoneVerificationScreen';
 import { Image, Platform, StatusBar, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import {COLORS, Fonts} from './src/utils';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -217,6 +218,11 @@ const App = () => {
             name="TabStack"
             component={TabStack}
             options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="PhoneVerificationScreen"
+            component={PhoneVerificationScreen}
+            options={{headerShown: false}}
           />
           <Stack.Screen
             name="BasicInfoScreen"

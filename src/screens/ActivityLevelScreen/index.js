@@ -50,7 +50,7 @@ const activityOptions = [
 ];
 
 const ActivityLevelScreen = ({ navigation, route }) => {
-    const { updateSignupData, activityList, profileData, updateProfileData } = useAuthStore();
+    const { updateSignupData, activityList, profileData, updateProfileData, signupData } = useAuthStore();
     const orientation = useOrientation(); // Get current orientation
     const isPortrait = orientation === 'portrait';
     const insets = useSafeAreaInsets();
@@ -64,8 +64,10 @@ const ActivityLevelScreen = ({ navigation, route }) => {
             if (route.params?.item) {
                 setSelectedLevel(route.params.item.activity_level?.id);
                 setFromAccount(true);
+            } else {
+                setSelectedLevel(signupData?.activity_level || '');
             }
-        }, [])
+        }, [route.params?.item, profileData?.activity_level, signupData?.activity_level])
     );
 
     const handleContinue = async () => {
@@ -149,7 +151,7 @@ const ActivityLevelScreen = ({ navigation, route }) => {
                             icon: 'success',
                         });
                         const profileRes = await onGetCommonApi('user/profile');
-                        updateProfileData(profileRes.data.data);
+                        updateProfileData(profileRes.data.data.user);
                         setIsLoading(false);
                         navigation.goBack();
                     } else {
