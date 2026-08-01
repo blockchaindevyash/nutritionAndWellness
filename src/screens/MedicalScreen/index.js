@@ -20,7 +20,7 @@ import { hp } from '../../components/responsive';
 import { showMessage } from 'react-native-flash-message';
 import useAuthStore from '../../store/authStore';
 import { useFocusEffect } from '@react-navigation/native';
-import { onAddCommonFormApi, onGetCommonApi } from '../../services/Api';
+import { onAddCommonFormApi, onEditCommonFormApi, onGetCommonApi } from '../../services/Api';
 
 const medicalOptions = [
     { id: 1, title: "None" },
@@ -45,13 +45,13 @@ const MedicalScreen = ({ navigation, route }) => {
     useFocusEffect(
         useCallback(() => {
             if (route.params?.item) {
-                setSelected(profileData?.medical_condition.map(item => item.id) || []);
+                setSelected(profileData?.medical_conditions.map(item => item.id) || []);
                 setFromAccount(true);
             } else {
                 setSelected(signupData?.medical_condition);
                 setOtherText(signupData?.medical_condition_text || "");
             }
-        }, [route.params?.item, profileData?.medical_condition, signupData?.medical_condition])
+        }, [route.params?.item, profileData?.medical_conditions, signupData?.medical_condition])
     );
 
     // 🔹 Toggle logic
@@ -91,7 +91,7 @@ const MedicalScreen = ({ navigation, route }) => {
                 try {
                     setIsLoading(true);
                     const imageUrl = profileData.prescription_file;
-                    const extension = imageUrl.split(".").pop().toLowerCase();
+                    const extension = imageUrl ? imageUrl.split(".").pop().toLowerCase() : null;
                     let mimeType = "image/png";
                     switch (extension) {
                         case "jpg":
@@ -112,37 +112,39 @@ const MedicalScreen = ({ navigation, route }) => {
                     const imageFile = {
                         uri: imageUrl,
                         type: mimeType,
-                        name: imageUrl.split('/').pop(),
+                        name: imageUrl ? imageUrl.split('/').pop() : null,
                     };
-                    const goalIds = profileData?.goal.map(item => item.id);
+                    const goalIds = profileData?.goals.map(item => item.id);
                     // const medicalIds = profileData?.medical_condition.map(item => item.id);
-                    console.log('Profile Data for API:', goalIds, profileData?.current_medicine);
+                    console.log('Profile Data for API:', goalIds, profileData?.medicines);
                     var formdata = new FormData();
                     formdata.append("name", profileData?.name);
-                    formdata.append("dob", profileData?.dob);
+                    formdata.append("dob", moment(profileData?.dob).format('DD/MM/YYYY'));
                     formdata.append("gender", profileData?.gender);
                     formdata.append("height", profileData?.height);
                     formdata.append("weight", profileData?.weight);
-                    formdata.append("diet", profileData?.diet?.id);
-                    formdata.append("activity_level", profileData?.activity_level?.id);
+                    formdata.append("diet", profileData?.diet?.id || '');
+                    formdata.append("activity_level", profileData?.activity_level?.id || '');
                     formdata.append("medical_condition_text", otherText);
-                    formdata.append("prescription_file", imageFile);
-                    formdata.append("health_note", profileData?.health_note);
+                    if (profileData.prescription_file) {
+                        formdata.append("prescription_file", imageFile);
+                    }
+                    formdata.append("health_note", profileData?.health_note || '');
                     goalIds.forEach(id => {
                         formdata.append("goal[]", id);
                     });
                     selected.forEach(id => {
                         formdata.append("medical_condition[]", id);
                     });
-                    profileData?.current_medicine?.forEach((medicine, index) => {
+                    profileData?.medicines?.forEach((medicine, index) => {
                         formdata.append(`current_medicine[${index}][medicine_name]`, medicine.medicine_name);
                         formdata.append(`current_medicine[${index}][dosage]`, medicine.dosage);
                         formdata.append(`current_medicine[${index}][timing]`, medicine.timing);
                         formdata.append(`current_medicine[${index}][additional_notes]`, medicine.additional_notes);
                     });
-                    formdata.append("workout_reference", profileData?.workout_reference?.id);
+                    formdata.append("workout_reference", profileData?.workout_reference?.id || '');
 
-                    const response = await onAddCommonFormApi('user/profile', formdata);
+                    const response = await onEditCommonFormApi('user/profile', formdata);
                     if (response.data.status) {
                         showMessage({
                             message: 'Profile updated successfully',

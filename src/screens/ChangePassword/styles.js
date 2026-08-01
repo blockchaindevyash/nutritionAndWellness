@@ -44,7 +44,7 @@ export const portraitStyles = StyleSheet.create({
     borderWidth: 0.3,
     borderColor: COLORS.greyColor,
     borderRadius: 6,
-    paddingVertical: hp(0.1),
+    paddingVertical: hp(0.3),
     justifyContent: 'center',
     marginTop: hp(1),
   },
@@ -93,6 +93,11 @@ export const portraitStyles = StyleSheet.create({
     fontFamily: Fonts.FONTS.PoppinsMedium,
     marginTop: hp(1),
     marginLeft: wp(1),
+  },
+  eyeIcon: {
+    width: wp(5),
+    height: hp(4),
+    resizeMode: 'contain',
   },
 });
 
@@ -186,5 +191,10 @@ export const landscapeStyles = StyleSheet.create({
     fontFamily: Fonts.FONTS.PoppinsMedium,
     marginTop: hp(1),
     marginLeft: wp(1),
+  },
+  eyeIcon: {
+    width: wp(5),
+    height: hp(3),
+    resizeMode: 'contain',
   },
 });

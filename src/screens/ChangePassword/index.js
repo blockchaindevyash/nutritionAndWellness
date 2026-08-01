@@ -14,11 +14,14 @@ import { portraitStyles, landscapeStyles } from './styles';
 import useOrientation from '../../components/OrientationComponent';
 import { COLORS, Fonts } from '../../utils';
 import logo from '../../images/logo.png';
+import view from '../../images/view.png';
+import hidden from '../../images/hidden.png';
 import backButton from '../../images/backArrow.png';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import { showMessage } from 'react-native-flash-message';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useFocusEffect } from '@react-navigation/native';
+import { onAddCommonJsonApi } from '../../services/Api';
 
 const ChangePassword = ({ navigation }) => {
   const insets = useSafeAreaInsets();
@@ -27,11 +30,14 @@ const ChangePassword = ({ navigation }) => {
   const styles = isPortrait ? portraitStyles : landscapeStyles;
   const [upcomingVisible, setUpcomingVisible] = useState(false);
   const [password, setPassword] = useState('');
+  const [passwordVisible, setPasswordVisible] = useState(true);
   const [passwordError, setPasswordError] = useState(false);
   const [newPassword, setNewPassword] = useState('');
   const [newPasswordError, setNewPasswordError] = useState(false);
+  const [newPasswordVisible, setNewPasswordVisible] = useState(true);
   const [confirmPassword, setConfirmPassword] = useState('');
   const [confirmPasswordError, setConfirmPasswordError] = useState(false);
+  const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(true);
   const [apiError, setApiError] = useState(false);
   const [apiErrorMessage, setApiErrorMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -44,6 +50,7 @@ const ChangePassword = ({ navigation }) => {
 
   const onVerifyFunction = async () => {
     try {
+      console.log('Password:', password, confirmPassword);
       if (password == '') {
         setPasswordError(true);
       } else if (newPassword == '') {
@@ -51,6 +58,7 @@ const ChangePassword = ({ navigation }) => {
       } else if (confirmPassword == '') {
         setConfirmPasswordError(true);
       } else {
+        console.log('Password:', password);
         setIsLoading(true);
         let raw = JSON.stringify({
           old_password: password,
@@ -59,7 +67,7 @@ const ChangePassword = ({ navigation }) => {
         });
         const response = await onAddCommonJsonApi('user/change-password', raw);
         console.log('get Repsonse>>', response.data);
-        if (response.data.success) {
+        if (response.data.status) {
           showMessage({
             message: 'Password reset successfully!',
             type: 'success',
@@ -102,7 +110,7 @@ const ChangePassword = ({ navigation }) => {
           {/* <Text style={styles.resetText}>Verify Yourself by Password</Text> */}
           <View style={styles.mainView}>
             <Text style={styles.titleText}>Enter Old Password</Text>
-            <View style={styles.textInputView}>
+            <View style={[styles.textInputView, { flexDirection: 'row', alignItems: 'center' }]}>
               <TextInput
                 value={password}
                 onChangeText={text => {
@@ -112,11 +120,21 @@ const ChangePassword = ({ navigation }) => {
                 }}
                 placeholder="Old Password"
                 placeholderTextColor={COLORS.greyColor}
-                style={styles.textInput}
-                secureTextEntry={true}
+                style={[styles.textInput, { width: isPortrait ? '83%' : '90%', color: COLORS.white }]}
+                secureTextEntry={passwordVisible}
                 textContentType={'none'}
                 autoCapitalize={'none'}
               />
+              <TouchableOpacity
+                style={{ width: isPortrait ? '12%' : '10%' }}
+                onPress={() => {
+                    setPasswordVisible(!passwordVisible);
+                }}>
+                <Image
+                    style={[styles.eyeIcon, {tintColor: COLORS.greyColor}]}
+                    source={passwordVisible ? hidden : view}
+                />
+              </TouchableOpacity>
             </View>
             {passwordError && (
               <Text style={styles.errorText}>
@@ -124,7 +142,7 @@ const ChangePassword = ({ navigation }) => {
               </Text>
             )}
             <Text style={styles.titleText}>Enter New Password</Text>
-            <View style={styles.textInputView}>
+            <View style={[styles.textInputView, { flexDirection: 'row', alignItems: 'center' }]}>
               <TextInput
                 value={newPassword}
                 onChangeText={text => {
@@ -134,11 +152,21 @@ const ChangePassword = ({ navigation }) => {
                 }}
                 placeholder="New Password"
                 placeholderTextColor={COLORS.greyColor}
-                style={styles.textInput}
-                secureTextEntry={true}
+                style={[styles.textInput, { width: isPortrait ? '83%' : '90%', color: COLORS.white }]}
+                secureTextEntry={newPasswordVisible}
                 textContentType={'none'}
                 autoCapitalize={'none'}
               />
+              <TouchableOpacity
+                style={{ width: isPortrait ? '12%' : '10%' }}
+                onPress={() => {
+                    setNewPasswordVisible(!newPasswordVisible);
+                }}>
+                <Image
+                    style={[styles.eyeIcon, {tintColor: COLORS.greyColor}]}
+                    source={newPasswordVisible ? hidden : view}
+                />
+              </TouchableOpacity>
             </View>
             {newPasswordError && (
               <Text style={styles.errorText}>
@@ -146,7 +174,7 @@ const ChangePassword = ({ navigation }) => {
               </Text>
             )}
             <Text style={styles.titleText}>Enter Confirm Password</Text>
-            <View style={styles.textInputView}>
+            <View style={[styles.textInputView, { flexDirection: 'row', alignItems: 'center' }]}>
               <TextInput
                 value={confirmPassword}
                 onChangeText={text => {
@@ -156,11 +184,21 @@ const ChangePassword = ({ navigation }) => {
                 }}
                 placeholder="Confirm Password"
                 placeholderTextColor={COLORS.greyColor}
-                style={styles.textInput}
-                secureTextEntry={true}
+                style={[styles.textInput, { width: isPortrait ? '83%' : '90%', color: COLORS.white }]}
+                secureTextEntry={confirmPasswordVisible}
                 textContentType={'none'}
                 autoCapitalize={'none'}
               />
+              <TouchableOpacity
+                style={{ width: isPortrait ? '12%' : '10%' }}
+                onPress={() => {
+                    setConfirmPasswordVisible(!confirmPasswordVisible);
+                }}>
+                <Image
+                    style={[styles.eyeIcon, {tintColor: COLORS.greyColor}]}
+                    source={confirmPasswordVisible ? hidden : view}
+                />
+              </TouchableOpacity>
             </View>
             {confirmPasswordError && (
               <Text style={styles.errorText}>

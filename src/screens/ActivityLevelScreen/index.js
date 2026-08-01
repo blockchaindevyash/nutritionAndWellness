@@ -20,7 +20,8 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { showMessage } from 'react-native-flash-message';
 import useAuthStore from '../../store/authStore';
 import { useFocusEffect } from '@react-navigation/native';
-import { onAddCommonFormApi, onGetCommonApi } from '../../services/Api';
+import { onAddCommonFormApi, onEditCommonFormApi, onGetCommonApi } from '../../services/Api';
+import moment from 'moment';
 
 const activityOptions = [
     {
@@ -83,7 +84,7 @@ const ActivityLevelScreen = ({ navigation, route }) => {
                 try {
                     setIsLoading(true);
                     const imageUrl = profileData.prescription_file;
-                    const extension = imageUrl.split(".").pop().toLowerCase();
+                    const extension = imageUrl ? imageUrl.split(".").pop().toLowerCase() : null;
                     let mimeType = "image/png";
                     switch (extension) {
                         case "jpg":
@@ -107,24 +108,26 @@ const ActivityLevelScreen = ({ navigation, route }) => {
                     const imageFile = {
                         uri: imageUrl,
                         type: mimeType,
-                        name: imageUrl.split('/').pop(),
+                        name: imageUrl ? imageUrl.split('/').pop() : null,
                     };
-                    const goalIds = profileData?.goal.map(item => item.id);
-                    const medicalIds = profileData?.medical_condition.map(item => item.id);
-                    console.log('Profile Data for API:', goalIds, medicalIds, profileData?.current_medicine);
+                    const goalIds = profileData?.goals.map(item => item.id);
+                    const medicalIds = profileData?.medical_conditions.map(item => item.id);
+                    console.log('Profile Data for API:', goalIds, medicalIds, profileData);
                     var formdata = new FormData();
                     formdata.append("name", profileData?.name);
-                    formdata.append("dob", profileData?.dob);
+                    formdata.append("dob", moment(profileData?.dob).format('DD/MM/YYYY'));
                     formdata.append("gender", profileData?.gender);
                     formdata.append("height", profileData?.height);
                     formdata.append("weight", profileData?.weight);
                     // formdata.append("goal", goalIds);
-                    formdata.append("diet", profileData?.diet?.id);
+                    formdata.append("diet", profileData?.diet?.id || '');
                     formdata.append("activity_level", selectedLevel);
                     // formdata.append("medical_condition", medicalIds);
-                    formdata.append("medical_condition_text", profileData?.medical_condition_text);
-                    formdata.append("prescription_file", imageFile);
-                    formdata.append("health_note", profileData?.health_note);
+                    formdata.append("medical_condition_text", profileData?.medical_condition_text || '');
+                    if (profileData.prescription_file) {
+                        formdata.append("prescription_file", imageFile);
+                    }
+                    formdata.append("health_note", profileData?.health_note || '');
                     // formdata.append("current_medicine", profileData?.current_medicine);
                     goalIds.forEach(id => {
                         formdata.append("goal[]", id);
@@ -134,13 +137,13 @@ const ActivityLevelScreen = ({ navigation, route }) => {
                         formdata.append("medical_condition[]", id);
                     });
 
-                    profileData?.current_medicine?.forEach((medicine, index) => {
+                    profileData?.medicines?.forEach((medicine, index) => {
                         formdata.append(`current_medicine[${index}][medicine_name]`, medicine.medicine_name);
                         formdata.append(`current_medicine[${index}][dosage]`, medicine.dosage);
                         formdata.append(`current_medicine[${index}][timing]`, medicine.timing);
                         formdata.append(`current_medicine[${index}][additional_notes]`, medicine.additional_notes);
                     });
-                    formdata.append("workout_reference", profileData?.workout_reference?.id);
+                    formdata.append("workout_reference", profileData?.workout_reference?.id || '');
 
                     const response = await onAddCommonFormApi('user/profile', formdata);
                     if (response.data.status) {

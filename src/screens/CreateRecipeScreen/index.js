@@ -143,7 +143,7 @@ const CreateRecipeScreen = ({ navigation, route }) => {
                 if (responseData.data.status) {
                     setIsLoading(false);
                     showMessage({
-                        message: responseData.data.message,
+                        message: 'Recipe created successfully',
                         type: 'success',
                         duration: 6000,
                         icon: 'success',

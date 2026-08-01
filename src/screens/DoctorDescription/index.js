@@ -23,7 +23,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { showMessage } from "react-native-flash-message";
 import useAuthStore from "../../store/authStore";
 import { useFocusEffect } from "@react-navigation/native";
-import { onAddCommonFormApi, onGetCommonApi } from "../../services/Api";
+import { onAddCommonFormApi, onEditCommonFormApi, onGetCommonApi } from "../../services/Api";
 
 const DoctorDescriptionScreen = ({navigation, route}) => {
     const {updateSignupData, profileData, updateProfileData, signupData} = useAuthStore();
@@ -67,7 +67,7 @@ const DoctorDescriptionScreen = ({navigation, route}) => {
                 setFromAccount(true);
             } else {
                 setDocumentFile(signupData?.prescription_file);
-                setDoctorNotes(signupData?.health_note);
+                setDoctorNotes(signupData?.health_note || "");
             }
         }, [route.params?.item, profileData?.prescription_file, signupData?.prescription_file])
     );
@@ -124,27 +124,29 @@ const DoctorDescriptionScreen = ({navigation, route}) => {
             if (fromAccount) {
                 try {
                     setIsLoading(true);
-                    const goalIds = profileData?.goal.map(item => item.id);
-                    const medicalIds = profileData?.medical_condition.map(item => item.id);
-                    console.log('Profile Data for API:', goalIds, profileData?.current_medicine);
+                    const goalIds = profileData?.goals.map(item => item.id);
+                    const medicalIds = profileData?.medical_conditions.map(item => item.id);
+                    console.log('Profile Data for API:', goalIds, profileData);
                     var formdata = new FormData();
                     formdata.append("name", profileData?.name);
-                    formdata.append("dob", profileData?.dob);
+                    formdata.append("dob", moment(profileData?.dob).format('DD/MM/YYYY'));
                     formdata.append("gender", profileData?.gender);
                     formdata.append("height", profileData?.height);
                     formdata.append("weight", profileData?.weight);
-                    formdata.append("diet", profileData?.diet?.id);
-                    formdata.append("activity_level", profileData?.activity_level?.id);
-                    formdata.append("medical_condition_text", profileData?.medical_condition_text);
-                    formdata.append("prescription_file", documentFile);
-                    formdata.append("health_note", doctorNotes);
+                    formdata.append("diet", profileData?.diet?.id || '');
+                    formdata.append("activity_level", profileData?.activity_level?.id || '');
+                    formdata.append("medical_condition_text", profileData?.medical_condition_text || '');
+                    if (documentFile != null) {
+                        formdata.append("prescription_file", documentFile);
+                    }
+                    formdata.append("health_note", doctorNotes || '');
                     goalIds.forEach(id => {
                         formdata.append("goal[]", id);
                     });
                     medicalIds.forEach(id => {
                         formdata.append("medical_condition[]", id);
                     });
-                    profileData?.current_medicine?.forEach((medicine, index) => {
+                    profileData?.medicines?.forEach((medicine, index) => {
                         formdata.append(`current_medicine[${index}][medicine_name]`, medicine.medicine_name);
                         formdata.append(`current_medicine[${index}][dosage]`, medicine.dosage);
                         formdata.append(`current_medicine[${index}][timing]`, medicine.timing);
@@ -152,12 +154,13 @@ const DoctorDescriptionScreen = ({navigation, route}) => {
                     });
                     formdata.append("workout_reference", profileData?.workout_reference?.id);
 
-                    const response = await onAddCommonFormApi('user/profile', formdata);
+                    const response = await onEditCommonFormApi('user/profile', formdata);
                     if (response.data.status) {
                         showMessage({
                             message: 'Profile updated successfully',
                             type: 'success',
-                            duration: 4000,                            icon: 'success',
+                            duration: 4000, 
+                            icon: 'success',
                         });
                         const profileRes = await onGetCommonApi('user/profile');
                         updateProfileData(profileRes.data.data.user);

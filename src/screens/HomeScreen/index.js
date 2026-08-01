@@ -72,9 +72,9 @@ const HomeScreen = ({ navigation }) => {
   const onGetRecipeData = async () => {
     try {
       setIsLoading(true);
-      const respose = await onGetCommonApi('recipes?per_page=100');
+      const respose = await onGetCommonApi('my-recipes?per_page=100');
       if (respose.data.status) {
-        setRecipeList(respose.data.data.data);
+        setRecipeList(respose.data.data.recipes);
         setIsLoading(false);
       }
     } catch (error) {
@@ -120,7 +120,7 @@ const HomeScreen = ({ navigation }) => {
           )}
           renderItem={({ item }) => (
             <TouchableOpacity style={styles.dishCard} onPress={() => navigation.navigate('RecipeScreen', {item: item})}>
-              <Image source={{uri: item.recipe_image_url}} style={styles.dishImage} />
+              <Image source={{uri: item.recipe_image}} style={styles.dishImage} />
               <Text style={styles.cardTitle}>{item.recipe_name}</Text>
             </TouchableOpacity>
           )}

@@ -21,6 +21,7 @@ import { showMessage } from 'react-native-flash-message';
 import useAuthStore from '../../store/authStore';
 import { onAddCommonFormApi, onEditCommonFormApi, onGetCommonApi } from '../../services/Api';
 import { useFocusEffect } from '@react-navigation/native';
+import moment from 'moment';
 
 const dietOptions = [
     { id: 1, title: 'Vegetarian', icon: '🥦', desc: 'Plant-based diet' },
@@ -51,6 +52,39 @@ const DietPreferenceScreen = ({ navigation, route }) => {
         }, [route.params?.item, profileData?.diet, signupData?.diet])
     );
 
+    const buildProfileFile = fileValue => {
+        if (!fileValue || typeof fileValue !== 'string') return null;
+        if (fileValue.startsWith('http://') || fileValue.startsWith('https://')) return null;
+
+        const normalizedPath = fileValue.startsWith('file://') ? fileValue : `file://${fileValue}`;
+        const extension = fileValue.split('.').pop()?.toLowerCase() || '';
+        let mimeType = 'image/png';
+
+        switch (extension) {
+            case 'jpg':
+            case 'jpeg':
+                mimeType = 'image/jpeg';
+                break;
+            case 'png':
+                mimeType = 'image/png';
+                break;
+            case 'webp':
+                mimeType = 'image/webp';
+                break;
+            case 'pdf':
+                mimeType = 'application/pdf';
+                break;
+            default:
+                mimeType = 'image/png';
+        }
+
+        return {
+            uri: normalizedPath,
+            type: mimeType,
+            name: fileValue.split('/').pop() || 'file',
+        };
+    };
+
     const handleContinue = async () => {
         console.log('User Data:', selectedDiet);
         if (selectedDiet == '') {
@@ -65,58 +99,29 @@ const DietPreferenceScreen = ({ navigation, route }) => {
                 try {
                     setIsLoading(true);
                     console.log('Profile Data before API call:', profileData);
-                    const imageUrl = profileData.prescription_file;
-                    const extension = imageUrl ? imageUrl.split(".").pop().toLowerCase() : null;
-                    let mimeType = "image/png";
-                    switch (extension) {
-                    case "jpg":
-                    case "jpeg":
-                        mimeType = "image/jpeg";
-                        break;
-
-                    case "png":
-                        mimeType = "image/png";
-                        break;
-
-                    case "webp":
-                        mimeType = "image/webp";
-                        break;
-
-                    // PDF
-                    case "pdf":
-                        mimeType = "application/pdf";
-                        break;
-                    }
-                    const imageFile = {
-                        uri: imageUrl,
-                        type: mimeType,
-                        name: imageUrl ? imageUrl.split('/').pop() : null,
-                    };
-                    const goalIds = profileData?.goals.map(item => item.id);
-                    const medicalIds = profileData?.medical_conditions.map(item => item.id);
-                    console.log('Profile Data for API:', goalIds, medicalIds, profileData?.current_medicine);
+                    const imageFile = buildProfileFile(profileData?.prescription_file);
+                    const goalIds = profileData?.goals?.map(item => item.id) || [];
+                    const medicalIds = profileData?.medical_conditions?.map(item => item.id) || [];
+                    console.log('Profile Data for API:', selectedDiet);
                     var formdata = new FormData();
-                    formdata.append("name", profileData?.name);
-                    formdata.append("dob", profileData?.dob);
-                    formdata.append("gender", profileData?.gender);
-                    formdata.append("height", profileData?.height);
-                    formdata.append("weight", profileData?.weight);
-                    // formdata.append("goal", goalIds);
-                    formdata.append("diet", selectedDiet);
-                    formdata.append("activity_level", profileData?.activity_level?.id || '');
-                    // formdata.append("medical_condition", medicalIds);
+                    formdata.append("name", profileData?.name || '');
+                    formdata.append("dob", moment(profileData?.dob).format('DD/MM/YYYY'));
+                    formdata.append("gender", profileData?.gender || '');
+                    formdata.append("height", profileData?.height || '');
+                    formdata.append("weight", profileData?.weight || '');
+                    formdata.append("diet", `${selectedDiet}`);
+                    formdata.append("activity_level", `${profileData?.activity_level?.id || ''}`);
                     formdata.append("medical_condition_text", profileData?.medical_condition_text || '');
-                    if (profileData.prescription_file) {
-                        formdata.append("prescription_file", imageFile);
-                    }
+                    // if (imageFile) {
+                    //     formdata.append("prescription_file", imageFile);
+                    // }
                     formdata.append("health_note", profileData?.health_note || '');
-                    // formdata.append("current_medicine", profileData?.current_medicine);
                     goalIds.forEach(id => {
-                        formdata.append("goal[]", id);
+                        formdata.append("goal[]", `${id}`);
                     });
 
                     medicalIds.forEach(id => {
-                        formdata.append("medical_condition[]", id);
+                        formdata.append("medical_condition[]", `${id}`);
                     });
 
                     profileData?.medicines?.forEach((medicine, index) => {
@@ -125,10 +130,10 @@ const DietPreferenceScreen = ({ navigation, route }) => {
                         formdata.append(`current_medicine[${index}][timing]`, medicine.timing);
                         formdata.append(`current_medicine[${index}][additional_notes]`, medicine.additional_notes);
                     });
-                    formdata.append("workout_reference", profileData?.workout_reference?.id || '');
-
-                    const response = await onEditCommonFormApi('user/profile', formdata);
-                    console.log('Profile Update Response:', response.data);
+                    formdata.append("workout_reference", `${profileData?.workout_reference?.id || ''}`);
+                    console.log('Form Data for API:', formdata);
+                    const response = await onAddCommonFormApi('user/profile', formdata);
+                    console.log('Profile Update Response:', response);
                     if (response.data.status) {
                         showMessage({
                             message: 'Profile updated successfully',

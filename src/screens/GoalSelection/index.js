@@ -19,8 +19,9 @@ import { hp } from '../../components/responsive';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { showMessage } from 'react-native-flash-message';
 import useAuthStore from '../../store/authStore';
-import { onAddCommonFormApi, onGetCommonApi } from '../../services/Api';
+import { onAddCommonFormApi, onEditCommonFormApi, onGetCommonApi } from '../../services/Api';
 import { useFocusEffect } from '@react-navigation/native';
+import moment from 'moment';
 
 const goals = [
     { id: 1, title: 'Weight Loss', icon: '🔥' },
@@ -44,13 +45,13 @@ const GoalSelection = ({ navigation, route }) => {
     useFocusEffect(
         useCallback(() => {
             if (route.params?.item) {
-                setSelectedGoals(profileData?.goal?.map(item => item.id) || []);
+                setSelectedGoals(profileData?.goals?.map(item => item.id) || []);
                 setFromAccount(true);
             } else {
                 setSelectedGoals(signupData?.goal || []);
                 setFromAccount(false);
             }
-        }, [route.params?.item, profileData?.goal, signupData?.goal])
+        }, [route.params?.item, profileData?.goals, signupData?.goal])
     );
 
     const toggleGoal = (goal) => {
@@ -75,7 +76,7 @@ const GoalSelection = ({ navigation, route }) => {
                 try {
                     setIsLoading(true);
                     const imageUrl = profileData.prescription_file;
-                    const extension = imageUrl.split(".").pop().toLowerCase();
+                    const extension = imageUrl ? imageUrl.split(".").pop().toLowerCase() : null;
                     let mimeType = "image/png";
                     switch (extension) {
                         case "jpg":
@@ -95,21 +96,23 @@ const GoalSelection = ({ navigation, route }) => {
                     const imageFile = {
                         uri: imageUrl,
                         type: mimeType,
-                        name: imageUrl.split('/').pop(),
+                        name: imageUrl ? imageUrl.split('/').pop() : null,
                     };
-                    const medicalIds = profileData?.medical_condition.map(item => item.id);
-                    console.log('Profile Data for API:', medicalIds, profileData?.current_medicine);
+                    const medicalIds = profileData?.medical_conditions.map(item => item.id);
+                    console.log('Profile Data for API:', medicalIds, profileData?.medicines);
                     var formdata = new FormData();
                     formdata.append("name", profileData?.name);
-                    formdata.append("dob", profileData?.dob);
+                    formdata.append("dob", moment(profileData?.dob).format('DD/MM/YYYY'));
                     formdata.append("gender", profileData?.gender);
                     formdata.append("height", profileData?.height);
                     formdata.append("weight", profileData?.weight);
-                    formdata.append("diet", profileData?.diet?.id);
-                    formdata.append("activity_level", profileData?.activity_level?.id);
-                    formdata.append("medical_condition_text", profileData?.medical_condition_text);
-                    formdata.append("prescription_file", imageFile);
-                    formdata.append("health_note", profileData?.health_note);
+                    formdata.append("diet", profileData?.diet?.id || '');
+                    formdata.append("activity_level", profileData?.activity_level?.id || '');
+                    formdata.append("medical_condition_text", profileData?.medical_condition_text || '');
+                    if (profileData.prescription_file) {
+                        formdata.append("prescription_file", imageFile);
+                    }
+                    formdata.append("health_note", profileData?.health_note || '');
                     selectedGoals.forEach(id => {
                         formdata.append("goal[]", id);
                     });
@@ -118,7 +121,7 @@ const GoalSelection = ({ navigation, route }) => {
                         formdata.append("medical_condition[]", id);
                     });
 
-                    profileData?.current_medicine?.forEach((medicine, index) => {
+                    profileData?.medicines?.forEach((medicine, index) => {
                         formdata.append(`current_medicine[${index}][medicine_name]`, medicine.medicine_name);
                         formdata.append(`current_medicine[${index}][dosage]`, medicine.dosage);
                         formdata.append(`current_medicine[${index}][timing]`, medicine.timing);

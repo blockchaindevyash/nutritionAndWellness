@@ -137,7 +137,7 @@ export const onAddCommonFormApi = async (dataUrl, requestData) => {
     axios
       .post(url, requestData, {
         headers: {
-          'Content-Type': 'multipart/form-data',
+          Accept: "application/json",
           Authorization: `Bearer ${token}`,
         },
       })
