@@ -25,7 +25,7 @@ import { startCounter, stopCounter } from 'react-native-accurate-step-counter';
 
 const weeklyPlan = [
   {
-    date: "2026-07-27",
+    date: "2026-08-03",
     day: "Monday",
     calories: 1500,
     meals: {
@@ -53,7 +53,7 @@ const weeklyPlan = [
     ],
   },
   {
-    date: "2026-07-28",
+    date: "2026-08-04",
     day: "Tuesday",
     calories: 1500,
     meals: {
@@ -80,7 +80,7 @@ const weeklyPlan = [
     ],
   },
   {
-    date: "2026-07-29",
+    date: "2026-08-05",
     day: "Wednesday",
     calories: 1450,
     meals: {
@@ -107,7 +107,7 @@ const weeklyPlan = [
     ],
   },
   {
-    date: "2026-07-30",
+    date: "2026-08-06",
     day: "Thursday",
     calories: 1500,
     meals: {
@@ -134,7 +134,7 @@ const weeklyPlan = [
     ],
   },
   {
-    date: "2026-07-31",
+    date: "2026-08-07",
     day: "Friday",
     calories: 1500,
     meals: {
@@ -160,7 +160,7 @@ const weeklyPlan = [
     ],
   },
   {
-    date: "2026-08-01",
+    date: "2026-08-08",
     day: "Saturday",
     calories: 1550,
     meals: {
@@ -186,7 +186,7 @@ const weeklyPlan = [
     ],
   },
   {
-    date: "2026-08-02",
+    date: "2026-08-09",
     day: "Sunday",
     calories: 1400,
     meals: {
@@ -437,7 +437,6 @@ const DashboardScreen = ({ navigation }) => {
                           {supplement.dosage}
                         </Text>
                       </View>
-
                     </View>
                   ))}
                 </View>

@@ -153,7 +153,6 @@ const DoctorDescriptionScreen = ({navigation, route}) => {
                         formdata.append(`current_medicine[${index}][additional_notes]`, medicine.additional_notes);
                     });
                     formdata.append("workout_reference", profileData?.workout_reference?.id);
-
                     const response = await onEditCommonFormApi('user/profile', formdata);
                     if (response.data.status) {
                         showMessage({

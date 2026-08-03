@@ -129,22 +129,49 @@ export const onAddCommonJsonApi = async (dataUrl, requestData) => {
   });
 };
 
-export const onAddCommonFormApi = async (dataUrl, requestData) => {
-  const token = await AsyncStorage.getItem('accessToken');
-  const url = Api.baseUrl1 + dataUrl;
-  console.log('Get Login Url:::', url);
-  return new Promise((resolve, reject) => {
-    axios
-      .post(url, requestData, {
-        headers: {
-          Accept: "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then(res => resolve(res))
-      .catch(err => reject(err));
-  });
-};
+export const onAddCommonFormApi = async (dataUrl, formData) => {
+  try {
+    const token = await AsyncStorage.getItem('accessToken');
+    const url = Api.baseUrl1 + dataUrl;
+    console.log('URL:', url);
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: formData,
+    });
+    const result = {data: await response.json()};
+    if (!response.ok) {
+      throw {
+        status: response.status,
+        data: result,
+      };
+    }
+    return result;
+  } catch (error) {
+    console.log('Fetch Error:', error);
+    throw error;
+  }
+}
+
+// export const onAddCommonFormApi = async (dataUrl, requestData) => {
+//   const token = await AsyncStorage.getItem('accessToken');
+//   const url = Api.baseUrl1 + dataUrl;
+//   console.log('Get Login Url:::', url);
+//   return new Promise((resolve, reject) => {
+//     axios
+//       .post(url, requestData, {
+//         headers: {
+//           Accept: "application/json",
+//           Authorization: `Bearer ${token}`,
+//         },
+//       })
+//       .then(res => resolve(res))
+//       .catch(err => reject(err));
+//   });
+// };
 
 export const onEditCommonFormApi = async (dataUrl, requestData) => {
   const token = await AsyncStorage.getItem('accessToken');
