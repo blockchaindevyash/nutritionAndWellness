@@ -96,9 +96,9 @@ const HomeScreen = ({ navigation }) => {
         <Text style={styles.callLogText}>
           Food Recipes
         </Text>
-        <TouchableOpacity onPress={() => navigation.navigate('CreateRecipeScreen')}>
+        {/* <TouchableOpacity onPress={() => navigation.navigate('CreateRecipeScreen')}>
           <Image source={plus} style={styles.addImage} />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
       <View style={{height: '92%', backgroundColor: COLORS.backColor, padding: 16}}>
         <FlatList

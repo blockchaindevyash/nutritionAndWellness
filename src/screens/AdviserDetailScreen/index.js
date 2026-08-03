@@ -43,7 +43,7 @@ const AdviserDetailScreen = ({ navigation, route }) => {
       <View style={[styles.container, {backgroundColor: COLORS.backColor}]}>
         <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: hp(10) }}>
           <LinearGradient
-            colors={["#ff9966", "#ff5e62"]}
+            colors={['#99e141', '#79B433']}
             style={styles.headerCard}>
             <View style={styles.iconContainer}>
               <Text style={styles.icon}>

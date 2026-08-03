@@ -203,7 +203,7 @@ export const portraitStyles = StyleSheet.create({
     fontFamily: Fonts.FONTS.PoppinsSemiBold,
   },
   selectedTag: {
-    backgroundColor: "#fc6127",
+    backgroundColor: COLORS.secondary,
   },
   selectedTagText: {
     color: "#fff",
