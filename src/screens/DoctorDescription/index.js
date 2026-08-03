@@ -23,7 +23,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { showMessage } from "react-native-flash-message";
 import useAuthStore from "../../store/authStore";
 import { useFocusEffect } from "@react-navigation/native";
-import { onAddCommonFormApi, onEditCommonFormApi, onGetCommonApi } from "../../services/Api";
+import { onAddCommonFormApi, onGetCommonApi } from "../../services/Api";
 
 const DoctorDescriptionScreen = ({navigation, route}) => {
     const {updateSignupData, profileData, updateProfileData, signupData} = useAuthStore();
@@ -153,7 +153,7 @@ const DoctorDescriptionScreen = ({navigation, route}) => {
                         formdata.append(`current_medicine[${index}][additional_notes]`, medicine.additional_notes);
                     });
                     formdata.append("workout_reference", profileData?.workout_reference?.id);
-                    const response = await onEditCommonFormApi('user/profile', formdata);
+                    const response = await onAddCommonFormApi('user/profile', formdata);
                     if (response.data.status) {
                         showMessage({
                             message: 'Profile updated successfully',

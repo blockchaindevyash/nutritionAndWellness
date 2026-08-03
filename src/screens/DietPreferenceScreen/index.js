@@ -19,7 +19,7 @@ import { hp } from '../../components/responsive';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { showMessage } from 'react-native-flash-message';
 import useAuthStore from '../../store/authStore';
-import { onAddCommonFormApi, onEditCommonFormApi, onGetCommonApi } from '../../services/Api';
+import { onAddCommonFormApi, onGetCommonApi } from '../../services/Api';
 import { useFocusEffect } from '@react-navigation/native';
 import moment from 'moment';
 

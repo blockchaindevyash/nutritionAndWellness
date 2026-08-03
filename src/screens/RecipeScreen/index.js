@@ -108,7 +108,7 @@ const RecipeScreen = ({ navigation, route }) => {
       </View>
       <View style={styles.mainView}>
         <ScrollView style={styles.container} contentContainerStyle={{paddingBottom: hp(8)}} showsVerticalScrollIndicator={false}>
-          <Image style={styles.fullImageStyle} source={{uri: item?.recipe_image_url}} />
+          <Image style={styles.fullImageStyle} source={{uri: item?.recipe_image}} />
           <View style={styles.infoView}>
             <View style={styles.topBadge}>
               <Text style={styles.badgeText}>

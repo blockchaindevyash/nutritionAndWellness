@@ -20,7 +20,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { showMessage } from 'react-native-flash-message';
 import useAuthStore from '../../store/authStore';
 import { useFocusEffect } from '@react-navigation/native';
-import { onAddCommonFormApi, onEditCommonFormApi, onGetCommonApi } from '../../services/Api';
+import { onAddCommonFormApi, onGetCommonApi } from '../../services/Api';
 import moment from 'moment';
 
 const activityOptions = [
@@ -91,15 +91,12 @@ const ActivityLevelScreen = ({ navigation, route }) => {
                         case "jpeg":
                             mimeType = "image/jpeg";
                             break;
-
                         case "png":
                             mimeType = "image/png";
                             break;
-
                         case "webp":
                             mimeType = "image/webp";
                             break;
-
                         // PDF
                         case "pdf":
                             mimeType = "application/pdf";
@@ -132,11 +129,9 @@ const ActivityLevelScreen = ({ navigation, route }) => {
                     goalIds.forEach(id => {
                         formdata.append("goal[]", id);
                     });
-
                     medicalIds.forEach(id => {
                         formdata.append("medical_condition[]", id);
                     });
-
                     profileData?.medicines?.forEach((medicine, index) => {
                         formdata.append(`current_medicine[${index}][medicine_name]`, medicine.medicine_name);
                         formdata.append(`current_medicine[${index}][dosage]`, medicine.dosage);

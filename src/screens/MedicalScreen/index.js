@@ -20,7 +20,7 @@ import { hp } from '../../components/responsive';
 import { showMessage } from 'react-native-flash-message';
 import useAuthStore from '../../store/authStore';
 import { useFocusEffect } from '@react-navigation/native';
-import { onAddCommonFormApi, onEditCommonFormApi, onGetCommonApi } from '../../services/Api';
+import { onAddCommonFormApi, onGetCommonApi } from '../../services/Api';
 
 const medicalOptions = [
     { id: 1, title: "None" },
@@ -144,7 +144,7 @@ const MedicalScreen = ({ navigation, route }) => {
                     });
                     formdata.append("workout_reference", profileData?.workout_reference?.id || '');
 
-                    const response = await onEditCommonFormApi('user/profile', formdata);
+                    const response = await onAddCommonFormApi('user/profile', formdata);
                     if (response.data.status) {
                         showMessage({
                             message: 'Profile updated successfully',
