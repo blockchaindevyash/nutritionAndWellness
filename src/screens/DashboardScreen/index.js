@@ -22,6 +22,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { COLORS } from '../../utils';
 import { LineChart } from "react-native-gifted-charts"
 import { startCounter, stopCounter } from 'react-native-accurate-step-counter';
+import { getUpdatedWaterCount, MAX_WATER_GLASSES } from './helpers';
 
 const weeklyPlan = [
   {
@@ -237,6 +238,7 @@ const DashboardScreen = ({ navigation }) => {
   const insets = useSafeAreaInsets();
   const [selectedDate, setSelectedDate] = useState(null);
   const [steps, setSteps] = useState(0);
+  const [waterByDate, setWaterByDate] = useState({});
   const stepGoal = 10000;
   const progress = stepGoal > 0 ? Math.min(steps / stepGoal, 1) : 0;
   const progressPercent = `${Math.round(progress * 100)}%`;
@@ -304,8 +306,7 @@ const DashboardScreen = ({ navigation }) => {
     const today = new Date();
     const startOfWeek = new Date(today);
     startOfWeek.setDate(today.getDate() - today.getDay() + 1);
-    console.log('Start of week:', JSON.stringify(today.toISOString().split('T')[0]));
-    
+
     return Array.from({ length: 7 }, (_, i) => {
       const d = new Date(startOfWeek);
       d.setDate(startOfWeek.getDate() + i);
@@ -317,6 +318,19 @@ const DashboardScreen = ({ navigation }) => {
   };
 
   const weekDays = getCurrentWeek();
+  const selectedDateKey = selectedDate?.date || null;
+  const waterCount = selectedDateKey ? (waterByDate[selectedDateKey] || 0) : 0;
+
+  const updateWater = delta => {
+    if (!selectedDateKey) {
+      return;
+    }
+
+    setWaterByDate(prev => ({
+      ...prev,
+      [selectedDateKey]: getUpdatedWaterCount(prev[selectedDateKey], delta),
+    }));
+  };
 
   return (
     <View style={styles.safeAreaStyle}>
@@ -407,15 +421,42 @@ const DashboardScreen = ({ navigation }) => {
                   <Text style={styles.foodText}>{`${item.meals.dinner}\n`}</Text>
                 </View>
               </TouchableOpacity>
+              {/* Water Intake */}
+              <View style={styles.waterCard}>
+          <View style={styles.waterCardHeader}>
+            <View>
+              <Text style={styles.waterTitle}>💧 Water intake</Text>
+              <Text style={styles.waterSubtitle}>Track your daily glasses</Text>
+            </View>
+            <View style={styles.waterBadge}>
+              <Text style={styles.waterBadgeText}>{waterCount}/{MAX_WATER_GLASSES}</Text>
+            </View>
+          </View>
+
+          <View style={styles.waterControls}>
+            <TouchableOpacity style={styles.waterButton} onPress={() => updateWater(-1)}>
+              <Text style={[styles.waterButtonText, {marginBottom: hp(1)}]}>-</Text>
+            </TouchableOpacity>
+            <View style={styles.waterCenterBox}>
+              <Text style={styles.waterCountText}>{waterCount}</Text>
+              <Text style={styles.waterHintText}>Glasses</Text>
+            </View>
+            <TouchableOpacity style={styles.waterButton} onPress={() => updateWater(1)}>
+              <Text style={styles.waterButtonText}>+</Text>
+            </TouchableOpacity>
+          </View>
+
+          <Text style={styles.waterLimitText}>Maximum {MAX_WATER_GLASSES} glasses per day</Text>
+        </View>
               {/* Exercises */}
               <View style={styles.card}>
                 <View style={styles.section}>
-                  <Text style={styles.sectionTitle}>Workout</Text>
+                  <Text style={styles.sectionTitle}>Exercises</Text>
                   {item.exercises.map((ex, index) => (
                     <Text key={index} style={styles.exerciseText}>• {ex}</Text>
                   ))}
                   <TouchableOpacity style={styles.workoutButton} onPress={() => navigation.navigate('ProgramDetailScreen', {item: item})}>
-                    <Text style={styles.startText}>Start Workout</Text>
+                    <Text style={styles.startText}>Start Exercises</Text>
                   </TouchableOpacity>
                 </View>
               </View>

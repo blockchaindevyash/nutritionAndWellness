@@ -23,6 +23,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { COLORS } from '../../utils';
 import { onGetCommonApi } from '../../services/Api';
 import { useFocusEffect } from '@react-navigation/native';
+import Header from '../../components/HeaderComponent';
 
 const dishArray = [
   {
@@ -93,9 +94,10 @@ const HomeScreen = ({ navigation }) => {
         }}
       />
       <View style={styles.headerView}>
-        <Text style={styles.callLogText}>
+        <Header title={'Food Recipes'} onPress={() => navigation.goBack()} />
+        {/* <Text style={styles.callLogText}>
           Food Recipes
-        </Text>
+        </Text> */}
         {/* <TouchableOpacity onPress={() => navigation.navigate('CreateRecipeScreen')}>
           <Image source={plus} style={styles.addImage} />
         </TouchableOpacity> */}

@@ -19,6 +19,7 @@ import AnalysisDetailScreen from './src/screens/AnalysisDetailScreen';
 import EditScreen from './src/screens/EditScreen';
 import RecipeScreen from './src/screens/RecipeScreen';
 import DashboardScreen from './src/screens/DashboardScreen';
+import TodoListScreen from './src/screens/TodoListScreen';
 import ChangePassword from './src/screens/ChangePassword';
 import NotificationScreen from './src/screens/NotificationScreen';
 import ProgramDetailScreen from './src/screens/ProgramDetailScreen';
@@ -44,6 +45,7 @@ import recipeBook from './src/images/recipeBook.png';
 import user from './src/images/user.png';
 import chat from './src/images/messenger.png';
 import trend from './src/images/trend.png';
+import toList from './src/images/toList.png';
 import FlashMessage from 'react-native-flash-message';
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -95,6 +97,24 @@ const TabStack = () => {
         }}
       />
       <Tab.Screen
+        name="TodoListScreen"
+        component={TodoListScreen}
+        options={{
+          headerShown: false,
+          tabBarIcon: ({ focused }) => (
+            <View style={[styles.bottomMainView, { width: wp(20) }]}>
+              <Image
+                style={[
+                  isPortrait ? styles.imageView : styles.imageViewLandscape,
+                  { tintColor: focused ? COLORS.subPrimary : COLORS.white },
+                ]}
+                source={toList}
+              />
+            </View>
+          ),
+        }}
+      />
+      {/* <Tab.Screen
         name="HomeScreen"
         component={HomeScreen}
         options={{
@@ -111,7 +131,7 @@ const TabStack = () => {
             </View>
           ),
         }}
-      />
+      /> */}
       <Tab.Screen
         name="HistoryScreen"
         component={HistoryScreen}
@@ -297,6 +317,11 @@ const App = () => {
           <Stack.Screen
             name="MedicineDetailScreen"
             component={MedicineDetailScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="HomeScreen"
+            component={HomeScreen}
             options={{headerShown: false}}
           />
           <Stack.Screen
