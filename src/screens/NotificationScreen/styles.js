@@ -19,7 +19,18 @@ export const portraitStyles = StyleSheet.create({
   mainView: {
     height: '92%',
     width: '100%',
-  }
+  },
+  emptyText: {
+    fontSize: hp(2.5),
+    fontFamily: Fonts.FONTS.PoppinsMedium,
+    color: COLORS.secondary,
+  },
+  ListEmptyView: {
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: hp(15),
+  },
 })
 
 export const landscapeStyles = StyleSheet.create({

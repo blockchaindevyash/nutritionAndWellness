@@ -110,7 +110,7 @@ const baseStyles = {
   },
   dayCell: {
     width: '13.5%',
-    aspectRatio: 0.7,
+    aspectRatio: 0.8,
     borderRadius: normalize(10),
     marginBottom: hp(0.8),
     justifyContent: 'center',

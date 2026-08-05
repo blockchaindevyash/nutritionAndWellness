@@ -9,6 +9,7 @@ import {
   Platform,
   PermissionsAndroid,
   FlatList,
+  AppState,
 } from 'react-native';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -22,7 +23,7 @@ import { LineChart } from "react-native-gifted-charts"
 import { startCounter, stopCounter } from 'react-native-accurate-step-counter';
 import { getUpdatedWaterCount, MAX_WATER_GLASSES } from './helpers';
 import { scheduleDailyStepGoalReminder } from '../../../notificationService';
-import { onAddCommonFormApi, onAddCommonJsonApi } from '../../services/Api';
+import { onAddCommonJsonApi } from '../../services/Api';
 
 const weeklyPlan = [
   {
@@ -247,12 +248,12 @@ const saveStepState = async (value, dateKey = getTodayKey(), sensorValue = null)
 
 const uploadStepCount = async (stepsToUpload, dateKey = getTodayKey()) => {
   try {
-    const raw = JSON.stringify({
+    const payload = {
       steps: Number(stepsToUpload || 0),
       date: dateKey,
-    });
-
-    const responseData = await onAddCommonFormApi('step-count', raw);
+    };
+    console.log('Uploading step uploadStepCount count::', payload);
+    const responseData = await onAddCommonJsonApi('step-count', payload);
     return responseData?.data?.status === true;
   } catch (error) {
     console.log('Error syncing step count::', error);
@@ -268,24 +269,24 @@ const DashboardScreen = ({ navigation }) => {
   const [selectedDate, setSelectedDate] = useState(null);
   const [steps, setSteps] = useState(0);
   const [waterByDate, setWaterByDate] = useState({});
+  const [isStepStateReady, setIsStepStateReady] = useState(false);
   const lastSensorValueRef = useRef(null);
   const progress = stepGoal > 0 ? Math.min(steps / stepGoal, 1) : 0;
   const progressPercent = `${Math.round(progress * 100)}%`;
   const stepsRemaining = Math.max(stepGoal - steps, 0);
 
-  const onStepCountDataAdd = useCallback(async (stepsToSend = steps, dateKey = getTodayKey()) => {
+  const onStepCountDataAdd = useCallback(async (stepsToSend = 0, dateKey = getTodayKey()) => {
     try {
       const synced = await uploadStepCount(stepsToSend, dateKey);
-      if (synced) {
-        if (dateKey === getTodayKey()) {
-          setSteps(0);
-          await saveStepState(0, dateKey);
-        }
+      if (synced && dateKey === getTodayKey()) {
+        const currentSteps = Number(stepsToSend || 0);
+        await saveStepState(currentSteps, dateKey, lastSensorValueRef.current);
+        setSteps(currentSteps);
       }
     } catch (err) {
       console.log('Error::', err);
     }
-  }, [steps]);
+  }, []);
 
   useEffect(() => {
     const today = new Date();
@@ -298,22 +299,25 @@ const DashboardScreen = ({ navigation }) => {
   useEffect(() => {
     const initializeStepsState = async () => {
       try {
+        setIsStepStateReady(false);
         const raw = await AsyncStorage.getItem(STEP_STATE_KEY);
         const todayKey = getTodayKey();
 
         if (raw) {
           const parsed = JSON.parse(raw);
-          if (parsed?.date === todayKey) {
-            const storedSteps = Number(parsed.steps || 0);
+          const storedSteps = Number(parsed?.steps || 0);
+
+          if (storedSteps > 0 || parsed?.date === todayKey) {
             setSteps(storedSteps);
-            lastSensorValueRef.current = parsed.sensorValue !== undefined && parsed.sensorValue !== null
+            lastSensorValueRef.current = parsed?.sensorValue !== undefined && parsed?.sensorValue !== null
               ? Number(parsed.sensorValue)
               : storedSteps;
+            setIsStepStateReady(true);
             return;
           }
 
-          if (Number(parsed.steps || 0) > 0) {
-            await onStepCountDataAdd(Number(parsed.steps || 0), parsed.date);
+          if (storedSteps > 0) {
+            await onStepCountDataAdd(storedSteps, parsed?.date);
           }
         }
 
@@ -322,6 +326,8 @@ const DashboardScreen = ({ navigation }) => {
         lastSensorValueRef.current = 0;
       } catch (error) {
         console.warn('Unable to initialize step state', error);
+      } finally {
+        setIsStepStateReady(true);
       }
     };
 
@@ -340,6 +346,29 @@ const DashboardScreen = ({ navigation }) => {
     scheduleReminder();
   }, []);
 
+  useEffect(() => {
+    if (!isStepStateReady) {
+      return;
+    }
+
+    saveStepState(steps, getTodayKey(), lastSensorValueRef.current).catch(error => {
+      console.warn('Unable to persist steps', error);
+    });
+  }, [steps, isStepStateReady]);
+
+  useEffect(() => {
+    const handleAppStateChange = (nextAppState) => {
+      if (nextAppState === 'background' || nextAppState === 'inactive') {
+        saveStepState(steps, getTodayKey(), lastSensorValueRef.current).catch(error => {
+          console.warn('Unable to persist steps on app background', error);
+        });
+      }
+    };
+
+    const subscription = AppState.addEventListener('change', handleAppStateChange);
+    return () => subscription.remove();
+  }, [steps]);
+
   const handleStepCountChange = useCallback((stepCount) => {
     const safeCount = Number(stepCount || 0);
     const previousSensorValue = lastSensorValueRef.current;
@@ -348,15 +377,16 @@ const DashboardScreen = ({ navigation }) => {
       let totalSteps = prevSteps;
 
       if (previousSensorValue === null) {
-        totalSteps = safeCount;
-      } else if (safeCount >= previousSensorValue) {
+        totalSteps = safeCount > 0 ? safeCount : prevSteps;
+      } else if (safeCount > previousSensorValue) {
         totalSteps = prevSteps + (safeCount - previousSensorValue);
+      } else if (safeCount === previousSensorValue) {
+        totalSteps = prevSteps;
       } else {
         totalSteps = prevSteps + safeCount;
       }
 
       lastSensorValueRef.current = safeCount;
-      saveStepState(totalSteps, getTodayKey(), safeCount).catch(error => console.warn('Unable to persist steps', error));
       return totalSteps;
     });
   }, []);
@@ -371,6 +401,10 @@ const DashboardScreen = ({ navigation }) => {
     }
 
     const start = async () => {
+      if (!isStepStateReady) {
+        return;
+      }
+
       if (Platform.OS === 'android' && Platform.Version >= 29) {
         try {
           const granted = await PermissionsAndroid.request(
@@ -409,7 +443,7 @@ const DashboardScreen = ({ navigation }) => {
         console.warn('Unable to stop step counter:', error);
       }
     }
-  }, [handleStepCountChange]);
+  }, [handleStepCountChange, isStepStateReady]);
 
   const getCurrentWeek = () => {
     const today = new Date();

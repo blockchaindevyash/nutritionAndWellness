@@ -107,7 +107,7 @@ const AccountScreen = ({ navigation }) => {
                     </View>
                     <View style={styles.optionView}>
                         <Text style={[styles.detailText,{color: COLORS.secondary}]}>Weight</Text>
-                        <Text style={styles.detailText1}>{profileData?.weight} kg</Text>
+                        <Text style={styles.detailText1}>{profileData?.weight}</Text>
                     </View>
                 </View>
                 <TouchableOpacity style={styles.optionView} onPress={() => navigation.navigate('DietPreferenceScreen', {item: profileData})}>

@@ -5,12 +5,16 @@ import notifee, {
   RepeatFrequency,
 } from "@notifee/react-native";
 import { Platform, PermissionsAndroid } from "react-native";
-import { onAddCommonFormApi, onAddCommonJsonApi } from "./src/services/Api";
+import { onAddCommonJsonApi } from "./src/services/Api";
 
 const CHANNEL_ID = "meal-reminder";
 const STEP_GOAL_REMINDER_ID = "step-goal-reminder";
 const STEP_STATE_KEY = "daily-step-state";
+const STEP_SYNC_DONE_KEY = "daily-step-sync-done";
+const STEP_SYNC_PENDING_KEY = "daily-step-sync-pending";
 const MEAL_NOTIFICATION_IDS = ["breakfast-reminder", "lunch-reminder", "dinner-reminder"];
+
+let stepSyncInFlight = new Map();
 
 export async function requestNotificationPermission() {
   if (Platform.OS === "android" && Platform.Version >= 33) {
@@ -131,28 +135,59 @@ async function readStoredSteps() {
 }
 
 export async function syncDailyStepCount(dateKey = new Date().toISOString().slice(0, 10)) {
-  try {
-    const { steps } = await readStoredSteps();
-    const payload = JSON.stringify({
-      steps: Number(steps || 0),
-      date: dateKey,
-    });
+  const activeSync = stepSyncInFlight.get(dateKey);
+  if (activeSync) {
+    return activeSync;
+  }
 
-    const responseData = await onAddCommonFormApi("step-count", payload);
-    const success = responseData?.data?.status === true;
+  const lastSyncedDate = await AsyncStorage.getItem(STEP_SYNC_DONE_KEY);
+  const pendingSyncDate = await AsyncStorage.getItem(STEP_SYNC_PENDING_KEY);
 
-    if (success) {
-      await AsyncStorage.setItem(
-        STEP_STATE_KEY,
-        JSON.stringify({ date: dateKey, steps: 0 })
-      );
-    }
+  if (lastSyncedDate === dateKey) {
+    return true;
+  }
 
-    return success;
-  } catch (error) {
-    console.warn("Unable to sync step count", error);
+  if (pendingSyncDate === dateKey) {
     return false;
   }
+
+  const pendingSync = (async () => {
+    try {
+      await AsyncStorage.setItem(STEP_SYNC_PENDING_KEY, dateKey);
+      const { steps } = await readStoredSteps();
+      const payload = {
+        steps: Number(steps || 0),
+        date: dateKey,
+      };
+      console.log('Uploading syncDailyStepCount step count::', payload);
+      const responseData = await onAddCommonJsonApi("step-count", payload);
+      const success = responseData?.data?.status === true;
+
+      if (success) {
+        const raw = await AsyncStorage.getItem(STEP_STATE_KEY);
+        const storedState = raw ? JSON.parse(raw) : null;
+        const nextState = {
+          ...(storedState || {}),
+          date: dateKey,
+          steps: Number(steps || 0),
+        };
+
+        await AsyncStorage.setItem(STEP_STATE_KEY, JSON.stringify(nextState));
+        await AsyncStorage.setItem(STEP_SYNC_DONE_KEY, dateKey);
+        await AsyncStorage.removeItem(STEP_SYNC_PENDING_KEY);
+      }
+
+      return success;
+    } catch (error) {
+      console.warn("Unable to sync step count", error);
+      return false;
+    } finally {
+      stepSyncInFlight.delete(dateKey);
+    }
+  })();
+
+  stepSyncInFlight.set(dateKey, pendingSync);
+  return pendingSync;
 }
 
 export async function scheduleDailyStepGoalReminder(stepGoal = 10000) {
@@ -169,8 +204,8 @@ export async function scheduleDailyStepGoalReminder(stepGoal = 10000) {
     id: STEP_GOAL_REMINDER_ID,
     title,
     body,
-    hour: 13,
-    minute: 13,
+    hour: 17,
+    minute: 27,
   });
 }
 
