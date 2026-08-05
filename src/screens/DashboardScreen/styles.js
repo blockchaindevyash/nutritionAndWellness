@@ -153,6 +153,12 @@ export const portraitStyles = StyleSheet.create({
     color: COLORS.white,
     fontFamily: Fonts.FONTS.PoppinsSemiBold,
   },
+  resumeText: {
+    marginTop: hp(1.2),
+    fontSize: normalize(12),
+    color: COLORS.secondary,
+    fontFamily: Fonts.FONTS.PoppinsMedium,
+  },
   card: {
     backgroundColor: COLORS.primary,
     padding: wp(4),

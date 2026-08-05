@@ -10,19 +10,19 @@ import {
   PermissionsAndroid,
   FlatList,
 } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import moment from 'moment';
 import { portraitStyles, landscapeStyles } from './styles';
 import useOrientation from '../../components/OrientationComponent';
 import { hp } from '../../components/responsive';
-import dish1 from '../../images/dish1.jpg';
-import dish2 from '../../images/dish2.png';
-import dish3 from '../../images/dish3.jpg';
-import dish4 from '../../images/dish4.jpg';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { COLORS } from '../../utils';
 import { LineChart } from "react-native-gifted-charts"
 import { startCounter, stopCounter } from 'react-native-accurate-step-counter';
 import { getUpdatedWaterCount, MAX_WATER_GLASSES } from './helpers';
+import { scheduleDailyStepGoalReminder } from '../../../notificationService';
+import { onAddCommonFormApi, onAddCommonJsonApi } from '../../services/Api';
 
 const weeklyPlan = [
   {
@@ -231,6 +231,35 @@ const areaData = [
   { id: 3, name: 'Legs' },
 ]
 
+const STEP_STATE_KEY = 'daily-step-state';
+const stepGoal = 10000;
+
+const getTodayKey = () => moment().format('YYYY-MM-DD');
+
+const saveStepState = async (value, dateKey = getTodayKey(), sensorValue = null) => {
+  const payload = JSON.stringify({
+    date: dateKey,
+    steps: Number(value || 0),
+    sensorValue: sensorValue === null ? null : Number(sensorValue),
+  });
+  await AsyncStorage.setItem(STEP_STATE_KEY, payload);
+};
+
+const uploadStepCount = async (stepsToUpload, dateKey = getTodayKey()) => {
+  try {
+    const raw = JSON.stringify({
+      steps: Number(stepsToUpload || 0),
+      date: dateKey,
+    });
+
+    const responseData = await onAddCommonFormApi('step-count', raw);
+    return responseData?.data?.status === true;
+  } catch (error) {
+    console.log('Error syncing step count::', error);
+    return false;
+  }
+};
+
 const DashboardScreen = ({ navigation }) => {
   const orientation = useOrientation();
   const isPortrait = orientation === 'portrait';
@@ -239,10 +268,24 @@ const DashboardScreen = ({ navigation }) => {
   const [selectedDate, setSelectedDate] = useState(null);
   const [steps, setSteps] = useState(0);
   const [waterByDate, setWaterByDate] = useState({});
-  const stepGoal = 10000;
+  const lastSensorValueRef = useRef(null);
   const progress = stepGoal > 0 ? Math.min(steps / stepGoal, 1) : 0;
   const progressPercent = `${Math.round(progress * 100)}%`;
   const stepsRemaining = Math.max(stepGoal - steps, 0);
+
+  const onStepCountDataAdd = useCallback(async (stepsToSend = steps, dateKey = getTodayKey()) => {
+    try {
+      const synced = await uploadStepCount(stepsToSend, dateKey);
+      if (synced) {
+        if (dateKey === getTodayKey()) {
+          setSteps(0);
+          await saveStepState(0, dateKey);
+        }
+      }
+    } catch (err) {
+      console.log('Error::', err);
+    }
+  }, [steps]);
 
   useEffect(() => {
     const today = new Date();
@@ -253,11 +296,77 @@ const DashboardScreen = ({ navigation }) => {
   }, []);
 
   useEffect(() => {
+    const initializeStepsState = async () => {
+      try {
+        const raw = await AsyncStorage.getItem(STEP_STATE_KEY);
+        const todayKey = getTodayKey();
+
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (parsed?.date === todayKey) {
+            const storedSteps = Number(parsed.steps || 0);
+            setSteps(storedSteps);
+            lastSensorValueRef.current = parsed.sensorValue !== undefined && parsed.sensorValue !== null
+              ? Number(parsed.sensorValue)
+              : storedSteps;
+            return;
+          }
+
+          if (Number(parsed.steps || 0) > 0) {
+            await onStepCountDataAdd(Number(parsed.steps || 0), parsed.date);
+          }
+        }
+
+        await saveStepState(0, todayKey, 0);
+        setSteps(0);
+        lastSensorValueRef.current = 0;
+      } catch (error) {
+        console.warn('Unable to initialize step state', error);
+      }
+    };
+
+    initializeStepsState();
+  }, [onStepCountDataAdd]);
+
+  useEffect(() => {
+    const scheduleReminder = async () => {
+      try {
+        await scheduleDailyStepGoalReminder(stepGoal);
+      } catch (error) {
+        console.warn('Unable to schedule daily step reminder', error);
+      }
+    };
+
+    scheduleReminder();
+  }, []);
+
+  const handleStepCountChange = useCallback((stepCount) => {
+    const safeCount = Number(stepCount || 0);
+    const previousSensorValue = lastSensorValueRef.current;
+
+    setSteps(prevSteps => {
+      let totalSteps = prevSteps;
+
+      if (previousSensorValue === null) {
+        totalSteps = safeCount;
+      } else if (safeCount >= previousSensorValue) {
+        totalSteps = prevSteps + (safeCount - previousSensorValue);
+      } else {
+        totalSteps = prevSteps + safeCount;
+      }
+
+      lastSensorValueRef.current = safeCount;
+      saveStepState(totalSteps, getTodayKey(), safeCount).catch(error => console.warn('Unable to persist steps', error));
+      return totalSteps;
+    });
+  }, []);
+
+  useEffect(() => {
     const config = {
       default_threshold: 15.0,
       default_delay: 150000000,
       cheatInterval: 3000,
-      onStepCountChange: (stepCount) => { setSteps(stepCount) },
+      onStepCountChange: handleStepCountChange,
       onCheat: () => { console.log("User is Cheating") }
     }
 
@@ -300,7 +409,7 @@ const DashboardScreen = ({ navigation }) => {
         console.warn('Unable to stop step counter:', error);
       }
     }
-  }, []);
+  }, [handleStepCountChange]);
 
   const getCurrentWeek = () => {
     const today = new Date();
@@ -381,6 +490,10 @@ const DashboardScreen = ({ navigation }) => {
               <Text style={styles.stepMetaValue}>{progressPercent}</Text>
             </View>
           </View>
+
+          <Text style={styles.resumeText}>
+            {lastSensorValueRef.current !== null ? 'Resuming from last saved session' : 'Starting fresh today'}
+          </Text>
         </View>
 
         {/* Week Header */}

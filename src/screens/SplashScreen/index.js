@@ -34,6 +34,7 @@ const SplashScreen = ({ navigation }) => {
             const accessToken = await AsyncStorage.getItem('accessToken');
             console.log('Access Token:', accessToken);
             const goalRes = await onGetWithoutTokenCommonApi('goals');
+            console.log('Goal Response:', goalRes.data.data);
             updateGoalData(goalRes.data.data.items);
             const dietsRes = await onGetWithoutTokenCommonApi('diets');
             updateDietData(dietsRes.data.data.items);
@@ -51,7 +52,7 @@ const SplashScreen = ({ navigation }) => {
                 navigation.navigate('LoginScreen');
             }
         } catch (error) {
-            console.log('Error:', error);
+            console.log('Error:', error.response);
         }
     };
     

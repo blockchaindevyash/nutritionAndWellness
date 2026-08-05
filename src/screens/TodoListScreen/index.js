@@ -40,6 +40,14 @@ const TodoListScreen = () => {
         meal: true,
       },
     },
+    [moment().subtract(3, 'day').format('YYYY-MM-DD')]: {
+      tasks: {
+        walk: true,
+        workout: true,
+        water: true,
+        meal: true,
+      },
+    },
   });
 
   const calendarDays = useMemo(() => buildCalendarDays(selectedDate), [selectedDate]);

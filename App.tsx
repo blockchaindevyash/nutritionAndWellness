@@ -36,7 +36,9 @@ import {COLORS, Fonts} from './src/utils';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import {requestNotificationPermission,
   createNotificationChannel,
-  scheduleMealNotifications} from './notificationService';
+  scheduleMealNotifications,
+  scheduleDailyStepGoalReminder,
+  setupNotificationEventHandlers} from './notificationService';
 import useOrientation from './src/components/OrientationComponent';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { hp, wp } from './src/components/responsive';
@@ -194,9 +196,15 @@ const App = () => {
   
   useEffect(() => {
     async function initNotifications() {
-      await requestNotificationPermission();
-      await createNotificationChannel();
-      await scheduleMealNotifications();
+      try {
+        await requestNotificationPermission();
+        await createNotificationChannel();
+        await scheduleMealNotifications();
+        await scheduleDailyStepGoalReminder(10000);
+        setupNotificationEventHandlers();
+      } catch (error) {
+        console.warn('Notification setup error', error);
+      }
     }
     initNotifications();
   }, []);
