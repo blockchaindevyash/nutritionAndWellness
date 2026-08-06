@@ -1,13 +1,14 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import notifee, {
   AndroidImportance,
+  AndroidStyle,
   TriggerType,
   RepeatFrequency,
 } from "@notifee/react-native";
-import { Platform, PermissionsAndroid } from "react-native";
+import { Platform, PermissionsAndroid, Image } from "react-native";
 import { onAddCommonJsonApi } from "./src/services/Api";
 
-const CHANNEL_ID = "meal-reminder";
+const CHANNEL_ID = "health-reminders";
 const STEP_GOAL_REMINDER_ID = "step-goal-reminder";
 const STEP_STATE_KEY = "daily-step-state";
 const STEP_SYNC_DONE_KEY = "daily-step-sync-done";
@@ -29,10 +30,11 @@ export async function requestNotificationPermission() {
 export async function createNotificationChannel() {
   await notifee.createChannel({
     id: CHANNEL_ID,
-    name: "Meal Reminder",
+    name: "Health Reminders",
     importance: AndroidImportance.HIGH,
-    sound: "default",
     vibration: true,
+    sound: "default",
+    lights: true,
   });
 }
 
@@ -46,6 +48,13 @@ const getFutureTimestamp = (hour, minute = 0) => {
   futureDate.setMilliseconds(0);
 
   if (futureDate <= now) {
+    const diffMs = now.getTime() - futureDate.getTime();
+    // If scheduled time is within the same minute, treat as immediate test
+    if (diffMs < 60 * 1000) {
+      return now.getTime() + 5 * 1000; // 5 seconds from now
+    }
+
+    // Otherwise schedule for the next day
     futureDate.setDate(futureDate.getDate() + 1);
   }
 
@@ -58,27 +67,58 @@ async function scheduleNotification({
   body,
   hour,
   minute,
+  imageUrl = null,
   repeatDaily = true,
 }) {
   const timestamp = getFutureTimestamp(hour, minute);
+
+  console.log(
+    `Scheduling ${id} at ${new Date(timestamp).toLocaleString()}`
+  );
 
   await notifee.createTriggerNotification(
     {
       id,
       title,
       body,
+
       android: {
         channelId: CHANNEL_ID,
+        importance: AndroidImportance.HIGH,
         smallIcon: "ic_launcher",
+
         pressAction: {
           id: "default",
         },
+
+        ...(imageUrl && {
+          largeIcon: imageUrl,
+
+          style: {
+            type: AndroidStyle.BIGPICTURE,
+            picture: imageUrl,
+          },
+        }),
       },
+
+      ios: imageUrl
+        ? {
+            attachments: [
+              {
+                url: imageUrl,
+              },
+            ],
+          }
+        : undefined,
     },
     {
       type: TriggerType.TIMESTAMP,
       timestamp,
-      ...(repeatDaily ? { repeatFrequency: RepeatFrequency.DAILY } : {}),
+
+      ...(repeatDaily && {
+        repeatFrequency: RepeatFrequency.DAILY,
+      }),
+
       alarmManager: {
         allowWhileIdle: true,
       },
@@ -86,33 +126,90 @@ async function scheduleNotification({
   );
 }
 
+export async function scheduleWalkReminders() {
+  const walkImage = Image.resolveAssetSource(
+    require("./assets/walk.png")
+  );
+
+  const imageUri = walkImage.uri;
+
+  const morningHours = [7, 8, 9, 10, 13];
+  const eveningHours = [18, 19, 20, 21, 22];
+
+  const messages = [
+    "🚶 Let's go for a walk!",
+    "💪 Time to burn some calories.",
+    "🌿 Fresh air is waiting for you.",
+    "❤️ Walking improves your health.",
+    "😊 Every step counts. Keep moving!",
+  ];
+
+  const randomMessage = () =>
+    messages[Math.floor(Math.random() * messages.length)];
+
+  for (const hour of [...morningHours, ...eveningHours]) {
+    await notifee.cancelNotification(`walk-reminder-${hour}`);
+  }
+
+  for (const hour of morningHours) {
+    await scheduleNotification({
+      id: `walk-reminder-${hour}`,
+      title: "🌞 Morning Walk",
+      body: randomMessage(),
+      hour,
+      minute: 7,
+      imageUrl: imageUri,
+    });
+  }
+
+  for (const hour of eveningHours) {
+    await scheduleNotification({
+      id: `walk-reminder-${hour}`,
+      title: "🌙 Evening Walk",
+      body: randomMessage(),
+      hour,
+      minute: 0,
+      imageUrl: imageUri,
+    });
+  }
+}
+
 export async function scheduleMealNotifications() {
+  const walkImage = Image.resolveAssetSource(
+    require("./assets/walk.png")
+  );
+
+  const imageUri = walkImage.uri;
+
   for (const id of MEAL_NOTIFICATION_IDS) {
     await notifee.cancelNotification(id);
   }
 
   await scheduleNotification({
     id: "breakfast-reminder",
-    title: "Breakfast Time 🍳",
+    title: "🍳 Breakfast Time",
     body: "Don't skip your healthy breakfast!",
     hour: 8,
     minute: 0,
+    imageUrl: imageUri,
   });
 
   await scheduleNotification({
     id: "lunch-reminder",
-    title: "Lunch Time 🍛",
-    body: "Time for your lunch!",
+    title: "🍛 Lunch Time",
+    body: "Time for your healthy lunch!",
     hour: 13,
     minute: 0,
+    imageUrl: imageUri,
   });
 
   await scheduleNotification({
     id: "dinner-reminder",
-    title: "Dinner Time 🍲",
-    body: "Keep it light and healthy!",
+    title: "🍲 Dinner Time",
+    body: "Keep your dinner light and healthy!",
     hour: 20,
     minute: 0,
+    imageUrl: imageUri,
   });
 }
 

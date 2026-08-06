@@ -38,7 +38,8 @@ import {requestNotificationPermission,
   createNotificationChannel,
   scheduleMealNotifications,
   scheduleDailyStepGoalReminder,
-  setupNotificationEventHandlers} from './notificationService';
+  setupNotificationEventHandlers,
+  scheduleWalkReminders} from './notificationService';
 import useOrientation from './src/components/OrientationComponent';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { hp, wp } from './src/components/responsive';
@@ -200,6 +201,7 @@ const App = () => {
         await requestNotificationPermission();
         await createNotificationChannel();
         await scheduleMealNotifications();
+        await scheduleWalkReminders();
         await scheduleDailyStepGoalReminder(10000);
         setupNotificationEventHandlers();
       } catch (error) {

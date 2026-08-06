@@ -426,7 +426,6 @@ const DashboardScreen = ({ navigation }) => {
           return;
         }
       }
-
       try {
         startCounter(config);
       } catch (error) {
