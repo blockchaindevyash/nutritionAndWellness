@@ -340,19 +340,19 @@ export const portraitStyles = StyleSheet.create({
   queText: {
     color: COLORS.white,
     fontFamily: Fonts.FONTS.PoppinsMedium,
-    fontSize: normalize(22),
+    fontSize: normalize(18),
   },
   ansText: {
-    color: COLORS.black,
+    color: COLORS.white,
     fontFamily: Fonts.FONTS.PoppinsMedium,
-    fontSize: normalize(22),
+    fontSize: normalize(17),
     paddingVertical: hp(1),
     lineHeight: hp(3.8),
   },
   ansTitleText: {
-    color: COLORS.black,
+    color: COLORS.white,
     fontFamily: Fonts.FONTS.PoppinsMedium,
-    fontSize: normalize(22),
+    fontSize: normalize(19),
     marginTop: hp(2),
   },
   ansDateText: {
@@ -415,7 +415,7 @@ export const portraitStyles = StyleSheet.create({
   textInput: {
     fontSize: normalize(17),
     fontFamily: Fonts.FONTS.PoppinsRegular,
-    color: COLORS.black,
+    color: COLORS.white,
     width: '68%',
     paddingVertical: hp(0.5)
   },

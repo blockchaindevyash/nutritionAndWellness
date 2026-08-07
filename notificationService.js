@@ -138,12 +138,22 @@ export async function scheduleWalkReminders() {
   const walkImage = Image.resolveAssetSource(require("./assets/walk.png"));
   const walkImage1 = Image.resolveAssetSource(require("./assets/walk1.jpg"));
   const walkImage2 = Image.resolveAssetSource(require("./assets/walk2.png"));
+  const walkImage3 = Image.resolveAssetSource(require("./assets/walk3.webp"));
+  const walkImage4 = Image.resolveAssetSource(require("./assets/walk4.jpg"));
+  const walkImage5 = Image.resolveAssetSource(require("./assets/walk5.jpg"));
+  const walkImage6 = Image.resolveAssetSource(require("./assets/walk6.png"));
+  const walkImage7 = Image.resolveAssetSource(require("./assets/walk7.jpg"));
 
   const imageUri = walkImage.uri;
   const imageUri1 = walkImage1.uri;
   const imageUri2 = walkImage2.uri;
+  const imageUri3 = walkImage3.uri;
+  const imageUri4 = walkImage4.uri;
+  const imageUri5 = walkImage5.uri;
+  const imageUri6 = walkImage6.uri;
+  const imageUri7 = walkImage7.uri;
 
-  const photos = [imageUri, imageUri1, imageUri2];
+  const photos = [imageUri, imageUri1, imageUri2, imageUri3, imageUri4, imageUri5, imageUri6, imageUri7];
 
   const morningHours = [7, 8, 9, 10];
   const eveningHours = [18, 19, 20, 21, 22];
@@ -172,7 +182,7 @@ export async function scheduleWalkReminders() {
       title: "🌞 Morning Walk",
       body: randomMessage(),
       hour,
-      minute: 51,
+      minute: 0,
       imageUrl: randomImage(),
     });
   }
@@ -183,7 +193,7 @@ export async function scheduleWalkReminders() {
       title: "🌙 Evening Walk",
       body: randomMessage(),
       hour,
-      minute: 51,
+      minute: 0,
       imageUrl: randomImage(),
     });
   }
@@ -250,7 +260,7 @@ export async function scheduleWaterReminders() {
       title: "💧 Drink Water",
       body: randomMessage(),
       hour,
-      minute: 52,
+      minute: 0,
       actions: waterAction,
       repeatDaily: true,
       imageUrl: randomImage(),
@@ -393,8 +403,8 @@ export async function scheduleDailyStepGoalReminder(stepGoal = 10000) {
     id: STEP_GOAL_REMINDER_ID,
     title,
     body,
-    hour: 17,
-    minute: 27,
+    hour: 23,
+    minute: 0,
   });
 }
 
@@ -428,6 +438,11 @@ async function sendWaterDoneNotification() {
   const doneImage4 = Image.resolveAssetSource(require("./assets/done4.jpg"));
   const doneImage5 = Image.resolveAssetSource(require("./assets/done5.jpg"));
   const doneImage6 = Image.resolveAssetSource(require("./assets/done6.jpg"));
+  const doneImage7 = Image.resolveAssetSource(require("./assets/done7.png"));
+  const doneImage8 = Image.resolveAssetSource(require("./assets/done8.png"));
+  const doneImage9 = Image.resolveAssetSource(require("./assets/done9.jpg"));
+  const doneImage10 = Image.resolveAssetSource(require("./assets/done10.png"));
+  const doneImage11 = Image.resolveAssetSource(require("./assets/done11.jpg"));
 
   const imageUri = doneImage.uri;
   const imageUri1 = doneImage1.uri;
@@ -436,8 +451,13 @@ async function sendWaterDoneNotification() {
   const imageUri4 = doneImage4.uri;
   const imageUri5 = doneImage5.uri;
   const imageUri6 = doneImage6.uri;
+  const imageUri7 = doneImage7.uri;
+  const imageUri8 = doneImage8.uri;
+  const imageUri9 = doneImage9.uri;
+  const imageUri10 = doneImage10.uri;
+  const imageUri11 = doneImage11.uri;
 
-  const photos = [imageUri, imageUri1, imageUri2, imageUri3, imageUri4, imageUri5, imageUri6];
+  const photos = [imageUri, imageUri1, imageUri2, imageUri3, imageUri4, imageUri5, imageUri6, imageUri7, imageUri8, imageUri9, imageUri10, imageUri11];
 
   const randomImage = () => photos[Math.floor(Math.random() * photos.length)];
   const message = await getRandomYesMessage();

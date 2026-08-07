@@ -34,6 +34,12 @@ export const portraitStyles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  foodImage: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 8,
+    resizeMode: 'cover',
+  },
   scanView: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -64,12 +70,22 @@ export const portraitStyles = StyleSheet.create({
   },
   ingredientView: {
     width: '100%',
-
+    paddingVertical: hp(1),
+    paddingHorizontal: wp(2),
+    backgroundColor: COLORS.primary,
+    borderRadius: 5,
+    marginTop: hp(2),
   },
   ingredientText: {
     fontSize: normalize(14),
     fontFamily: Fonts.FONTS.PoppinsMedium,
     color: COLORS.white,
+    marginTop: hp(0.5),
+  },
+  ingredientDetailText: {
+    fontSize: normalize(14),
+    fontFamily: Fonts.FONTS.PoppinsMedium,
+    color: COLORS.secondary,
     marginTop: hp(0.5),
   }
 });

@@ -75,10 +75,10 @@ const AnalysisDetailScreen = ({navigation, route}) => {
               </View>
             ) : (
             <View style={styles.mainView}>
-              <ScrollView>
+              <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{paddingBottom: hp(8)}}>
               <View style={styles.imageView}>
-                {route.params?.imageAttachment ? (
-                  <Image source={{ uri: route.params.imageAttachment.uri }} style={styles.foodImage} />
+                {analyticsData?.image_url ? (
+                  <Image source={{ uri: analyticsData?.image_url }} style={styles.foodImage} />
                 ) : (
                   <Text style={styles.scanText}>Scanner Image</Text>
                 )}
@@ -87,12 +87,16 @@ const AnalysisDetailScreen = ({navigation, route}) => {
                 <Text style={[styles.analysisText, {color: COLORS.secondary}]}>{analyticsData?.dish_name}</Text>
                 <Text style={styles.percentageText}>Calories: {analyticsData?.total_calories}</Text>
               </View>
-              <Text style={styles.dateText}>{analyticsData?.notes}</Text>
+              <Text style={styles.dateText}>{analyticsData?.notes?.health_assessment}</Text>
               <Text style={[styles.analysisText, {color: COLORS.secondary}]}>Ingredients:</Text>
               {analyticsData?.ingredients?.map((item, index) => {
                 return (
                 <View key={index} style={[styles.ingredientView]}>
                   <Text style={styles.ingredientText}>{item?.name}</Text>
+                  <View style={{flexDirection: 'row', justifyContent: 'space-between', width: '100%'}}>
+                    <Text style={styles.ingredientDetailText}>{item?.estimated_portion}</Text>
+                    <Text style={styles.ingredientDetailText}>Calories: {item?.calories}</Text>
+                  </View>
                 </View>
               )})}
               </ScrollView>

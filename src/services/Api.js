@@ -151,7 +151,34 @@ export const onAddCommonFormApi = async (dataUrl, formData) => {
     }
     return result;
   } catch (error) {
-    console.log('Fetch Error:', error);
+    console.log('Fetch Error:', error.response);
+    throw error;
+  }
+}
+
+export const onAddChatFormApi = async (dataUrl, formData) => {
+  try {
+    const token = await AsyncStorage.getItem('accessToken');
+    const url = Api.baseUrl1 + dataUrl;
+    console.log('URL:', url);
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: formData,
+    });
+    const result = await response.text()
+    if (!response.ok) {
+      throw {
+        status: response.status,
+        data: result,
+      };
+    }
+    return result;
+  } catch (error) {
+    console.log('Fetch Error:', error.response);
     throw error;
   }
 }
