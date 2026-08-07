@@ -7,6 +7,7 @@ import {
   ScrollView,
   Dimensions,
   SafeAreaView,
+  ActivityIndicator,
 } from 'react-native';
 import React, {useEffect, useState, useRef, useCallback} from 'react';
 import {hp, wp} from '../../components/responsive';
@@ -18,6 +19,8 @@ import moment from 'moment';
 import plane from '../../images/plane.png';
 import plus from '../../images/plus.png';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useFocusEffect } from '@react-navigation/native';
+import { onAddCommonFormApi } from '../../services/Api';
 
 
 const AnalysisDetailScreen = ({navigation, route}) => {
@@ -25,8 +28,32 @@ const AnalysisDetailScreen = ({navigation, route}) => {
   const insets = useSafeAreaInsets();
   const isPortrait = orientation === 'portrait';
   const styles = isPortrait ? portraitStyles : landscapeStyles;
-  const [enterText, setEnterText] = useState('');
-  const [searchList, setSearchList] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [analyticsData, setAnalyticsData] = useState(null);
+  const [errorShow, setErrorShow] = useState(false);
+
+  useFocusEffect(
+    useCallback(() => {
+      onPostImageData();
+    }, [])
+  );
+
+  const onPostImageData = async () => {
+    try {
+      setIsLoading(true);
+      var formdata = new FormData();
+      formdata.append("image", route.params.imageAttachment);
+      const response = await onAddCommonFormApi('ai/analyze-meal', formdata);
+      console.log('onPostImageData Response:', response.data);
+      if (response.data.status) {
+        setAnalyticsData(response.data.data.analysis);
+        setIsLoading(false);
+      }
+    } catch (err) {
+      setIsLoading(false);
+      console.log('onPostImageData Error:', err);
+    }
+  };
 
   return(
     <View style={styles.safeAreaStyle}>
@@ -41,7 +68,14 @@ const AnalysisDetailScreen = ({navigation, route}) => {
             <View style={styles.headerView}>
               <Header title={'Analysis Details'} onPress={() => navigation.goBack()}/>
             </View>
+            {isLoading ? (
+              <View style={[styles.mainView, {alignItems: 'center', justifyContent: 'center'}]}>
+                <ActivityIndicator size={'large'} color={COLORS.secondary} />
+                <Text style={styles.analysisText}>Analyzing...</Text>
+              </View>
+            ) : (
             <View style={styles.mainView}>
+              <ScrollView>
               <View style={styles.imageView}>
                 {route.params?.imageAttachment ? (
                   <Image source={{ uri: route.params.imageAttachment.uri }} style={styles.foodImage} />
@@ -50,11 +84,20 @@ const AnalysisDetailScreen = ({navigation, route}) => {
                 )}
               </View>
               <View style={styles.scanView}>
-                <Text style={styles.analysisText}>Nutritional Analysis</Text>
-                <Text style={styles.percentageText}>95% confidence</Text>
+                <Text style={[styles.analysisText, {color: COLORS.secondary}]}>{analyticsData?.dish_name}</Text>
+                <Text style={styles.percentageText}>Calories: {analyticsData?.total_calories}</Text>
               </View>
-              <Text style={styles.dateText}>Oct 10, 2025 03:34 PM</Text>
+              <Text style={styles.dateText}>{analyticsData?.notes}</Text>
+              <Text style={[styles.analysisText, {color: COLORS.secondary}]}>Ingredients:</Text>
+              {analyticsData?.ingredients?.map((item, index) => {
+                return (
+                <View key={index} style={[styles.ingredientView]}>
+                  <Text style={styles.ingredientText}>{item?.name}</Text>
+                </View>
+              )})}
+              </ScrollView>
             </View>
+            )}
         </View>
     </View>
   );

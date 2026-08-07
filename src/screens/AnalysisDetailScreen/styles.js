@@ -61,6 +61,16 @@ export const portraitStyles = StyleSheet.create({
     fontSize: normalize(14),
     fontFamily: Fonts.FONTS.PoppinsRegular,
     color: COLORS.subPrimary,
+  },
+  ingredientView: {
+    width: '100%',
+
+  },
+  ingredientText: {
+    fontSize: normalize(14),
+    fontFamily: Fonts.FONTS.PoppinsMedium,
+    color: COLORS.white,
+    marginTop: hp(0.5),
   }
 });
 
