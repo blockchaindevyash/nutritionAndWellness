@@ -199,6 +199,116 @@ export async function scheduleWalkReminders() {
   }
 }
 
+export async function scheduleExercisesReminders() {
+  const walkImage = Image.resolveAssetSource(require("./assets/exercise/exercise.jpg"));
+  const walkImage1 = Image.resolveAssetSource(require("./assets/exercise/exercise1.jpg"));
+  const walkImage2 = Image.resolveAssetSource(require("./assets/exercise/exercise2.webp"));
+  const walkImage3 = Image.resolveAssetSource(require("./assets/exercise/exercise3.jpg"));
+  const walkImage4 = Image.resolveAssetSource(require("./assets/exercise/exercise4.jpg"));
+  const walkImage5 = Image.resolveAssetSource(require("./assets/exercise/exercise5.jpeg"));
+  const walkImage6 = Image.resolveAssetSource(require("./assets/exercise/exercise6.jpg"));
+
+  const imageUri = walkImage.uri;
+  const imageUri1 = walkImage1.uri;
+  const imageUri2 = walkImage2.uri;
+  const imageUri3 = walkImage3.uri;
+  const imageUri4 = walkImage4.uri;
+  const imageUri5 = walkImage5.uri;
+  const imageUri6 = walkImage6.uri;
+
+  const photos = [imageUri, imageUri1, imageUri2, imageUri3, imageUri4, imageUri5, imageUri6];
+
+  const morningHours = [6, 7, 8, 9];
+
+  const messages = [
+    "🏋️ Time to get moving and crush your workout!",
+    "🧘 Time to stretch and relax your body.",
+    "🌿 Take a few minutes to loosen up and feel better.",
+    "💆 Give your muscles some much-needed attention.",
+    "✨ Stretch today, move better tomorrow!",
+    "😊 A few minutes of stretching can make a big difference.",
+    "💪 Time to build strength!",
+    "🔥 One more rep — you've got this!",
+    "🏋️ Stronger every day, one workout at a time!",
+    "🎯 Stay focused and keep pushing!",
+    "⚡ Your strength journey starts with consistency!",
+    "💪 No excuses — just one more rep!",
+  ];
+
+  const randomImage = () =>
+    photos[Math.floor(Math.random() * photos.length)];
+
+  const randomMessage = () =>
+    messages[Math.floor(Math.random() * messages.length)];
+
+  for (const hour of morningHours) {
+    await notifee.cancelNotification(`exercises-reminder-${hour}`);
+  }
+
+  for (const hour of morningHours) {
+    await scheduleNotification({
+      id: `exercises-reminder-${hour}`,
+      title: "🌞 Morning Exercise",
+      body: randomMessage(),
+      hour,
+      minute: 0,
+      imageUrl: randomImage(),
+    });
+  }
+}
+
+export async function scheduleMeditationReminders() {
+  const walkImage = Image.resolveAssetSource(require("./assets/meditation/meditation.webp"));
+  const walkImage1 = Image.resolveAssetSource(require("./assets/meditation/meditation1.jpg"));
+  const walkImage2 = Image.resolveAssetSource(require("./assets/meditation/meditation2.png"));
+  const walkImage3 = Image.resolveAssetSource(require("./assets/meditation/meditation3.jpg"));
+  const walkImage4 = Image.resolveAssetSource(require("./assets/meditation/meditation4.jpg"));
+
+  const imageUri = walkImage.uri;
+  const imageUri1 = walkImage1.uri;
+  const imageUri2 = walkImage2.uri;
+  const imageUri3 = walkImage3.uri;
+  const imageUri4 = walkImage4.uri;
+
+  const photos = [imageUri, imageUri1, imageUri2, imageUri3, imageUri4];
+
+  const morningHours = [6, 7, 8, 9];
+
+  const messages = [
+    "🧘 Take a moment to pause, breathe, and relax.",
+    "🌿 Find a quiet place and give your mind some peace.",
+    "✨ Close your eyes, breathe deeply, and let go of stress.",
+    "💆 Relax your body and calm your mind.",
+    "🌸 Take a few peaceful minutes just for yourself.",
+    "😌 Slow down, breathe in, and breathe out.",
+    "🕊️ Let go of today's worries and enjoy a moment of calm.",
+    "🌅 Start your day with a peaceful and mindful moment.",
+    "🌙 Prepare your mind for restful sleep with a few minutes of meditation.",
+    "💚 Breathe deeply and give yourself permission to relax.",
+  ];
+
+  const randomImage = () =>
+    photos[Math.floor(Math.random() * photos.length)];
+
+  const randomMessage = () =>
+    messages[Math.floor(Math.random() * messages.length)];
+
+  for (const hour of morningHours) {
+    await notifee.cancelNotification(`exercises-reminder-${hour}`);
+  }
+
+  for (const hour of morningHours) {
+    await scheduleNotification({
+      id: `exercises-reminder-${hour}`,
+      title: "🌞 Morning Exercise",
+      body: randomMessage(),
+      hour,
+      minute: 0,
+      imageUrl: randomImage(),
+    });
+  }
+}
+
 export async function scheduleWaterReminders() {
   const waterMessages = [
     "💧 Time to hydrate! Drink a glass of water.",

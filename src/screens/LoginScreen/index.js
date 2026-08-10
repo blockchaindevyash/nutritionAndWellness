@@ -59,7 +59,7 @@ const LoginScreen = ({ navigation }) => {
                 AsyncStorage.setItem('userId', `${response.data.data.user.id}`);
                 updateProfileData(response.data.data.user);
                 setIsLoading(false);
-                navigation.navigate('TabStack');
+                navigation.navigate('LoadingScreen');
             } else {
                 setApiError(true);
                 setApiErrorMessage('Invalid Credentials');

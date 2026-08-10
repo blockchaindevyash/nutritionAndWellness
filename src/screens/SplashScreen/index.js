@@ -18,7 +18,7 @@ import { onGetCommonApi, onGetWithoutTokenCommonApi } from '../../services/Api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const SplashScreen = ({ navigation }) => {
-    const {updateGoalData, updateDietData, updateActivityData, updateMedicalData, updateWorkoutData, updateProfileData} = useAuthStore();
+    const {updateGoalData, updateDietData, updateActivityData, updateMedicalData, updateWorkoutData, updateProfileData, updateWeeklyPlan} = useAuthStore();
     const orientation = useOrientation(); // Get current orientation
     const isPortrait = orientation === 'portrait';
     const styles = isPortrait ? portraitStyles : landscapeStyles;
@@ -32,6 +32,7 @@ const SplashScreen = ({ navigation }) => {
         try {
             // navigation.navigate('TabStack');
             const accessToken = await AsyncStorage.getItem('accessToken');
+            const weekPlan = await AsyncStorage.getItem('weeklyPlan');
             console.log('Access Token:', accessToken);
             const goalRes = await onGetWithoutTokenCommonApi('goals');
             console.log('Goal Response:', goalRes.data.data);
@@ -45,6 +46,10 @@ const SplashScreen = ({ navigation }) => {
             const workoutRes = await onGetWithoutTokenCommonApi('workout-references');
             updateWorkoutData(workoutRes.data.data.items);
             if (accessToken != null) {
+                if (weekPlan != null) {
+                    console.log('Weekly Plan from AsyncStorage:', JSON.parse(weekPlan));
+                    updateWeeklyPlan(JSON.parse(weekPlan));
+                }
                 const profileRes = await onGetCommonApi('user/profile');
                 updateProfileData(profileRes.data.data.user);
                 navigation.navigate('TabStack');

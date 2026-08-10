@@ -37,6 +37,7 @@ const useAuthStore = create((set) => ({
         // Workout
         workout_reference: "",
     },
+    weeklyPlan: [],
     goalList: [],
     dietList: [],
     activityList: [],
@@ -78,6 +79,10 @@ const useAuthStore = create((set) => ({
     updateProfileData: (data) =>
         set({
             profileData: data
+        }),
+    updateWeeklyPlan: (data) =>
+        set({
+            weeklyPlan: data
         }),
 
 }));

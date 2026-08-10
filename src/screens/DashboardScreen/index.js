@@ -24,10 +24,11 @@ import { startCounter, stopCounter } from 'react-native-accurate-step-counter';
 import { getUpdatedWaterCount, MAX_WATER_GLASSES } from './helpers';
 import { scheduleDailyStepGoalReminder } from '../../../notificationService';
 import { onAddCommonJsonApi } from '../../services/Api';
+import useAuthStore from '../../store/authStore';
 
-const weeklyPlan = [
+const weeklyPlanList = [
   {
-    date: "2026-08-03",
+    date: "2026-08-10",
     day: "Monday",
     calories: 1500,
     meals: {
@@ -55,7 +56,7 @@ const weeklyPlan = [
     ],
   },
   {
-    date: "2026-08-04",
+    date: "2026-08-11",
     day: "Tuesday",
     calories: 1500,
     meals: {
@@ -82,7 +83,7 @@ const weeklyPlan = [
     ],
   },
   {
-    date: "2026-08-05",
+    date: "2026-08-12",
     day: "Wednesday",
     calories: 1450,
     meals: {
@@ -109,7 +110,7 @@ const weeklyPlan = [
     ],
   },
   {
-    date: "2026-08-06",
+    date: "2026-08-13",
     day: "Thursday",
     calories: 1500,
     meals: {
@@ -136,7 +137,7 @@ const weeklyPlan = [
     ],
   },
   {
-    date: "2026-08-07",
+    date: "2026-08-14",
     day: "Friday",
     calories: 1500,
     meals: {
@@ -162,7 +163,7 @@ const weeklyPlan = [
     ],
   },
   {
-    date: "2026-08-08",
+    date: "2026-08-15",
     day: "Saturday",
     calories: 1550,
     meals: {
@@ -188,7 +189,7 @@ const weeklyPlan = [
     ],
   },
   {
-    date: "2026-08-09",
+    date: "2026-08-16",
     day: "Sunday",
     calories: 1400,
     meals: {
@@ -262,6 +263,7 @@ const uploadStepCount = async (stepsToUpload, dateKey = getTodayKey()) => {
 };
 
 const DashboardScreen = ({ navigation }) => {
+  const {weeklyPlan} = useAuthStore();
   const orientation = useOrientation();
   const isPortrait = orientation === 'portrait';
   const styles = isPortrait ? portraitStyles : landscapeStyles;
@@ -306,7 +308,6 @@ const DashboardScreen = ({ navigation }) => {
         if (raw) {
           const parsed = JSON.parse(raw);
           const storedSteps = Number(parsed?.steps || 0);
-
           if (storedSteps > 0 || parsed?.date === todayKey) {
             setSteps(storedSteps);
             lastSensorValueRef.current = parsed?.sensorValue !== undefined && parsed?.sensorValue !== null
@@ -315,7 +316,6 @@ const DashboardScreen = ({ navigation }) => {
             setIsStepStateReady(true);
             return;
           }
-
           if (storedSteps > 0) {
             await onStepCountDataAdd(storedSteps, parsed?.date);
           }
@@ -463,14 +463,14 @@ const DashboardScreen = ({ navigation }) => {
   const selectedDateKey = selectedDate?.date || null;
   const waterCount = selectedDateKey ? (waterByDate[selectedDateKey] || 0) : 0;
 
-  const updateWater = delta => {
+  const updateWater = (delta, selectedKey) => {
     if (!selectedDateKey) {
       return;
     }
 
     setWaterByDate(prev => ({
       ...prev,
-      [selectedDateKey]: getUpdatedWaterCount(prev[selectedDateKey], delta),
+      [selectedDateKey]: getUpdatedWaterCount(prev[selectedDateKey], selectedKey, delta),
     }));
   };
 
@@ -567,6 +567,15 @@ const DashboardScreen = ({ navigation }) => {
                   <Text style={styles.foodText}>{`${item.meals.dinner}\n`}</Text>
                 </View>
               </TouchableOpacity>
+            {item?.beverage != null && (
+            <View style={styles.card}>
+                <View style={styles.section}>
+                  <Text style={styles.sectionTitle}>Beverage</Text>
+                  <Text style={styles.foodText}>{`${item?.beverage}`}</Text>
+                </View>
+              </View>
+              )}
+
               {/* Water Intake */}
               <View style={styles.waterCard}>
           <View style={styles.waterCardHeader}>
@@ -575,37 +584,45 @@ const DashboardScreen = ({ navigation }) => {
               <Text style={styles.waterSubtitle}>Track your daily glasses</Text>
             </View>
             <View style={styles.waterBadge}>
-              <Text style={styles.waterBadgeText}>{waterCount}/{MAX_WATER_GLASSES}</Text>
+              <Text style={styles.waterBadgeText}>{waterCount}/{item?.water_target_glasses}</Text>
             </View>
           </View>
 
           <View style={styles.waterControls}>
-            <TouchableOpacity style={styles.waterButton} onPress={() => updateWater(-1)}>
+            <TouchableOpacity style={styles.waterButton} onPress={() => updateWater(-1, item?.water_target_glasses)}>
               <Text style={[styles.waterButtonText, {marginBottom: hp(1)}]}>-</Text>
             </TouchableOpacity>
             <View style={styles.waterCenterBox}>
               <Text style={styles.waterCountText}>{waterCount}</Text>
               <Text style={styles.waterHintText}>Glasses</Text>
             </View>
-            <TouchableOpacity style={styles.waterButton} onPress={() => updateWater(1)}>
+            <TouchableOpacity style={styles.waterButton} onPress={() => updateWater(1, item?.water_target_glasses)}>
               <Text style={styles.waterButtonText}>+</Text>
             </TouchableOpacity>
           </View>
 
-          <Text style={styles.waterLimitText}>Maximum {MAX_WATER_GLASSES} glasses per day</Text>
+          <Text style={styles.waterLimitText}>Maximum {item?.water_target_glasses} glasses per day</Text>
         </View>
               {/* Exercises */}
               <View style={styles.card}>
                 <View style={styles.section}>
                   <Text style={styles.sectionTitle}>Exercises</Text>
                   {item.exercises.map((ex, index) => (
-                    <Text key={index} style={styles.exerciseText}>• {ex}</Text>
+                    <Text key={index} style={styles.exerciseText}>• {ex?.name}</Text>
                   ))}
                   <TouchableOpacity style={styles.workoutButton} onPress={() => navigation.navigate('ProgramDetailScreen', {item: item})}>
                     <Text style={styles.startText}>Start Exercises</Text>
                   </TouchableOpacity>
                 </View>
               </View>
+              
+              <View style={styles.card}>
+                <View style={styles.section}>
+                  <Text style={styles.sectionTitle}>Meditation</Text>
+                  <Text style={styles.foodText}>{`${item.meditation}`}</Text>
+                </View>
+              </View>
+
               <View style={styles.card}>
                 <View style={styles.section}>
                   <Text style={styles.sectionTitle}>Supplements</Text>
