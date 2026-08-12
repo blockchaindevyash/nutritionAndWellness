@@ -9,8 +9,11 @@ import {
     Platform,
     PermissionsAndroid,
     FlatList,
+    Alert,
 } from 'react-native';
 import React, { useEffect, useState } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import moment from 'moment';
 import { portraitStyles, landscapeStyles } from './styles';
 import useOrientation from '../../components/OrientationComponent';
 import Header from '../../components/HeaderComponent';
@@ -26,20 +29,72 @@ const ProgramDetailScreen = ({ navigation, route }) => {
 
     const { item } = route.params;
 
+    const COMPLETED_EXERCISES_KEY = 'completed-exercises';
+
+    const getTodayKey = () => moment().format('YYYY-MM-DD');
+
     // Add done state
     const [exercises, setExercises] = useState(
         item.exercises.map((ex, index) => ({
             id: index,
-            name: ex,
+            name: ex.name,
             done: false,
         }))
     );
 
+    useEffect(() => {
+        const loadCompleted = async () => {
+            try {
+                const raw = await AsyncStorage.getItem(COMPLETED_EXERCISES_KEY);
+                const parsed = raw ? JSON.parse(raw) : {};
+                const dateKey = item.date || `${item.day}`;
+                const saved = parsed?.[dateKey] || [];
+
+                if (Array.isArray(saved) && saved.length > 0) {
+                    setExercises(prev => prev.map(ex => ({
+                        ...ex,
+                        done: saved.includes(ex.id),
+                    })));
+                }
+            } catch (err) {
+                console.warn('Unable to load completed exercises', err);
+            }
+        };
+
+        loadCompleted();
+    }, [item]);
+
     const toggleDone = (id) => {
+        const dateKey = item.date || getTodayKey();
+        if (dateKey !== getTodayKey()) {
+            Alert.alert('Read only', 'You can only update exercises for today');
+            return;
+        }
+
         const updated = exercises.map(ex =>
             ex.id === id ? { ...ex, done: !ex.done } : ex
         );
         setExercises(updated);
+    };
+
+    const saveCompletedForDate = async () => {
+        try {
+            const dateKey = item.date || `${item.day}`;
+            if (dateKey !== getTodayKey()) {
+                Alert.alert('Read only', 'You can only save completed exercises for today');
+                return;
+            }
+            const raw = await AsyncStorage.getItem(COMPLETED_EXERCISES_KEY);
+            const parsed = raw ? JSON.parse(raw) : {};
+            const completedIndices = exercises.filter(e => e.done).map(e => e.id);
+            const updated = {
+                ...parsed,
+                [dateKey]: completedIndices,
+            };
+            await AsyncStorage.setItem(COMPLETED_EXERCISES_KEY, JSON.stringify(updated));
+        } catch (err) {
+            console.warn('Unable to save completed exercises', err);
+        }
     };
 
     const getProgress = () => {
@@ -86,8 +141,8 @@ const ProgramDetailScreen = ({ navigation, route }) => {
                 />
 
                 {/* Bottom Buttons */}
-                <View style={[styles.footer, {marginBottom: insets.bottom + 30}]}>
-                    <TouchableOpacity style={styles.completeBtn} onPress={() => navigation.goBack()}>
+                <View style={[styles.footer, {marginBottom: insets.bottom + 30}]}> 
+                    <TouchableOpacity style={styles.completeBtn} onPress={async () => { await saveCompletedForDate(); navigation.goBack(); }}>
                         <Text style={styles.buttonText}>Complete Workout</Text>
                     </TouchableOpacity>
                 </View>

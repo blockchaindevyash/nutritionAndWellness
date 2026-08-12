@@ -10,6 +10,8 @@ import {
   PermissionsAndroid,
   FlatList,
   AppState,
+  Modal,
+  Alert,
 } from 'react-native';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -23,8 +25,10 @@ import { LineChart } from "react-native-gifted-charts"
 import { startCounter, stopCounter } from 'react-native-accurate-step-counter';
 import { getUpdatedWaterCount, MAX_WATER_GLASSES } from './helpers';
 import { scheduleDailyStepGoalReminder } from '../../../notificationService';
-import { onAddCommonJsonApi } from '../../services/Api';
+import { onAddCommonJsonApi, onGetCommonApi } from '../../services/Api';
 import useAuthStore from '../../store/authStore';
+import MeditationTimer from '../../components/MeditationTimer';
+import { useFocusEffect } from '@react-navigation/native';
 
 const weeklyPlanList = [
   {
@@ -247,6 +251,95 @@ const saveStepState = async (value, dateKey = getTodayKey(), sensorValue = null)
   await AsyncStorage.setItem(STEP_STATE_KEY, payload);
 };
 
+const MEDITATION_STATE_KEY = 'meditation-timer-state';
+
+const COMPLETED_EXERCISES_KEY = 'completed-exercises';
+const WATER_BY_DATE_KEY = 'water-by-date';
+
+const getMeditationTotalSeconds = meditation => {
+  const match = meditation?.match(/(\d+)\s*(?:mins?|minutes?)/i);
+  const minutes = match ? parseInt(match[1], 10) : 0;
+  return minutes * 60;
+};
+
+const saveMeditationState = async (dateKey, state) => {
+  if (!dateKey) {
+    return;
+  }
+
+  try {
+    const raw = await AsyncStorage.getItem(MEDITATION_STATE_KEY);
+    const parsed = raw ? JSON.parse(raw) : {};
+    await AsyncStorage.setItem(
+      MEDITATION_STATE_KEY,
+      JSON.stringify({
+        ...parsed,
+        [dateKey]: {
+          ...parsed[dateKey],
+          ...state,
+          date: dateKey,
+          updatedAt: new Date().toISOString(),
+        },
+      })
+    );
+  } catch (error) {
+    console.warn('Unable to save meditation state', error);
+  }
+};
+
+const loadMeditationState = async dateKey => {
+  if (!dateKey) {
+    return null;
+  }
+
+  try {
+    const raw = await AsyncStorage.getItem(MEDITATION_STATE_KEY);
+    if (!raw) {
+      return null;
+    }
+    const parsed = JSON.parse(raw);
+    return parsed?.[dateKey] ?? null;
+  } catch (error) {
+    console.warn('Unable to load meditation state', error);
+    return null;
+  }
+};
+
+const persistMeditationState = async (dateKey, remainingSecondsValue, completed) => {
+  await saveMeditationState(dateKey, {
+    remainingSeconds: Number(remainingSecondsValue || 0),
+    isMeditationCompleted: Boolean(completed),
+  });
+};
+
+const loadCompletedExercisesFromStorage = async () => {
+  try {
+    const raw = await AsyncStorage.getItem(COMPLETED_EXERCISES_KEY);
+    return raw ? JSON.parse(raw) : {};
+  } catch (err) {
+    console.warn('Unable to load completed exercises', err);
+    return {};
+  }
+};
+
+const loadWaterByDateFromStorage = async () => {
+  try {
+    const raw = await AsyncStorage.getItem(WATER_BY_DATE_KEY);
+    return raw ? JSON.parse(raw) : {};
+  } catch (err) {
+    console.warn('Unable to load waterByDate', err);
+    return {};
+  }
+};
+
+const saveWaterByDateToStorage = async (data) => {
+  try {
+    await AsyncStorage.setItem(WATER_BY_DATE_KEY, JSON.stringify(data || {}));
+  } catch (err) {
+    console.warn('Unable to save waterByDate', err);
+  }
+};
+
 const uploadStepCount = async (stepsToUpload, dateKey = getTodayKey()) => {
   try {
     const payload = {
@@ -263,19 +356,135 @@ const uploadStepCount = async (stepsToUpload, dateKey = getTodayKey()) => {
 };
 
 const DashboardScreen = ({ navigation }) => {
-  const {weeklyPlan} = useAuthStore();
+  const { weeklyPlan, updateWeeklyPlan } = useAuthStore();
   const orientation = useOrientation();
   const isPortrait = orientation === 'portrait';
   const styles = isPortrait ? portraitStyles : landscapeStyles;
   const insets = useSafeAreaInsets();
+
+  const saveWeeklyPlanMeditationState = async (dateKey, meditationMinutes, completed) => {
+    if (!dateKey) {
+      return;
+    }
+
+    try {
+      const rawWeekly = await AsyncStorage.getItem('weeklyPlan');
+      const planData = rawWeekly ? JSON.parse(rawWeekly) : weeklyPlan || [];
+      const updatedPlan = planData.map(item => {
+        if (item.date === dateKey) {
+          return {
+            ...item,
+            meditatiion_minutes: meditationMinutes,
+            meditation_minutes: meditationMinutes,
+            is_meditation_completed: completed,
+          };
+        }
+        return item;
+      });
+
+      await AsyncStorage.setItem('weeklyPlan', JSON.stringify(updatedPlan));
+      if (typeof updateWeeklyPlan === 'function') {
+        updateWeeklyPlan(updatedPlan);
+      }
+    } catch (error) {
+      console.warn('Unable to save weekly plan meditation state', error);
+    }
+  };
+  const [completedExercisesByDate, setCompletedExercisesByDate] = useState({});
+
+  const [waterByDate, setWaterByDate] = useState({});
+  const [showWaterCompleteModal, setShowWaterCompleteModal] = useState(false);
+  const [showMeditationCompleteModal, setShowMeditationCompleteModal] = useState(false);
+
+  useEffect(() => {
+    const load = async () => {
+      const data = await loadCompletedExercisesFromStorage();
+      setCompletedExercisesByDate(data || {});
+      const waterData = await loadWaterByDateFromStorage();
+      setWaterByDate(waterData || {});
+    };
+
+    load();
+  }, []);
+
+  const toggleExerciseComplete = async (dateKey, idx) => {
+    try {
+      const key = dateKey || selectedDate?.date || getTodayKey();
+      if (key !== getTodayKey()) {
+        Alert.alert('Read only', 'You can only update exercises for today');
+        return;
+      }
+      const current = { ...(completedExercisesByDate || {}) };
+      const setForDate = new Set(current[key] || []);
+
+      if (setForDate.has(idx)) {
+        setForDate.delete(idx);
+      } else {
+        setForDate.add(idx);
+      }
+
+      current[key] = Array.from(setForDate);
+      setCompletedExercisesByDate(current);
+      await AsyncStorage.setItem(COMPLETED_EXERCISES_KEY, JSON.stringify(current));
+    } catch (err) {
+      console.warn('Unable to toggle exercise complete', err);
+    }
+  };
   const [selectedDate, setSelectedDate] = useState(null);
   const [steps, setSteps] = useState(0);
-  const [waterByDate, setWaterByDate] = useState({});
   const [isStepStateReady, setIsStepStateReady] = useState(false);
+  const [remainingSeconds, setRemainingSeconds] = useState(0);
+  const [isRunning, setIsRunning] = useState(false);
+  const [meditationTotalSeconds, setMeditationTotalSeconds] = useState(0);
+  const [caloriesChart, setCaloriesChart] = useState([
+    { value: 0, dataPointText: '0', label: 'Mon' },
+    { value: 0, dataPointText: '0', label: 'Tue' },
+    { value: 0, dataPointText: '0', label: 'Wed' },
+    { value: 0, dataPointText: '0', label: 'Thu' },
+    { value: 0, dataPointText: '0', label: 'Fri' },
+    { value: 0, dataPointText: '0', label: 'Sat' },
+    { value: 0, dataPointText: '0', label: 'Sun' },
+  ]);
   const lastSensorValueRef = useRef(null);
   const progress = stepGoal > 0 ? Math.min(steps / stepGoal, 1) : 0;
   const progressPercent = `${Math.round(progress * 100)}%`;
   const stepsRemaining = Math.max(stepGoal - steps, 0);
+
+  useFocusEffect(
+    useCallback(() => {
+      onGetCaloriesData();
+    }, [])
+  );
+
+  const onGetCaloriesData = async () => {
+    try {
+      const responseData = await onGetCommonApi(
+        'analytics/last-week-calories'
+      );
+
+      console.log(
+        'onGetCaloriesData Response:',
+        responseData.data
+      );
+
+      if (responseData?.data?.status) {
+        const dailyCalories =
+          responseData?.data?.data?.daily_calories || [];
+
+        const chartData = dailyCalories.map(item => ({
+          value: Number(item.calories || 0),
+          dataPointText: String(item.calories || 0),
+          label: item.day?.substring(0, 3) || '',
+        }));
+
+        console.log('Calories Chart Data:', chartData);
+
+        setCaloriesChart(chartData);
+      }
+    } catch (err) {
+      console.log('Calories Error:', err);
+    }
+  };
 
   const onStepCountDataAdd = useCallback(async (stepsToSend = 0, dateKey = getTodayKey()) => {
     try {
@@ -297,6 +506,30 @@ const DashboardScreen = ({ navigation }) => {
       date: today.toISOString().split('T')[0],
     });
   }, []);
+
+  useEffect(() => {
+    const loadMeditationForSelectedDate = async () => {
+      if (!selectedDate?.date) {
+        return;
+      }
+
+      const planForDate = weeklyPlan.find(plan => plan.date === selectedDate.date);
+      const totalSeconds = getMeditationTotalSeconds(planForDate?.meditation);
+      setMeditationTotalSeconds(totalSeconds);
+
+      const storedState = await loadMeditationState(selectedDate.date);
+      if (storedState) {
+        const isCompleted = storedState.isMeditationCompleted === true;
+        const restoredSeconds = Number(storedState.remainingSeconds || 0);
+        setRemainingSeconds(restoredSeconds > 0 ? restoredSeconds : 0);
+      } else {
+        setRemainingSeconds(totalSeconds);
+        setIsRunning(false);
+      }
+    };
+
+    loadMeditationForSelectedDate();
+  }, [selectedDate, weeklyPlan]);
 
   useEffect(() => {
     const initializeStepsState = async () => {
@@ -357,11 +590,36 @@ const DashboardScreen = ({ navigation }) => {
   }, [steps, isStepStateReady]);
 
   useEffect(() => {
+    const dateKey = selectedDate?.date;
+    if (!dateKey) {
+      return;
+    }
+
+    persistMeditationState(dateKey, remainingSeconds, remainingSeconds === 0).catch(error => {
+      console.warn('Unable to persist meditation state', error);
+    });
+  }, [remainingSeconds, selectedDate]);
+
+  // Show meditation complete modal when timer reaches zero
+  useEffect(() => {
+    if (remainingSeconds === 0 && isRunning) {
+      setShowMeditationCompleteModal(true);
+    }
+  }, [remainingSeconds]);
+
+  useEffect(() => {
     const handleAppStateChange = (nextAppState) => {
       if (nextAppState === 'background' || nextAppState === 'inactive') {
         saveStepState(steps, getTodayKey(), lastSensorValueRef.current).catch(error => {
           console.warn('Unable to persist steps on app background', error);
         });
+
+        const dateKey = selectedDate?.date;
+        if (dateKey) {
+          persistMeditationState(dateKey, remainingSeconds, remainingSeconds === 0).catch(error => {
+            console.warn('Unable to persist meditation state on app background', error);
+          });
+        }
       }
     };
 
@@ -461,17 +719,77 @@ const DashboardScreen = ({ navigation }) => {
 
   const weekDays = getCurrentWeek();
   const selectedDateKey = selectedDate?.date || null;
+  const isTodaySelected = selectedDateKey === getTodayKey();
   const waterCount = selectedDateKey ? (waterByDate[selectedDateKey] || 0) : 0;
 
   const updateWater = (delta, selectedKey) => {
-    if (!selectedDateKey) {
+    if (!selectedDateKey || !isTodaySelected) {
+      // only allow updates for today's date
+      Alert.alert('Read only', 'You can only update water for today');
       return;
     }
 
-    setWaterByDate(prev => ({
-      ...prev,
-      [selectedDateKey]: getUpdatedWaterCount(prev[selectedDateKey], selectedKey, delta),
-    }));
+    setWaterByDate(prev => {
+      const prevCount = prev[selectedDateKey] || 0;
+      const newCount = getUpdatedWaterCount(prevCount, selectedKey, delta);
+      const updated = { ...prev, [selectedDateKey]: newCount };
+      saveWaterByDateToStorage(updated).catch(err => console.warn('save water error', err));
+
+      // show completion popup if reached target
+      if (selectedKey && newCount >= Number(selectedKey)) {
+        setShowWaterCompleteModal(true);
+      }
+
+      return updated;
+    });
+  };
+
+  const startTimer = () => {
+    console.log('startTimer called', { remainingSeconds });
+    if (!isTodaySelected) {
+      Alert.alert('Read only', 'You can only start meditation for today');
+      return;
+    }
+
+    if (remainingSeconds > 0) {
+      setIsRunning(true);
+    }
+  };
+
+  const pauseTimer = () => {
+    console.log('pauseTimer called', { remainingSeconds, selectedDate });
+    if (!isTodaySelected) {
+      Alert.alert('Read only', 'You can only pause meditation for today');
+      return;
+    }
+
+    setIsRunning(false);
+    const dateKey = selectedDate?.date || getTodayKey();
+    const meditationMinutes = remainingSeconds / 60;
+    const isCompleted = remainingSeconds === 0;
+
+    persistMeditationState(dateKey, remainingSeconds, isCompleted).catch(error => {
+      console.warn('Unable to persist meditation state', error);
+    });
+
+    saveWeeklyPlanMeditationState(dateKey, meditationMinutes, isCompleted).catch(error => {
+      console.warn('Unable to save weekly plan meditation state', error);
+    });
+
+    const raw = {
+      date: dateKey,
+      meditatiion_minutes: parseInt(meditationMinutes),
+      is_meditation_completed: isCompleted,
+    };
+
+    console.log('Timer paused::', raw);
+    onAddCommonJsonApi('plan/track-progress', raw)
+      .then(responseData => {
+        console.log('responseData set::', responseData.data);
+      })
+      .catch(err => {
+        console.log('Error:', err.response);
+      });
   };
 
   return (
@@ -534,7 +852,7 @@ const DashboardScreen = ({ navigation }) => {
           {weekDays.map((d, i) => (
             <TouchableOpacity
               key={i}
-              style={[styles.dayBox, {backgroundColor: selectedDate?.date === d.date ? COLORS.textColor : COLORS.primary}]}
+              style={[styles.dayBox, { backgroundColor: selectedDate?.date === d.date ? COLORS.textColor : COLORS.primary }]}
               onPress={() => {
                 setSelectedDate(d);
                 console.log('OnPress', d, i);
@@ -557,7 +875,7 @@ const DashboardScreen = ({ navigation }) => {
                 </Text>
               </View>
               {/* Meals */}
-              <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('MealDetailScreen', {item: item})}>
+              <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('MealDetailScreen', { item: item })}>
                 <View style={styles.section}>
                   <Text style={styles.sectionTitle}>Breakfast</Text>
                   <Text style={styles.foodText}>{`${item.meals.breakfast}\n`}</Text>
@@ -567,42 +885,42 @@ const DashboardScreen = ({ navigation }) => {
                   <Text style={styles.foodText}>{`${item.meals.dinner}\n`}</Text>
                 </View>
               </TouchableOpacity>
-            {item?.beverage != null && (
-            <View style={styles.card}>
-                <View style={styles.section}>
-                  <Text style={styles.sectionTitle}>Beverage</Text>
-                  <Text style={styles.foodText}>{`${item?.beverage}`}</Text>
+              {item?.beverage != null && (
+                <View style={styles.card}>
+                  <View style={styles.section}>
+                    <Text style={styles.sectionTitle}>Beverage</Text>
+                    <Text style={styles.foodText}>{`${item?.beverage}`}</Text>
+                  </View>
                 </View>
-              </View>
               )}
 
               {/* Water Intake */}
               <View style={styles.waterCard}>
-          <View style={styles.waterCardHeader}>
-            <View>
-              <Text style={styles.waterTitle}>💧 Water intake</Text>
-              <Text style={styles.waterSubtitle}>Track your daily glasses</Text>
-            </View>
-            <View style={styles.waterBadge}>
-              <Text style={styles.waterBadgeText}>{waterCount}/{item?.water_target_glasses}</Text>
-            </View>
-          </View>
+                <View style={styles.waterCardHeader}>
+                  <View>
+                    <Text style={styles.waterTitle}>💧 Water intake</Text>
+                    <Text style={styles.waterSubtitle}>Track your daily glasses</Text>
+                  </View>
+                  <View style={styles.waterBadge}>
+                    <Text style={styles.waterBadgeText}>{waterCount}/{item?.water_target_glasses}</Text>
+                  </View>
+                </View>
 
-          <View style={styles.waterControls}>
-            <TouchableOpacity style={styles.waterButton} onPress={() => updateWater(-1, item?.water_target_glasses)}>
-              <Text style={[styles.waterButtonText, {marginBottom: hp(1)}]}>-</Text>
-            </TouchableOpacity>
-            <View style={styles.waterCenterBox}>
-              <Text style={styles.waterCountText}>{waterCount}</Text>
-              <Text style={styles.waterHintText}>Glasses</Text>
-            </View>
-            <TouchableOpacity style={styles.waterButton} onPress={() => updateWater(1, item?.water_target_glasses)}>
-              <Text style={styles.waterButtonText}>+</Text>
-            </TouchableOpacity>
-          </View>
+                <View style={styles.waterControls}>
+                  <TouchableOpacity style={styles.waterButton} onPress={() => updateWater(-1, item?.water_target_glasses)} disabled={!isTodaySelected}>
+                    <Text style={[styles.waterButtonText, { marginBottom: hp(1) }]}>-</Text>
+                  </TouchableOpacity>
+                  <View style={styles.waterCenterBox}>
+                    <Text style={styles.waterCountText}>{waterCount}</Text>
+                    <Text style={styles.waterHintText}>Glasses</Text>
+                  </View>
+                  <TouchableOpacity style={styles.waterButton} onPress={() => updateWater(1, item?.water_target_glasses)} disabled={!isTodaySelected}>
+                    <Text style={styles.waterButtonText}>+</Text>
+                  </TouchableOpacity>
+                </View>
 
-          <Text style={styles.waterLimitText}>Maximum {item?.water_target_glasses} glasses per day</Text>
-        </View>
+                <Text style={styles.waterLimitText}>Maximum {item?.water_target_glasses} glasses per day</Text>
+              </View>
               {/* Exercises */}
               <View style={styles.card}>
                 <View style={styles.section}>
@@ -610,16 +928,26 @@ const DashboardScreen = ({ navigation }) => {
                   {item.exercises.map((ex, index) => (
                     <Text key={index} style={styles.exerciseText}>• {ex?.name}</Text>
                   ))}
-                  <TouchableOpacity style={styles.workoutButton} onPress={() => navigation.navigate('ProgramDetailScreen', {item: item})}>
+                  <TouchableOpacity style={styles.workoutButton} onPress={() => navigation.navigate('ProgramDetailScreen', { item: item })}>
                     <Text style={styles.startText}>Start Exercises</Text>
                   </TouchableOpacity>
                 </View>
               </View>
-              
+
               <View style={styles.card}>
                 <View style={styles.section}>
                   <Text style={styles.sectionTitle}>Meditation</Text>
-                  <Text style={styles.foodText}>{`${item.meditation}`}</Text>
+                  {/* <Text style={styles.foodText}>{`${item.meditation}`}</Text> */}
+                  <MeditationTimer 
+                    meditation={item.meditation}
+                    remainingSeconds={remainingSeconds}
+                    setRemainingSeconds={setRemainingSeconds}
+                    isRunning={isRunning}
+                    setIsRunning={setIsRunning}
+                    startTimer={startTimer}
+                    pauseTimer={pauseTimer}
+                    isEditable={isTodaySelected}
+                  />
                 </View>
               </View>
 
@@ -652,11 +980,11 @@ const DashboardScreen = ({ navigation }) => {
           <Text style={styles.cardTitle}>🔥  Calories burned</Text>
           <LineChart
             initialSpacing={0}
-            data={lineData}
+            data={caloriesChart}
             spacing={39}
             textColor1={COLORS.white}
             textShiftY={-8}
-            textShiftX={-10}
+            textShiftX={-5}
             textFontSize={13}
             thickness={5}
             hideRules
@@ -667,24 +995,40 @@ const DashboardScreen = ({ navigation }) => {
             xAxisColor={COLORS.secondary}
             color={COLORS.secondary}
             dataPointColor={COLORS.white}
+            xAxisLabelTextStyle={{
+              color: COLORS.white,
+              fontSize: 11,
+            }}
           />
         </View>
-        {/* <View style={styles.progremView}>
-          <Text style={styles.cardTitle}>💪 Target Muscle Area</Text>
-        </View> */}
-        {/* <FlatList
-          data={areaData}
-          numColumns={2}
-          columnWrapperStyle={{ justifyContent: 'space-between' }}
-          showsVerticalScrollIndicator={false}
-          keyExtractor={(item, index) => index.toString()}
-          renderItem={({ item }) => (
-            <TouchableOpacity style={styles.dishCard} onPress={() => { }}>
-              <Text style={styles.cardTitle}>{item.name}</Text>
-            </TouchableOpacity>
-          )}
-        /> */}
       </ScrollView>
+      {/* Water completion modal */}
+      <Modal visible={showWaterCompleteModal} transparent animationType="fade">
+        <View style={{flex:1,backgroundColor:'rgba(0,0,0,0.6)',alignItems:'center',justifyContent:'center'}}>
+          <View style={{width:'85%',backgroundColor:COLORS.primary,padding:20,borderRadius:12,alignItems:'center'}}>
+            <Text style={{color:COLORS.secondary,fontSize:18,fontWeight:'700',marginBottom:8}}>Nice job!</Text>
+            <Image source={{uri: 'https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExcTV5ZW9jZjAxZTRybG54Y2h0NXZvZDlrM2hheng2Z2N3ZGRycHp5bCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/lMBcCPM0VYfhh2zCAy/giphy.gif'}} style={{width:200,height:200,marginBottom:12,borderRadius:8}} />
+            <Text style={{color:COLORS.white,marginBottom:16}}>You've reached your water goal for today.</Text>
+            <TouchableOpacity onPress={() => setShowWaterCompleteModal(false)} style={{backgroundColor:COLORS.subPrimary,paddingVertical:10,paddingHorizontal:20,borderRadius:8}}>
+              <Text style={{color:COLORS.white}}>Done</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+
+      {/* Meditation completion modal with gif */}
+      <Modal visible={showMeditationCompleteModal} transparent animationType="fade">
+        <View style={{flex:1,backgroundColor:'rgba(0,0,0,0.6)',alignItems:'center',justifyContent:'center'}}>
+          <View style={{width:'90%',backgroundColor:COLORS.primary,padding:18,borderRadius:12,alignItems:'center'}}>
+            <Text style={{color:COLORS.secondary,fontSize:18,fontWeight:'700',marginBottom:8}}>Meditation Complete</Text>
+            <Image source={{uri: 'https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExN3hreTIxdTUyM3N5dGlpcG5yemIybGp3YnU0bzE3anNhMWMwaTRvZSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/879RsXB8GvEuY95LNl/giphy.gif'}} style={{width:200,height:200,marginBottom:12,borderRadius:8}} />
+            <Text style={{color:COLORS.white,marginBottom:16}}>Great work — you've finished your session.</Text>
+            <TouchableOpacity onPress={() => setShowMeditationCompleteModal(false)} style={{backgroundColor:COLORS.subPrimary,paddingVertical:10,paddingHorizontal:20,borderRadius:8}}>
+              <Text style={{color:COLORS.white}}>Done</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
