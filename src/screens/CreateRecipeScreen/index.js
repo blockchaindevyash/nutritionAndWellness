@@ -12,6 +12,7 @@ import {
     TouchableWithoutFeedback,
 } from 'react-native';
 import React, { useCallback, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { portraitStyles, landscapeStyles } from './styles';
 import useOrientation from '../../components/OrientationComponent';
 import { COLORS } from '../../utils';
@@ -46,12 +47,13 @@ const CreateRecipeScreen = ({ navigation, route }) => {
     const [errorMessage, setErrorMessage] = useState("");
     const [recipeId, setRecipeId] = useState('');
     const styles = isPortrait ? portraitStyles : landscapeStyles;
+    const { t } = useTranslation();
 
       useFocusEffect(
         useCallback(() => {
         if (route?.params?.item) {
             const { item } = route.params;
-            const imageUrl = item.recipe_image_url;
+            const imageUrl = item.recipe_image;
             const extension = imageUrl.split(".").pop().toLowerCase();
             let mimeType = "image/png";
             switch (extension) {
@@ -76,8 +78,8 @@ const CreateRecipeScreen = ({ navigation, route }) => {
             setRecipeType(item?.recipe_type || '');
             setPrepTime(item?.prep_time || '');
             setCalories(item?.calories || '');
-            setIngredients(item?.ingredients || '');
-            setSteps(item?.cooking_steps || '');
+            setIngredients(item?.ingredients?.replace(/\\n/g, '\n') || '');
+            setSteps(item?.cooking_steps?.replace(/\\n/g, '\n') || '');
         } else {
             setRecipeImage(null);
             setRecipeId('');
@@ -138,8 +140,8 @@ const CreateRecipeScreen = ({ navigation, route }) => {
                 formdata.append("calories", calories);
                 formdata.append("ingredients", ingredients);
                 formdata.append("cooking_steps", steps);
-
-                const responseData = await onAddCommonFormApi(recipeId == '' ? 'recipes' : `recipes/${recipeId}`,formdata);
+                console.log('Form Data:', formdata);
+                const responseData = await onAddCommonFormApi(recipeId == '' ? 'user/recipes' : `user/recipes/${recipeId}`,formdata);
                 if (responseData.data.status) {
                     setIsLoading(false);
                     showMessage({
@@ -175,7 +177,7 @@ const CreateRecipeScreen = ({ navigation, route }) => {
                 }}
             />
             <View style={styles.headerView}>
-                <Header title={'Create Recipe'} onPress={() => navigation.goBack()} />
+                <Header title={t('create_recipe')} onPress={() => navigation.goBack()} />
             </View>
             <ScrollView
                 contentContainerStyle={{ paddingBottom: hp(5) }}
@@ -197,13 +199,13 @@ const CreateRecipeScreen = ({ navigation, route }) => {
                                 </Text>
 
                                 <Text style={styles.uploadText}>
-                                    Upload Recipe Image
+                                    {t('upload_recipe_image')}
                                 </Text>
                             </>
                         )}
                     </TouchableOpacity>
                     <View style={styles.textInputView}>
-                        <Text style={styles.titleText}>Recipe Name *</Text>
+                        <Text style={styles.titleText}>{t('recipe_name')}</Text>
                         <TextInput
                             value={recipeName}
                             onChangeText={text => {
@@ -215,7 +217,7 @@ const CreateRecipeScreen = ({ navigation, route }) => {
                         />
                     </View>
                     <View style={styles.textInputView}>
-                        <Text style={styles.titleText}>Recipe Type *</Text>
+                        <Text style={styles.titleText}>{t('recipe_type')}</Text>
                         <TextInput
                             value={recipeType}
                             onChangeText={text => {
@@ -227,7 +229,7 @@ const CreateRecipeScreen = ({ navigation, route }) => {
                         />
                     </View>
                     <View style={styles.textInputView}>
-                        <Text style={styles.titleText}>Prep Time</Text>
+                        <Text style={styles.titleText}>{t('prep_time')}</Text>
                         <TextInput
                             value={prepTime}
                             onChangeText={text => {
@@ -239,7 +241,7 @@ const CreateRecipeScreen = ({ navigation, route }) => {
                         />
                     </View>
                     <View style={styles.textInputView}>
-                        <Text style={styles.titleText}>Calories</Text>
+                        <Text style={styles.titleText}>{t('calories')}</Text>
                         <TextInput
                             value={calories}
                             onChangeText={text => {
@@ -252,7 +254,7 @@ const CreateRecipeScreen = ({ navigation, route }) => {
                         />
                     </View>
                     <View style={styles.textInputView}>
-                        <Text style={styles.titleText}>Ingredients *</Text>
+                        <Text style={styles.titleText}>{t('ingredient')}</Text>
                         <TextInput
                             value={ingredients}
                             onChangeText={text => {
@@ -266,7 +268,7 @@ const CreateRecipeScreen = ({ navigation, route }) => {
                         />
                     </View>
                     <View style={styles.textInputView}>
-                        <Text style={styles.titleText}>Cooking Steps *</Text>
+                        <Text style={styles.titleText}>{t('cooking_steps')}</Text>
                         <TextInput
                             value={steps}
                             onChangeText={text => {
@@ -288,7 +290,7 @@ const CreateRecipeScreen = ({ navigation, route }) => {
                         {isLoading ? (
                             <ActivityIndicator size={'large'} color={COLORS.white} />
                         ) : (
-                            <Text style={styles.logoutText}>Create Recipe</Text>
+                            <Text style={styles.logoutText}>{t('create_recipe')}</Text>
                         )}
                     </TouchableOpacity>
                 </View>

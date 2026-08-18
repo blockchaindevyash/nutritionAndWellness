@@ -85,7 +85,45 @@ export const portraitStyles = StyleSheet.create({
     paddingHorizontal: wp(3),
     backgroundColor: COLORS.primary,
     borderRadius: 8,
-  }
+  },
+  dropdown2DropdownStyle: {
+    backgroundColor: COLORS.white,
+    borderRadius: 4,
+    paddingVertical: hp(1),
+    // height: hp(25),
+    // borderRadius: 12,
+  },
+  dropdownItemTxtStyle: {
+    color: COLORS.black,
+    fontFamily: Fonts.FONTS.PoppinsMedium,
+    fontSize: hp(2.1),
+    paddingLeft: wp(2),
+  },
+  dropdownView: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: hp(1),
+    // height: hp(4),
+    borderBottomWidth: 0,
+  },
+  dropdown2BtnStyle2: {
+    width: '40%',
+    paddingVertical: hp(0.5),
+    backgroundColor: COLORS.white,
+    borderRadius: 5,
+    alignItems: 'center',
+    flexDirection: 'row',
+    borderWidth: 1,
+    borderColor: COLORS.primary,
+    // marginTop: hp(1),
+    justifyContent: 'space-between',
+  },
+  filterImage: {
+    width: wp(4),
+    height: hp(2.5),
+    resizeMode: 'contain',
+    tintColor: COLORS.greyColor,
+  },
 });
 
 export const landscapeStyles = StyleSheet.create({

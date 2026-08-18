@@ -11,6 +11,7 @@ import {
     FlatList,
 } from 'react-native';
 import React, { useCallback, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { portraitStyles, landscapeStyles } from './styles';
 import useOrientation from '../../components/OrientationComponent';
 import { COLORS } from '../../utils';
@@ -40,6 +41,7 @@ const DietPreferenceScreen = ({ navigation, route }) => {
     const [fromAccount, setFromAccount] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const styles = isPortrait ? portraitStyles : landscapeStyles;
+    const { t } = useTranslation();
 
     useFocusEffect(
         useCallback(() => {
@@ -183,11 +185,11 @@ const DietPreferenceScreen = ({ navigation, route }) => {
                 }}
             />
             <View style={styles.headerView}>
-                <Header title={'Your Diet Preference'} onPress={() => navigation.goBack()} />
+                <Header title={t('your_diet_preference')} onPress={() => navigation.goBack()} />
             </View>
             <View style={[styles.container, { backgroundColor: COLORS.backColor }]}>
                 <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: hp(10) }}>
-                    <Text style={styles.subtitle}>Select your eating style</Text>
+                    <Text style={styles.subtitle}>{t('select_your_eating_style')}</Text>
                     {/* Diet Options */}
                     {dietList.map((item) => (
                         <TouchableOpacity
@@ -210,8 +212,8 @@ const DietPreferenceScreen = ({ navigation, route }) => {
                     onPress={() => handleContinue()}>
                     {isLoading ? (
                         <ActivityIndicator size={'large'} color={COLORS.white} />
-                    ) : (
-                        <Text style={styles.signinText}>{fromAccount ? 'Save' : 'Next'}</Text>
+                        ) : (
+                        <Text style={styles.signinText}>{fromAccount ? t('save') : t('next')}</Text>
                     )}
                 </TouchableOpacity>
             </View>

@@ -1,10 +1,8 @@
 import moment from 'moment';
 
 export const TASKS = [
-  { key: 'walk', label: 'Walk' },
-  { key: 'workout', label: 'Workout' },
+  { key: 'meditation', label: 'Meditation' },
   { key: 'water', label: 'Water' },
-  { key: 'meal', label: 'Meal' },
 ];
 
 const isDayCompleted = dayData => {

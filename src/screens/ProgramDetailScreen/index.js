@@ -12,6 +12,7 @@ import {
     Alert,
 } from 'react-native';
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import moment from 'moment';
 import { portraitStyles, landscapeStyles } from './styles';
@@ -20,12 +21,14 @@ import Header from '../../components/HeaderComponent';
 import { COLORS } from '../../utils';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { hp } from '../../components/responsive';
+import { onAddCommonJsonApi } from '../../services/Api';
 
 const ProgramDetailScreen = ({ navigation, route }) => {
     const orientation = useOrientation(); // Get current orientation
     const isPortrait = orientation === 'portrait';
     const styles = isPortrait ? portraitStyles : landscapeStyles;
     const insets = useSafeAreaInsets();
+    const { t } = useTranslation();
 
     const { item } = route.params;
 
@@ -92,6 +95,22 @@ const ProgramDetailScreen = ({ navigation, route }) => {
                 [dateKey]: completedIndices,
             };
             await AsyncStorage.setItem(COMPLETED_EXERCISES_KEY, JSON.stringify(updated));
+            console.log('Saved completed exercises for date:', exercises, completedIndices);
+            for (const exercise_index of completedIndices) {
+                let rawData = JSON.stringify({
+                    date: item.date,
+                    exercise_index,
+                    is_exercise_completed: true,
+                });
+                console.log("Exercise progress:", rawData);
+
+                const responseData = await onAddCommonJsonApi(
+                    "plan/track-progress",
+                    rawData
+                );
+
+                console.log("Response:", responseData?.data);
+            }
         } catch (err) {
             console.warn('Unable to save completed exercises', err);
         }
@@ -125,7 +144,7 @@ const ProgramDetailScreen = ({ navigation, route }) => {
                 }}
             />
             <View style={styles.headerView}>
-                <Header title={`${item.day} Workout`} onPress={() => navigation.goBack()} />
+                <Header title={`${item.day} ${t('workout')}`} onPress={() => navigation.goBack()} />
             </View>
             <View style={styles.mainView}>
                 <Text style={styles.subtitle}>
@@ -143,7 +162,7 @@ const ProgramDetailScreen = ({ navigation, route }) => {
                 {/* Bottom Buttons */}
                 <View style={[styles.footer, {marginBottom: insets.bottom + 30}]}> 
                     <TouchableOpacity style={styles.completeBtn} onPress={async () => { await saveCompletedForDate(); navigation.goBack(); }}>
-                        <Text style={styles.buttonText}>Complete Workout</Text>
+                        <Text style={styles.buttonText}>{t('complete_workout')}</Text>
                     </TouchableOpacity>
                 </View>
             </View>

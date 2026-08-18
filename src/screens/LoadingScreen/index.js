@@ -16,9 +16,10 @@ import logo from '../../images/logo.png';
 import useAuthStore from '../../store/authStore';
 import { onGetCommonApi, onGetWithoutTokenCommonApi } from '../../services/Api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import moment from 'moment';
 
 const LoadingScreen = ({ navigation }) => {
-    const {updateWeeklyPlan} = useAuthStore();
+    const {updateWeeklyPlan, updateAdviserList} = useAuthStore();
     const orientation = useOrientation(); // Get current orientation
     const isPortrait = orientation === 'portrait';
     const styles = isPortrait ? portraitStyles : landscapeStyles;
@@ -27,16 +28,41 @@ const LoadingScreen = ({ navigation }) => {
         onGetDataList();
     }, []);
 
+    const getCurrentWeekStart = () => {
+        return moment()
+            .startOf('isoWeek')
+            .format('YYYY-MM-DD');
+    };
+
     const onGetDataList = async () => {
         try {
             // navigation.navigate('TabStack');
+            const currentWeekStart = getCurrentWeekStart();
             const accessToken = await AsyncStorage.getItem('accessToken');
+            const weekPlan = await AsyncStorage.getItem('weeklyPlan');
+            const storedWeekStart = await AsyncStorage.getItem('weeklyPlanStartDate');
             console.log('Access Token:', accessToken);
             if (accessToken != null) {
-                const weeklyPlanRes = await onGetCommonApi('ai/generate-weekly-plan');
-                console.log('Weekly Plan Response:', weeklyPlanRes.data.data);
-                updateWeeklyPlan(weeklyPlanRes.data.data.plan_data);
-                AsyncStorage.setItem('weeklyPlan', JSON.stringify(weeklyPlanRes.data.data.plan_data));
+                if (weekPlan != null) {
+                    if (storedWeekStart === currentWeekStart) {
+                        console.log('Weekly Plan from AsyncStorage:', JSON.parse(weekPlan));
+                        updateWeeklyPlan(JSON.parse(weekPlan));
+                    } else {
+                        const weeklyPlanRes = await onGetCommonApi('ai/generate-weekly-plan');
+                        console.log('Weekly Plan Response:', weeklyPlanRes.data.data);
+                        updateWeeklyPlan(weeklyPlanRes.data.data.plan_data);
+                        AsyncStorage.setItem('weeklyPlanStartDate', currentWeekStart);
+                        AsyncStorage.setItem('weeklyPlan', JSON.stringify(weeklyPlanRes.data.data.plan_data));
+                    }
+                } else {
+                    const weeklyPlanRes = await onGetCommonApi('ai/generate-weekly-plan');
+                    console.log('Weekly Plan Response:', weeklyPlanRes.data.data);
+                    updateWeeklyPlan(weeklyPlanRes.data.data.plan_data);
+                    AsyncStorage.setItem('weeklyPlanStartDate', currentWeekStart);
+                    AsyncStorage.setItem('weeklyPlan', JSON.stringify(weeklyPlanRes.data.data.plan_data));
+                }
+                const wellnessRes = await onGetCommonApi('ai/wellness-advice');
+                updateAdviserList(wellnessRes.data.data.advice_data);
                 navigation.navigate('TabStack');
             }
         } catch (error) {

@@ -6,6 +6,7 @@ import {
     ActivityIndicator,
 } from 'react-native';
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { portraitStyles, landscapeStyles } from './styles';
 import useOrientation from '../../components/OrientationComponent';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -22,6 +23,7 @@ const ForgotPassword = ({ navigation }) => {
     const [apiErrorMessage, setApiErrorMessage] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const styles = isPortrait ? portraitStyles : landscapeStyles;
+    const { t } = useTranslation();
 
     const onForgotData = async () => {
         if (email === '') {
@@ -58,7 +60,7 @@ const ForgotPassword = ({ navigation }) => {
        <KeyboardAwareScrollView contentContainerStyle={styles.safeAreaStyle}>
             <View style={[styles.container, {backgroundColor: COLORS.backColor}]}>
                 <View style={styles.headerView}>
-                    <Header title={'Forgot Password'} onPress={() => navigation.goBack()}/>
+                    <Header title={t('forgot_password')} onPress={() => navigation.goBack()}/>
                 </View>
                 <View style={styles.mainView}>
                     <View style={styles.textInputView}>
@@ -69,7 +71,7 @@ const ForgotPassword = ({ navigation }) => {
                                 setEmailError(false);
                                 setApiError(false);
                             }}
-                            placeholder="Enter Email"
+                            placeholder={t('enter_email')}
                             placeholderTextColor={COLORS.greyColor}
                             style={[styles.textInput, { color: COLORS.greyColor }]}
                             keyboardType={'email-address'}
@@ -79,7 +81,7 @@ const ForgotPassword = ({ navigation }) => {
                     </View>
                     {emailError && (
                         <Text style={styles.errorText}>
-                            {'Please first enter email address.'}
+                            {t('please_enter_email')}
                         </Text>
                     )}
                     {apiError && (
@@ -94,7 +96,7 @@ const ForgotPassword = ({ navigation }) => {
                         {isLoading ? (
                             <ActivityIndicator size={'large'} color={COLORS.white} />
                         ) : (
-                            <Text style={styles.signinText}>Submit</Text>
+                            <Text style={styles.signinText}>{t('submit')}</Text>
                         )}
                     </TouchableOpacity>
                 </View>

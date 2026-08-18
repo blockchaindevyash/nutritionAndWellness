@@ -12,6 +12,7 @@ import {
     TouchableWithoutFeedback,
 } from 'react-native';
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { portraitStyles, landscapeStyles } from './styles';
 import useOrientation from '../../components/OrientationComponent';
 import { COLORS } from '../../utils';
@@ -51,6 +52,7 @@ const EditScreen = ({ navigation }) => {
     const [dateModalVisible, setDateModalVisible] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const styles = isPortrait ? portraitStyles : landscapeStyles;
+    const { t } = useTranslation();
 
     useEffect(() => {
         if (profileData) {
@@ -77,7 +79,7 @@ const EditScreen = ({ navigation }) => {
             try {
                 setIsLoading(true);
                 const imageUrl = profileData.prescription_file;
-                const extension = imageUrl.split(".").pop().toLowerCase();
+                const extension = imageUrl ? imageUrl.split(".").pop().toLowerCase() : null;
                 let mimeType = "image/png";
                 switch (extension) {
                 case "jpg":
@@ -98,13 +100,13 @@ const EditScreen = ({ navigation }) => {
                 const imageFile = {
                     uri: imageUrl,
                     type: mimeType,
-                    name: imageUrl.split('/').pop(),
+                    name: imageUrl ? imageUrl.split('/').pop() : null,
                 };
-                const goalIds = profileData?.goal.map(item => item.id);
-                const medicalIds = profileData?.medical_condition.map(item => item.id);
+                const goalIds = profileData?.goals.map(item => item.id);
+                const medicalIds = profileData?.medical_conditions.map(item => item.id);
                 var formdata = new FormData();
                 formdata.append("name", name);
-                formdata.append("dob", dob);
+                formdata.append("dob", moment(dob).format('DD/MM/YYYY'));
                 formdata.append("gender", gender);
                 formdata.append("height", height);
                 formdata.append("weight", weight);
@@ -122,7 +124,7 @@ const EditScreen = ({ navigation }) => {
                 medicalIds.forEach(id => {
                     formdata.append("medical_condition[]", id);
                 });
-                profileData?.current_medicine?.forEach((medicine, index) => {
+                profileData?.medicines?.forEach((medicine, index) => {
                     formdata.append(`current_medicine[${index}][medicine_name]`, medicine.medicine_name);
                     formdata.append(`current_medicine[${index}][dosage]`, medicine.dosage);
                     formdata.append(`current_medicine[${index}][timing]`, medicine.timing);
@@ -174,18 +176,18 @@ const EditScreen = ({ navigation }) => {
                 }}
             />
             <View style={styles.headerView}>
-                <Header title={'Edit Profile'} onPress={() => navigation.goBack()} />
+                <Header title={t('edit_profile')} onPress={() => navigation.goBack()} />
             </View>
             <View style={styles.editTextInputView}>
                 <>
                 <View style={styles.textInputView}>
-                    <Text style={styles.titleText}>Name</Text>
+                    <Text style={styles.titleText}>{t('name')}</Text>
                     <TextInput
                         value={name}
                         onChangeText={text => {
                             setName(text);
                         }}
-                        placeholder="Enter Name"
+                        placeholder={t('enter_name')}
                         placeholderTextColor={COLORS.greyColor}
                         style={[styles.textInput, { color: COLORS.white, width: '100%' }]}
                         keyboardType={'email-address'}
@@ -195,11 +197,11 @@ const EditScreen = ({ navigation }) => {
                 </View>
                 {nameError && (
                     <Text style={styles.errorText}>
-                        {'name is required.'}
+                        {t('name_is_required')}
                     </Text>
                 )}
                 <View style={styles.textInputView}>
-                    <Text style={styles.titleText}>Date of Birth</Text>
+                    <Text style={styles.titleText}>{t('date_of_birth')}</Text>
                     <Text
                         style={[
                             styles.textInput,
@@ -253,11 +255,11 @@ const EditScreen = ({ navigation }) => {
                 </View>
                 {dobError && (
                     <Text style={styles.errorText}>
-                        {'Date of birth is required.'}
+                        {t('dob_is_required')}
                     </Text>
                 )}
                 <View style={styles.textInputView}>
-                    <Text style={styles.titleText}>Gender</Text>
+                    <Text style={styles.titleText}>{t('gender')}</Text>
                     <SelectDropdown
                         data={genderArray}
                         dropdownOverlayColor='transparent'
@@ -276,7 +278,7 @@ const EditScreen = ({ navigation }) => {
                                         </Text>
                                     ) : (
                                         <Text style={styles.dropdownItemTxtStyle}>
-                                            {selectedItem?.value || 'Select Gender'}
+                                            {selectedItem?.value || t('select_gender')}
                                         </Text>
                                     )}
                                     <View style={{ width: wp(7) }}>
@@ -301,46 +303,46 @@ const EditScreen = ({ navigation }) => {
                 </View>
                 {genderError && (
                     <Text style={styles.errorText}>
-                        {'Gender is required.'}
+                        {t('gender_is_required')}
                     </Text>
                 )}
                 <View style={styles.textInputView}>
-                    <Text style={styles.titleText}>Height</Text>
+                    <Text style={styles.titleText}>{t('height')}</Text>
                     <TextInput
                         value={height}
                         onChangeText={text => {
                             setHeight(text);
                         }}
-                        placeholder="Enter Height"
+                        placeholder={t('enter_height')}
                         placeholderTextColor={COLORS.greyColor}
                         style={[styles.textInput, { color: COLORS.white, width: '100%' }]}
                     />
                 </View>
                 {heightError && (
                     <Text style={styles.errorText}>
-                        {'Height is required.'}
+                        {t('height_is_required')}
                     </Text>
                 )}
                 <View style={styles.textInputView}>
-                    <Text style={styles.titleText}>Weight</Text>
+                    <Text style={styles.titleText}>{t('weight')}</Text>
                     <TextInput
                         value={weight}
                         onChangeText={text => {
                             setWeight(text);
                         }}
-                        placeholder="Enter Weight"
+                        placeholder={t('enter_weight')}
                         placeholderTextColor={COLORS.greyColor}
                         style={[styles.textInput, { color: COLORS.white, width: '100%' }]}
                     />
                 </View>
                 {weightError && (
                     <Text style={styles.errorText}>
-                        {'Weight is required.'}
+                        {t('weight_is_required')}
                     </Text>
                 )}
                 </>
                 <TouchableOpacity style={styles.logoutButton} onPress={() => onSaveProfileData()}>
-                    <Text style={styles.logoutText}>Save</Text>
+                    <Text style={styles.logoutText}>{t('save')}</Text>
                 </TouchableOpacity>
             </View>
         </View>

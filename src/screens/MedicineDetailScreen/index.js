@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useTranslation } from 'react-i18next';
 import {
     View,
     Text,
@@ -32,6 +33,7 @@ const MedicineDetailScreen = ({ navigation }) => {
     const [timing, setTiming] = useState("");
     const [notes, setNotes] = useState("");
     const [medicineList, setMedicineList] = useState([]);
+    const { t } = useTranslation();
 
     const addMedicine = () => {
         if (!medicineName.trim()) {
@@ -96,7 +98,7 @@ const MedicineDetailScreen = ({ navigation }) => {
                 }}
             />
             <View style={styles.headerView}>
-                <Header title={'Current Medicines'} onPress={() => navigation.goBack()} />
+                <Header title={t('current_medicines')} onPress={() => navigation.goBack()} />
             </View>
             <View style={[styles.mainView, { backgroundColor: COLORS.backColor }]}>
                 <ScrollView
@@ -104,8 +106,7 @@ const MedicineDetailScreen = ({ navigation }) => {
                     showsVerticalScrollIndicator={false}>
                     <View style={styles.headerContainer}>
                         <Text style={styles.subtitle}>
-                            Add your current medicines so we can
-                            personalize your meal plan and workout safely.
+                            {t('medicine_subtitle')}
                         </Text>
                     </View>
                     {/* Form Card */}
@@ -115,10 +116,10 @@ const MedicineDetailScreen = ({ navigation }) => {
                         {/* Medicine Name */}
                         <View style={styles.inputContainer}>
                             <Text style={styles.label}>
-                                Medicine Name
-                            </Text>
+                                    {t('medicine_name')}
+                                </Text>
                             <TextInput
-                                placeholder="Enter medicine name"
+                                placeholder={t('enter_medicine_name')}
                                 placeholderTextColor="#eee"
                                 value={medicineName}
                                 onChangeText={setMedicineName}
@@ -128,10 +129,10 @@ const MedicineDetailScreen = ({ navigation }) => {
                         {/* Dosage */}
                         <View style={styles.inputContainer}>
                             <Text style={styles.label}>
-                                Dosage
+                                {t('dosage')}
                             </Text>
                             <TextInput
-                                placeholder="Example: 500mg"
+                                placeholder={t('dosage_example')}
                                 placeholderTextColor="#eee"
                                 value={dosage}
                                 onChangeText={setDosage}
@@ -141,10 +142,10 @@ const MedicineDetailScreen = ({ navigation }) => {
                         {/* Timing */}
                         <View style={styles.inputContainer}>
                             <Text style={styles.label}>
-                                Timing
+                                {t('timing')}
                             </Text>
                             <TextInput
-                                placeholder="Morning / After Lunch"
+                                placeholder={t('timing_placeholder')}
                                 placeholderTextColor="#eee"
                                 value={timing}
                                 onChangeText={setTiming}
@@ -154,10 +155,10 @@ const MedicineDetailScreen = ({ navigation }) => {
                         {/* Notes */}
                         <View style={styles.inputContainer}>
                             <Text style={styles.label}>
-                                Additional Notes
+                                {t('additional_notes')}
                             </Text>
                             <TextInput
-                                placeholder="Optional notes"
+                                placeholder={t('optional_notes')}
                                 placeholderTextColor="#eee"
                                 value={notes}
                                 onChangeText={setNotes}
@@ -169,7 +170,7 @@ const MedicineDetailScreen = ({ navigation }) => {
                         {/* Add Button */}
                         <TouchableOpacity style={styles.addButton} onPress={addMedicine}>
                             <Text style={styles.addButtonText}>
-                                + Add Medicine
+                                {`+ ${t('add_medicine')}`}
                             </Text>
                         </TouchableOpacity>
                     </LinearGradient>
@@ -177,7 +178,7 @@ const MedicineDetailScreen = ({ navigation }) => {
                     {medicineList.length > 0 && (
                         <View style={styles.listContainer}>
                             <Text style={styles.listTitle}>
-                                Added Medicines
+                                {t('added_medicines')}
                             </Text>
                             {medicineList.map((item) => (
                                 <View key={item.id} style={styles.medicineCard}>
@@ -203,7 +204,7 @@ const MedicineDetailScreen = ({ navigation }) => {
                                     </View>
                                     <TouchableOpacity onPress={() => removeMedicine(item.id)}>
                                         <Text style={styles.removeText}>
-                                            Remove
+                                            {t('remove')}
                                         </Text>
                                     </TouchableOpacity>
                                 </View>
@@ -218,7 +219,7 @@ const MedicineDetailScreen = ({ navigation }) => {
                         style={styles.button}
                         onPress={handleContinue}>
                         <Text style={styles.buttonText}>
-                            Next
+                            {t('next')}
                         </Text>
                     </TouchableOpacity>
                 </View>

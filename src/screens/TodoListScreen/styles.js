@@ -208,6 +208,12 @@ const baseStyles = {
   taskStatusPending: {
     color: COLORS.textColor,
   },
+  sectionText: {
+    color: COLORS.errorColor,
+    fontFamily: Fonts.FONTS.PoppinsMedium,
+    fontSize: normalize(15),
+    marginTop: hp(1),
+  }
 };
 
 export const portraitStyles = StyleSheet.create(baseStyles);

@@ -9,6 +9,7 @@ import {
   Keyboard,
 } from 'react-native';
 import {useCallback, useEffect, useRef, useState} from 'react';
+import { useTranslation } from 'react-i18next';
 import {portraitStyles, landscapeStyles} from './styles';
 import {COLORS} from '../../utils';
 import useOrientation from '../../components/OrientationComponent';
@@ -24,6 +25,7 @@ import { hp } from '../../components/responsive';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Header from '../../components/HeaderComponent';
 import useAuthStore from '../../store/authStore';
+import { getAuth, signInWithPhoneNumber } from '@react-native-firebase/auth';
 
 const AuthVerificationScreen = ({navigation, route}) => {
   const otpRef = useRef(null);
@@ -34,15 +36,16 @@ const AuthVerificationScreen = ({navigation, route}) => {
   const [emailError, setEmailError] = useState(false);
   const [otpPin, setOtpPin] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [isResendLoading, setIsResendLoading] = useState(false);
   const [confirm, setConfirm] = useState(null);
   const [resendLoading, setResendLoading] = useState(false);
   const [timer, setTimer] = useState(30);
 
   const styles = isPortrait ? portraitStyles : landscapeStyles;
+  const { t } = useTranslation();
 
    useFocusEffect(
     useCallback(() => {
+      setConfirm(route.params?.confirm);
       StatusBar.setBarStyle('light-content');
     }, [])
   );
@@ -52,29 +55,43 @@ const AuthVerificationScreen = ({navigation, route}) => {
       setEmailError(true);
       return;
     } else {
-      updateSignupData({verify_phone: true});
-      navigation.navigate('BasicInfoScreen');
-      console.log('Verifying OTP:', otpPin);
+      try {
+        setIsLoading(true);
+        await confirm.confirm(otpPin);
+        updateSignupData({verify_phone: true});
+        setIsLoading(false);
+        navigation.navigate('BasicInfoScreen');
+        console.log('Verifying OTP:', otpPin);
+      } catch (error) {
+        setIsLoading(false);
+        console.log('Error verifying OTP:', error);
+        showMessage({
+          message: error.message || 'Invalid OTP',
+          type: 'danger',
+          duration: 5000,
+          icon: 'danger',
+        });
+      }
     }
   };
 
   const onResendOtp = async () => {
     try {
       setResendLoading(true);
-      // if (response.data.success) {
-      //   showMessage({
-      //     message: response.data.message,
-      //     type: 'success',
-      //     duration: 5000,
-      //     icon: 'success',
-      //   });
-      // }
+      const confirmation = await signInWithPhoneNumber(getAuth(), route.params?.phone);
+      setConfirm(confirmation);
+      showMessage({
+        message: 'Resend OTP successfully!',
+        type: 'success',
+        duration: 5000,
+        icon: 'success',
+      });
       setResendLoading(false);
     } catch (error) {
       setResendLoading(false);
       console.log('error::', error.response);
       showMessage({
-        message: error.message || 'Invalid OTP',
+        message: 'Invalid OTP. Please enter the correct OTP.',
         type: 'danger',
         duration: 5000,
         icon: 'danger',
@@ -93,11 +110,11 @@ const AuthVerificationScreen = ({navigation, route}) => {
       />
       <KeyboardAwareScrollView contentContainerStyle={styles.safeAreaStyle}>
         <View style={styles.headerView}>
-          <Header title={'Phone Verification'} onPress={() => navigation.goBack()} />
+          <Header title={t('phone_verification')} onPress={() => navigation.goBack()} />
         </View>
         <View style={styles.mainView}>
           <View>
-            <Text style={styles.desText}>{`Enter the OTP sent to your Phone Number`}</Text>
+            <Text style={styles.desText}>{t('enter_otp_sent')}</Text>
             <OtpInput
               ref={otpRef}
               numberOfDigits={6}
@@ -122,7 +139,7 @@ const AuthVerificationScreen = ({navigation, route}) => {
             />
             {emailError && (
               <Text style={styles.errorText}>
-                {'Please enter valid otp.'}
+                {t('please_enter_valid_otp')}
               </Text>
             )}
           </View>
@@ -134,17 +151,17 @@ const AuthVerificationScreen = ({navigation, route}) => {
               {isLoading ? (
                 <ActivityIndicator size={'large'} color={COLORS.white} />
               ) : (
-                <Text style={styles.logoutText}>{'Verify'}</Text>
+                <Text style={styles.logoutText}>{t('verify')}</Text>
               )}
             </TouchableOpacity>
             <TouchableOpacity
-              style={[styles.resendButtonView, {opacity: isLoading ? 0.75 : 1}]}
-              disabled={isResendLoading}
+              style={[styles.resendButtonView, {opacity: resendLoading ? 0.75 : 1}]}
+              disabled={resendLoading}
               onPress={() => onResendOtp()}>
-              {isResendLoading ? (
+              {resendLoading ? (
                 <ActivityIndicator size={'large'} color={COLORS.black} />
-              ) : (
-                <Text style={styles.resendText}>{'Resend OTP'}</Text>
+                ) : (
+                <Text style={styles.resendText}>{t('resend_otp')}</Text>
               )}
             </TouchableOpacity>
           </View>

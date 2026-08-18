@@ -2,6 +2,8 @@ import React, { useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import SplashScreen from './src/screens/SplashScreen';
+import './src/i18n';
+import LanguageSelector from './src/components/LanguageSelector';
 import LoginScreen from './src/screens/LoginScreen';
 import LoadingScreen from './src/screens/LoadingScreen';
 import HomeScreen from './src/screens/HomeScreen';
@@ -19,6 +21,8 @@ import FoodAnalysis from './src/screens/FoodAnalysis';
 import AnalysisDetailScreen from './src/screens/AnalysisDetailScreen';
 import EditScreen from './src/screens/EditScreen';
 import RecipeScreen from './src/screens/RecipeScreen';
+import SaveRecipeDetailScreen from './src/screens/SaveRecipeDetailScreen';
+import SaveRecipeScreen from './src/screens/SaveRecipeScreen';
 import DashboardScreen from './src/screens/DashboardScreen';
 import TodoListScreen from './src/screens/TodoListScreen';
 import ChangePassword from './src/screens/ChangePassword';
@@ -30,6 +34,8 @@ import DoctorDescription from './src/screens/DoctorDescription';
 import MedicineDetailScreen from './src/screens/MedicineDetailScreen';
 import CreateRecipeScreen from './src/screens/CreateRecipeScreen';
 import AdviserScreen from './src/screens/AdviserScreen';
+import BMIScreen from './src/screens/BMIScreen';
+import BMIResultScreen from './src/screens/BMIResultScreen';
 import AdviserDetailScreen from './src/screens/AdviserDetailScreen';
 import PhoneVerificationScreen from './src/screens/PhoneVerificationScreen';
 import { Image, Platform, StatusBar, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
@@ -308,6 +314,16 @@ const App = () => {
             options={{headerShown: false}}
           />
           <Stack.Screen
+            name="SaveRecipeScreen"
+            component={SaveRecipeScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="SaveRecipeDetailScreen"
+            component={SaveRecipeDetailScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
             name="NotificationScreen"
             component={NotificationScreen}
             options={{headerShown: false}}
@@ -355,6 +371,16 @@ const App = () => {
           <Stack.Screen
             name="AdviserDetailScreen"
             component={AdviserDetailScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="BMIScreen"
+            component={BMIScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="BMIResultScreen"
+            component={BMIResultScreen}
             options={{headerShown: false}}
           />
         </Stack.Navigator>

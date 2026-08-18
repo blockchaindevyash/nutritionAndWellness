@@ -23,7 +23,7 @@ import ProfilePhoto from '../../components/ProfilePhoto';
 import moment from 'moment';
 import plane from '../../images/plane.png';
 import { pick } from '@react-native-documents/picker'
-import { onAddChatFormApi, onAddCommonFormApi } from '../../services/Api';
+import { onAddChatFormApi, onAddCommonFormApi, onGetCommonApi } from '../../services/Api';
 import ImagePicker from "react-native-image-crop-picker";
 
 const HistoryScreen = ({ navigation }) => {
@@ -43,6 +43,7 @@ const HistoryScreen = ({ navigation }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [MessageListData, setMessageListData] = useState([]);
     const [imageAttachment, setImageAttachment] = useState(null);
+    const scrollViewRef = useRef(null);
 
     useFocusEffect(
         useCallback(() => {
@@ -51,33 +52,70 @@ const HistoryScreen = ({ navigation }) => {
     );
 
     useEffect(() => {
-    if (!answerLoading) {
-        setLoadingCount(1);
-        return;
-    }
+        if (!answerLoading) {
+            setLoadingCount(1);
+            return;
+        }
 
-    const interval = setInterval(() => {
-        setLoadingCount(prev => (prev >= 3 ? 1 : prev + 1));
-    }, 500);
+        const interval = setInterval(() => {
+            setLoadingCount(prev => (prev >= 3 ? 1 : prev + 1));
+        }, 500);
 
-    return () => clearInterval(interval);
-}, [answerLoading]);
+        return () => clearInterval(interval);
+    }, [answerLoading]);
 
-    // useFocusEffect(
-    //     useCallback(() => {
-    //         onGetChatList();
-    //     }, [])
-    // );
+    useEffect(() => {
+        if (MessageListData.length > 0) {
+            requestAnimationFrame(() => {
+                scrollViewRef.current?.scrollToEnd({ animated: true });
+            });
+        }
+    }, [MessageListData]);
+
+    useFocusEffect(
+        useCallback(() => {
+            onGetChatList();
+        }, [])
+    );
+
+    const mapHistoryToMessages = history => {
+        if (!Array.isArray(history)) return [];
+
+        const normalizedHistory = [...history].reverse();
+
+        return normalizedHistory.flatMap(item => {
+            const userMessage = {
+                id: `user-${item.id}`,
+                type: 'user',
+                text: item.prompt || '',
+            };
+
+            const botMessage = {
+                id: `bot-${item.id}`,
+                type: 'bot',
+                text: item.response || '',
+            };
+
+            return [userMessage, botMessage];
+        });
+    };
 
     const onGetChatList = async () => {
         try {
-            const response = await onGetCommonApi('chat-list');
+            setLoading(true);
+            const response = await onGetCommonApi('ai/history');
             if (response.data.status) {
                 console.log('Get Value');
-                setChatUserList(response.data.data);
-                setFilteredList(response.data.data);
+                const history = response.data.data?.history || [];
+                const messages = mapHistoryToMessages(history);
+                setMessageListData(messages);
                 setLoading(false);
                 setRefresh(!refresh);
+                requestAnimationFrame(() => {
+                    scrollViewRef.current?.scrollToEnd({ animated: false });
+                });
+            } else {
+                setLoading(false);
             }
         } catch (err) {
             setLoading(false);
@@ -173,7 +211,6 @@ const HistoryScreen = ({ navigation }) => {
             if (!line.startsWith("data:")) return;
             const data = line.replace("data:", "").trim();
             if (data === "[DONE]") return;
-
             try {
                 const json = JSON.parse(data);
                 finalText += json.text;
@@ -212,16 +249,24 @@ const HistoryScreen = ({ navigation }) => {
             />
             <View style={styles.headerView}>
                 <Text style={styles.callLogText}>
-                    AI Assistant
+                    {t('ai_assistant')}
                 </Text>
             </View>
             <View style={{height: '94%', backgroundColor: COLORS.backColor}}>
                 <View style={styles.mainView}>
-                    {MessageListData.length > 0 ? (
-                        <ScrollView contentContainerStyle={{paddingBottom: hp(15)}}>
+                    {loading ? (
+                        <View style={styles.loaderContainer}>
+                            <ActivityIndicator size="large" color={COLORS.subPrimary} />
+                        </View>
+                    ) : MessageListData.length > 0 ? (
+                        <ScrollView
+                            ref={scrollViewRef}
+                            contentContainerStyle={{ paddingBottom: hp(15) }}
+                            onContentSizeChange={() => scrollViewRef.current?.scrollToEnd({ animated: true })}
+                        >
                             {MessageListData.map((item, index) => {
                                 return (
-                                    <View style={styles.itemsDataView}>
+                                    <View key={item.id} style={styles.itemsDataView}>
                                         {item.type == 'user' ? (
                                             <View style={[styles.queDataMainView, { paddingTop: index == 0 ? hp(1) : hp(4) }]}>
                                                 <View style={styles.queDataView}>
@@ -276,7 +321,7 @@ const HistoryScreen = ({ navigation }) => {
                                 onChangeText={text => {
                                     setEnterText(text);
                                 }}
-                                placeholder="Ask anything"
+                                placeholder={t('ask_anything')}
                                 placeholderTextColor={COLORS.greyColor}
                                 style={[styles.textInput, { width: '78%' }]}
                                 multiline

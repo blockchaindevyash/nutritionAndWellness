@@ -418,6 +418,11 @@ export const portraitStyles = StyleSheet.create({
     fontSize: normalize(14),
     fontFamily: Fonts.FONTS.PoppinsMedium,
   },
+  optionImageStyle: {
+    width: wp(6),
+    height: hp(5),
+    resizeMode: 'contain',
+  }
 })
 
 export const landscapeStyles = StyleSheet.create({

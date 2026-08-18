@@ -11,12 +11,14 @@ import {
   FlatList,
 } from 'react-native';
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { portraitStyles, landscapeStyles } from './styles';
 import useOrientation from '../../components/OrientationComponent';
 import { COLORS } from '../../utils';
 import Header from '../../components/HeaderComponent';
 import { hp } from '../../components/responsive';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import useAuthStore from '../../store/authStore';
 
 const wellnessData = [
   {
@@ -217,12 +219,14 @@ const wellnessData = [
 ];
 
 const AdviserScreen = ({ navigation }) => {
+  const {adviserList} = useAuthStore();
   const orientation = useOrientation(); // Get current orientation
   const isPortrait = orientation === 'portrait';
   const insets = useSafeAreaInsets();
   const [selectedLevel, setSelectedLevel] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const styles = isPortrait ? portraitStyles : landscapeStyles;
+  const { t } = useTranslation();
 
   return (
     <View style={styles.safeAreaStyle}>
@@ -234,12 +238,12 @@ const AdviserScreen = ({ navigation }) => {
         }}
       />
       <View style={styles.headerView}>
-        <Header title={'Wellness Adviser'} onPress={() => navigation.goBack()} />
+        <Header title={t('wellness_adviser')} onPress={() => navigation.goBack()} />
       </View>
       <View style={[styles.container, { backgroundColor: COLORS.backColor }]}>
         <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: hp(10) }}>
-          <Text style={styles.subtitle}>Personalized health guidance based on your lifestyle, medical conditions, diet, and fitness goals.</Text>
-          {wellnessData.map((item) => (
+          <Text style={styles.subtitle}>{t('adviser_subtitle')}</Text>
+          {adviserList.map((item) => (
             <View key={item.id} style={styles.card}>
               <View style={styles.topRow}>
                 <View style={styles.iconContainer}>
@@ -254,7 +258,7 @@ const AdviserScreen = ({ navigation }) => {
                   )
                 }>
                   <Text style={styles.viewButtonText}>
-                    View Details
+                    {t('view_details')}
                   </Text>
                 </TouchableOpacity>
               </View>

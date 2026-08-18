@@ -15,6 +15,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { portraitStyles, landscapeStyles } from './styles';
 import useOrientation from '../../components/OrientationComponent';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+    import { useTranslation } from 'react-i18next';
 import { COLORS, Fonts } from '../../utils/index';
 import Header from '../../components/HeaderComponent';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -32,6 +33,7 @@ const genderArray = [
 ];
 
 const BasicInfoScreen = ({navigation, route}) => {
+    const { t } = useTranslation();
     const {signupData, updateSignupData} = useAuthStore();
     const orientation = useOrientation(); // Get current orientation
     const isPortrait = orientation === 'portrait';
@@ -93,10 +95,10 @@ const BasicInfoScreen = ({navigation, route}) => {
             />
             <View style={[styles.container, { backgroundColor: COLORS.backColor }]}>
                 <View style={styles.headerView}>
-                    <Header title={'Basic Information'} onPress={() => {signupData?.verify_phone ? navigation.navigate('SignupScreen') : navigation.goBack()}} />
+                    <Header title={t('basic_information')} onPress={() => {signupData?.verify_phone ? navigation.navigate('SignupScreen') : navigation.goBack()}} />
                 </View>
                 <View style={styles.mainView}>
-                    <Text style={styles.titleText}>Date of Birth</Text>
+                    <Text style={styles.titleText}>{t('date_of_birth')}</Text>
                     <Text
                         style={[
                             styles.textInput,
@@ -149,10 +151,10 @@ const BasicInfoScreen = ({navigation, route}) => {
                     )}
                     {dobError && (
                         <Text style={styles.errorText}>
-                            {'Date of birth is required.'}
+                            {t('dob_is_required')}
                         </Text>
                     )}
-                    <Text style={styles.titleText}>Gender</Text>
+                    <Text style={styles.titleText}>{t('gender')}</Text>
                     {/* <TextInput
                         value={gender}
                         onChangeText={text => {
@@ -182,7 +184,7 @@ const BasicInfoScreen = ({navigation, route}) => {
                                         </Text>
                                     ) : (
                                         <Text style={styles.dropdownItemTxtStyle}>
-                                            {selectedItem?.value || 'Select Gender'}
+                                            {selectedItem?.value || t('select_gender')}
                                         </Text>
                                     )}
                                     <View style={{ width: wp(7) }}>
@@ -206,10 +208,10 @@ const BasicInfoScreen = ({navigation, route}) => {
                     />
                     {genderError && (
                         <Text style={styles.errorText}>
-                            {'Gender is required.'}
+                            {t('gender_is_required')}
                         </Text>
                     )}
-                    <Text style={styles.titleText}>{'Height (cm)'}</Text>
+                    <Text style={styles.titleText}>{t('height')+' (cm)'}</Text>
                     <TextInput
                         value={height}
                         onChangeText={text => {
@@ -217,17 +219,17 @@ const BasicInfoScreen = ({navigation, route}) => {
                             setHeightError(false);
                             setApiError(false);
                         }}
-                        placeholder="Enter Height"
+                        placeholder={t('enter_height')}
                         keyboardType='numeric'
                         placeholderTextColor={COLORS.greyColor}
                         style={[styles.textInput]}
                     />
                     {heightError && (
                         <Text style={styles.errorText}>
-                            {'Height is required.'}
+                            {t('height_is_required')}
                         </Text>
                     )}
-                    <Text style={styles.titleText}>{'Weight (kg)'}</Text>
+                    <Text style={styles.titleText}>{t('weight')+' (kg)'}</Text>
                     <TextInput
                         value={weight}
                         onChangeText={text => {
@@ -236,13 +238,13 @@ const BasicInfoScreen = ({navigation, route}) => {
                             setApiError(false);
                         }}
                         keyboardType='numeric'
-                        placeholder="Enter Weight"
+                        placeholder={t('enter_weight')}
                         placeholderTextColor={COLORS.greyColor}
                         style={[styles.textInput]}
                     />
                     {weightError && (
                         <Text style={styles.errorText}>
-                            {'Weight is required.'}
+                            {t('weight_is_required')}
                         </Text>
                     )}
                     {apiError && (
@@ -257,7 +259,7 @@ const BasicInfoScreen = ({navigation, route}) => {
                         {isLoading ? (
                             <ActivityIndicator size={'large'} color={COLORS.white} />
                         ) : (
-                            <Text style={styles.signinText}>Next</Text>
+                            <Text style={styles.signinText}>{t('next')}</Text>
                         )}
                     </TouchableOpacity>
                 </View>

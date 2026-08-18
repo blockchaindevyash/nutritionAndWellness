@@ -11,7 +11,7 @@ import {
   FlatList,
 } from 'react-native';
 import React, { useEffect, useState } from 'react';
-import { portraitStyles, landscapeStyles } from './styles';
+import { useTranslation } from 'react-i18next';
 import useOrientation from '../../components/OrientationComponent';
 import { COLORS } from '../../utils';
 import Header from '../../components/HeaderComponent';
@@ -21,6 +21,7 @@ import LinearGradient from "react-native-linear-gradient";
 
 const AdviserDetailScreen = ({ navigation, route }) => {
   const { details } = route.params;
+  const { t } = useTranslation();
   const orientation = useOrientation(); // Get current orientation
   const isPortrait = orientation === 'portrait';
   const insets = useSafeAreaInsets();
@@ -38,12 +39,12 @@ const AdviserDetailScreen = ({ navigation, route }) => {
         }}
       />
       <View style={styles.headerView}>
-        <Header title={'Wellness Adviser'} onPress={() => navigation.goBack()} />
+        <Header title={t('wellness_adviser')} onPress={() => navigation.goBack()} />
       </View>
       <View style={[styles.container, {backgroundColor: COLORS.backColor}]}>
         <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: hp(10) }}>
           <LinearGradient
-            colors={['#99e141', '#79B433']}
+            colors={details.color}
             style={styles.headerCard}>
             <View style={styles.iconContainer}>
               <Text style={styles.icon}>
@@ -66,7 +67,7 @@ const AdviserDetailScreen = ({ navigation, route }) => {
           {/* Recommendations */}
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>
-              Recommended
+              {t('recommendations')}
             </Text>
             {details.recommendations.map((item, index) => (
               <View key={index} style={styles.listItem}>
@@ -81,7 +82,7 @@ const AdviserDetailScreen = ({ navigation, route }) => {
           {/* Avoid Foods */}
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>
-              Avoid Foods
+              {t('avoid_foods')}
             </Text>
             {details.avoid.map((item, index) => (
               <View key={index} style={styles.listItem}>
@@ -94,12 +95,12 @@ const AdviserDetailScreen = ({ navigation, route }) => {
           {/* Meal Timing */}
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>
-              Meal Timing
+              {t('timing')}
             </Text>
             {details.schedule.map((item, index) => (
               <View key={index} style={styles.timingCard}>
                 <View style={styles.timingTopRow}>
-                  <Text style={styles.mealTitle}>
+                  <Text style={[styles.mealTitle, {width: '74%'}]}>
                     {item.title}
                   </Text>
                   <View style={styles.timeBadge}>

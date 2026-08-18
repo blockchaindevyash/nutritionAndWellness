@@ -20,8 +20,10 @@ import hidden from '../../images/hidden.png';
 import logo from '../../images/logo.png';
 import {onLoginApi} from '../../services/Api';
 import useAuthStore from '../../store/authStore';
+import { useTranslation } from 'react-i18next';
 
 const LoginScreen = ({ navigation }) => {
+    const { t } = useTranslation();
     const { updateProfileData } = useAuthStore();
     const orientation = useOrientation(); // Get current orientation
     const isPortrait = orientation === 'portrait';
@@ -98,7 +100,7 @@ const LoginScreen = ({ navigation }) => {
                                 setEmailError(false);
                                 setApiError(false);
                             }}
-                            placeholder="Enter Email"
+                            placeholder={t('enter_email')}
                             placeholderTextColor={COLORS.greyColor}
                             style={[styles.textInput, {color: COLORS.white}]}
                             keyboardType={'email-address'}
@@ -108,7 +110,7 @@ const LoginScreen = ({ navigation }) => {
                     </View>
                     {emailError && (
                         <Text style={styles.errorText}>
-                            {'Please first enter email address.'}
+                            {t('please_enter_email')}
                         </Text>
                     )}
                     <View
@@ -123,7 +125,7 @@ const LoginScreen = ({ navigation }) => {
                                 setPasswordError(false);
                                 setApiError(false);
                             }}
-                            placeholder="Enter Password"
+                            placeholder={t('enter_password')}
                             placeholderTextColor={COLORS.greyColor}
                             style={[
                                 styles.textInput,
@@ -145,7 +147,7 @@ const LoginScreen = ({ navigation }) => {
                     </View>
                     {passwordError && (
                         <Text style={styles.errorText}>
-                            {'Please first enter password.'}
+                            {t('please_enter_password')}
                         </Text>
                     )}
                     {apiError && (
@@ -158,7 +160,7 @@ const LoginScreen = ({ navigation }) => {
                         onPress={() => {
                             navigation.navigate('ForgotPassword');
                         }}>
-                        Forgot Password?
+                        {`${t('forgot_password')}?`}
                     </Text>
 
                     <TouchableOpacity
@@ -169,13 +171,13 @@ const LoginScreen = ({ navigation }) => {
                         {isLoading ? (
                             <ActivityIndicator size={'large'} color={COLORS.white} />
                         ) : (
-                            <Text style={styles.signinText}>Login</Text>
+                            <Text style={styles.signinText}>{t('login')}</Text>
                         )}
                     </TouchableOpacity>
                     <TouchableOpacity
                         style={[styles.signupView]}
                         onPress={() => { navigation.navigate('SignupScreen') }}>
-                        <Text style={styles.signupText}>Sign up</Text>
+                        <Text style={styles.signupText}>{t('sign_up')}</Text>
                     </TouchableOpacity>
                 </View>
             </View>

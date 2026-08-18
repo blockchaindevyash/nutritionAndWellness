@@ -13,48 +13,12 @@ import {
 import React, { useCallback, useEffect, useState } from 'react';
 import { portraitStyles, landscapeStyles } from './styles';
 import useOrientation from '../../components/OrientationComponent';
-import { hp } from '../../components/responsive';
-import dish1 from '../../images/dish1.jpg';
-import dish2 from '../../images/dish2.png';
-import dish3 from '../../images/dish3.jpg';
-import dish4 from '../../images/dish4.jpg';
-import plus from '../../images/plus.png';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { COLORS } from '../../utils';
 import { onGetCommonApi } from '../../services/Api';
 import { useFocusEffect } from '@react-navigation/native';
 import Header from '../../components/HeaderComponent';
-
-const dishArray = [
-  {
-    id: 1, image: dish1, name: 'Oats with Fruits', recipeType: "Healthy Breakfast",
-    prepTime: "20 min",
-    calories: "350 kcal",
-    ingredients: "1 cup oats\n1 cup milk\nAlmonds\nCarrot\nBroccoli\nSalt & pepper",
-    steps: "Boil oats for 5 minutes\nAdd vegetables and cook\nMix milk and spices\nServe hot with almonds",
-  },
-  {
-    id: 2, image: dish2, name: 'Grilled Chicken Salad', recipeType: "Healthy Breakfast",
-    prepTime: "20 min",
-    calories: "350 kcal",
-    ingredients: "1 cup oats\n1 cup milk\nAlmonds\nCarrot\nBroccoli\nSalt & pepper",
-    steps: "Boil oats for 5 minutes\nAdd vegetables and cook\nMix milk and spices\nServe hot with almonds",
-  },
-  {
-    id: 3, image: dish3, name: 'Pasta with Veggies', recipeType: "Healthy Breakfast",
-    prepTime: "20 min",
-    calories: "350 kcal",
-    ingredients: "1 cup oats\n1 cup milk\nAlmonds\nCarrot\nBroccoli\nSalt & pepper",
-    steps: "Boil oats for 5 minutes\nAdd vegetables and cook\nMix milk and spices\nServe hot with almonds",
-  },
-  {
-    id: 4, image: dish4, name: 'Avocado Toast', recipeType: "Healthy Breakfast",
-    prepTime: "20 min",
-    calories: "350 kcal",
-    ingredients: "1 cup oats\n1 cup milk\nAlmonds\nCarrot\nBroccoli\nSalt & pepper",
-    steps: "Boil oats for 5 minutes\nAdd vegetables and cook\nMix milk and spices\nServe hot with almonds",
-  },
-];
+import { useTranslation } from 'react-i18next';
 
 const HomeScreen = ({ navigation }) => {
   const orientation = useOrientation();
@@ -63,17 +27,18 @@ const HomeScreen = ({ navigation }) => {
   const insets = useSafeAreaInsets();
   const [recipeList, setRecipeList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const { t } = useTranslation();
 
   useFocusEffect(
     useCallback(() => {
       onGetRecipeData();
     }, [])
   );
-
+    
   const onGetRecipeData = async () => {
     try {
       setIsLoading(true);
-      const respose = await onGetCommonApi('my-recipes?per_page=100');
+      const respose = await onGetCommonApi('recipes?per_page=100');
       if (respose.data.status) {
         setRecipeList(respose.data.data.recipes);
         setIsLoading(false);
@@ -94,7 +59,7 @@ const HomeScreen = ({ navigation }) => {
         }}
       />
       <View style={styles.headerView}>
-        <Header title={'Food Recipes'} onPress={() => navigation.goBack()} />
+        <Header title={t('food_recipes')} onPress={() => navigation.goBack()} />
         {/* <Text style={styles.callLogText}>
           Food Recipes
         </Text> */}
@@ -113,11 +78,11 @@ const HomeScreen = ({ navigation }) => {
             <View key={0} style={styles.ListEmptyView}>
               {isLoading ? (
                 <ActivityIndicator size={'large'} color={COLORS.subPrimary} />
-              ) : (
-                <Text style={styles.emptyText}>
-                  {'No record found'}
-                </Text>
-              )}
+               ) : (
+                 <Text style={styles.emptyText}>
+                   {t('no_record_found')}
+                 </Text>
+               )}
             </View>
           )}
           renderItem={({ item }) => (

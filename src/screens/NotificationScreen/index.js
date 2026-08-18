@@ -11,6 +11,7 @@ import {
     FlatList,
 } from 'react-native';
 import React, { useCallback, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { portraitStyles, landscapeStyles } from './styles';
 import useOrientation from '../../components/OrientationComponent';
 import Header from '../../components/HeaderComponent';
@@ -24,6 +25,7 @@ const NotificationScreen = ({ navigation }) => {
     const isPortrait = orientation === 'portrait';
     const insets = useSafeAreaInsets();
     const styles = isPortrait ? portraitStyles : landscapeStyles;
+    const { t } = useTranslation();
     const [loading, setLoading] = useState(false);
     const [notificationList, setNotificationList] = useState([]);
 
@@ -59,7 +61,7 @@ const NotificationScreen = ({ navigation }) => {
                 }}
             />
             <View style={styles.headerView}>
-                <Header title={'Notification'} onPress={() => navigation.goBack()} />
+                <Header title={t('notification')} onPress={() => navigation.goBack()} />
             </View>
             <View style={styles.mainView}>
                 <FlatList
@@ -70,9 +72,9 @@ const NotificationScreen = ({ navigation }) => {
                     <View key={0} style={styles.ListEmptyView}>
                         {loading ? (
                         <ActivityIndicator size={'large'} color={COLORS.subPrimary} />
-                        ) : (
+                             ) : (
                         <Text style={styles.emptyText}>
-                            {'No record found'}
+                            {t('no_record_found')}
                         </Text>
                         )}
                     </View>

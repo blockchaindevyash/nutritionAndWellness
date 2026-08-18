@@ -22,8 +22,10 @@ import { showMessage } from 'react-native-flash-message';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useFocusEffect } from '@react-navigation/native';
 import { onAddCommonJsonApi } from '../../services/Api';
+import { useTranslation } from 'react-i18next';
 
 const ChangePassword = ({ navigation }) => {
+  const { t } = useTranslation();
   const insets = useSafeAreaInsets();
   const orientation = useOrientation();
   const isPortrait = orientation === 'portrait';
@@ -102,14 +104,14 @@ const ChangePassword = ({ navigation }) => {
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Image style={styles.backImage} source={backButton} />
         </TouchableOpacity>
-        <Text style={styles.mobileNumberText}>Change Password</Text>
+        <Text style={styles.mobileNumberText}>{t('change_password')}</Text>
       </View>
       <KeyboardAwareScrollView contentContainerStyle={styles.safeAreaStyle}>
         <View style={[styles.container, {backgroundColor: COLORS.backColor}]}>
           <Image style={styles.logoImage} source={logo} />
           {/* <Text style={styles.resetText}>Verify Yourself by Password</Text> */}
           <View style={styles.mainView}>
-            <Text style={styles.titleText}>Enter Old Password</Text>
+            <Text style={styles.titleText}>{t('enter_old_password')}</Text>
             <View style={[styles.textInputView, { flexDirection: 'row', alignItems: 'center' }]}>
               <TextInput
                 value={password}
@@ -118,7 +120,7 @@ const ChangePassword = ({ navigation }) => {
                   setPasswordError(false);
                   setApiError(false);
                 }}
-                placeholder="Old Password"
+                placeholder="******"
                 placeholderTextColor={COLORS.greyColor}
                 style={[styles.textInput, { width: isPortrait ? '83%' : '90%', color: COLORS.white }]}
                 secureTextEntry={passwordVisible}
@@ -141,7 +143,7 @@ const ChangePassword = ({ navigation }) => {
                 {'Please enter your old password.'}
               </Text>
             )}
-            <Text style={styles.titleText}>Enter New Password</Text>
+            <Text style={styles.titleText}>{t('enter_new_password')}</Text>
             <View style={[styles.textInputView, { flexDirection: 'row', alignItems: 'center' }]}>
               <TextInput
                 value={newPassword}
@@ -150,7 +152,7 @@ const ChangePassword = ({ navigation }) => {
                   setNewPasswordError(false);
                   setApiError(false);
                 }}
-                placeholder="New Password"
+                placeholder="*******"
                 placeholderTextColor={COLORS.greyColor}
                 style={[styles.textInput, { width: isPortrait ? '83%' : '90%', color: COLORS.white }]}
                 secureTextEntry={newPasswordVisible}
@@ -170,10 +172,10 @@ const ChangePassword = ({ navigation }) => {
             </View>
             {newPasswordError && (
               <Text style={styles.errorText}>
-                {'Please enter your new password.'}
+                {t('new_password_is_required')}
               </Text>
             )}
-            <Text style={styles.titleText}>Enter Confirm Password</Text>
+            <Text style={styles.titleText}>{t('enter_confirm_password')}</Text>
             <View style={[styles.textInputView, { flexDirection: 'row', alignItems: 'center' }]}>
               <TextInput
                 value={confirmPassword}
@@ -182,7 +184,7 @@ const ChangePassword = ({ navigation }) => {
                   setConfirmPasswordError(false);
                   setApiError(false);
                 }}
-                placeholder="Confirm Password"
+                placeholder="*******"
                 placeholderTextColor={COLORS.greyColor}
                 style={[styles.textInput, { width: isPortrait ? '83%' : '90%', color: COLORS.white }]}
                 secureTextEntry={confirmPasswordVisible}
@@ -202,7 +204,7 @@ const ChangePassword = ({ navigation }) => {
             </View>
             {confirmPasswordError && (
               <Text style={styles.errorText}>
-                {'Please enter your confirm password.'}
+                {t('confirm_password_is_required')}
               </Text>
             )}
             {apiError && (
@@ -217,7 +219,7 @@ const ChangePassword = ({ navigation }) => {
                 {isLoading ? (
                   <ActivityIndicator size={'large'} color={COLORS.white} />
                 ) : (
-                  <Text style={styles.signinText}>Change Password</Text>
+                  <Text style={styles.signinText}>{t('change_password')}</Text>
                 )}
               </TouchableOpacity>
             </View>

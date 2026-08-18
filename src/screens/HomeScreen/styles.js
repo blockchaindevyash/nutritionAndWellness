@@ -55,12 +55,6 @@ export const portraitStyles = StyleSheet.create({
     borderRadius: 5,
     marginBottom: 14,
   },
-  cardTitle: {
-    fontSize: normalize(14),
-    color: COLORS.greyColor,
-    fontFamily: Fonts.FONTS.PoppinsMedium,
-    marginBottom: 6,
-  },
   bigText: {
     fontSize: normalize(18),
     fontFamily: Fonts.FONTS.PoppinsSemiBold,
@@ -120,7 +114,7 @@ export const portraitStyles = StyleSheet.create({
     fontSize: normalize(14),
     color: COLORS.white,
     fontFamily: Fonts.FONTS.PoppinsMedium,
-    marginVertical: hp(0.5),
+    marginVertical: hp(1),
   },
   dishCard: {
     width: '47%',

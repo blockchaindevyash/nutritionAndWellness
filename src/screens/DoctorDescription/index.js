@@ -25,6 +25,7 @@ import useAuthStore from "../../store/authStore";
 import { useFocusEffect } from "@react-navigation/native";
 import { onAddCommonFormApi, onGetCommonApi } from "../../services/Api";
 import moment from "moment";
+import { useTranslation } from 'react-i18next';
 
 const DoctorDescriptionScreen = ({navigation, route}) => {
     const {updateSignupData, profileData, updateProfileData, signupData} = useAuthStore();
@@ -37,6 +38,7 @@ const DoctorDescriptionScreen = ({navigation, route}) => {
     const [selectedTags, setSelectedTags] = useState([]);
     const [fromAccount, setFromAccount] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const { t } = useTranslation();
 
     useFocusEffect(
         useCallback(() => {
@@ -222,7 +224,7 @@ const DoctorDescriptionScreen = ({navigation, route}) => {
                 }}
             />
             <View style={styles.headerView}>
-                <Header title={'Doctor Recommendations'} onPress={() => navigation.goBack()} />
+                <Header title={t('header_doctor_recommendations')} onPress={() => navigation.goBack()} />
             </View>
             <View style={[styles.mainView, { backgroundColor: COLORS.backColor }]}>
             <ScrollView
@@ -230,27 +232,25 @@ const DoctorDescriptionScreen = ({navigation, route}) => {
                 showsVerticalScrollIndicator={false}>
                 {/* Header */}
                 <Text style={styles.subtitle}>
-                    Add doctor advice, dietary restrictions,
-                    medical instructions, or upload prescriptions
-                    to generate a personalized fitness & meal plan.
+                    {t('doctor_advice')}
                 </Text>
                 {/* Upload Section */}
                 <View style={styles.uploadContainer}>
                     <Text style={styles.uploadTitle}>
-                        Upload Prescription / Report
+                        {t('upload_prescription_report')}
                     </Text>
                     <View style={styles.uploadOptionsRow}>
                         <TouchableOpacity
                             style={styles.uploadOptionBox}
                             onPress={() => pickDocument()}>
                             <Text style={styles.uploadIcon}>📄</Text>
-                            <Text style={styles.uploadText}>Upload File</Text>
+                            <Text style={styles.uploadText}>{t('upload_file')}</Text>
                         </TouchableOpacity>
                         <TouchableOpacity
                             style={styles.uploadOptionBox}
                             onPress={() => takePhoto()}>
                             <Text style={styles.uploadIcon}>📷</Text>
-                            <Text style={styles.uploadText}>Use Camera</Text>
+                            <Text style={styles.uploadText}>{t('use_camera')}</Text>
                         </TouchableOpacity>
                     </View>
                     {/* Preview */}
@@ -267,7 +267,7 @@ const DoctorDescriptionScreen = ({navigation, route}) => {
                                 </View>
                                 <TouchableOpacity onPress={removeFile}>
                                     <Text style={styles.removeText}>
-                                        Remove
+                                        {t('remove')}
                                     </Text>
                                 </TouchableOpacity>
                             </View>
@@ -283,7 +283,7 @@ const DoctorDescriptionScreen = ({navigation, route}) => {
                             {documentFile.type?.includes("pdf") && (
                                 <View style={styles.pdfBox}>
                                     <Text style={styles.pdfText}>
-                                        PDF Document Selected
+                                        {t('pdf_document_selected')}
                                     </Text>
                                 </View>
                             )}
@@ -293,7 +293,7 @@ const DoctorDescriptionScreen = ({navigation, route}) => {
                 {/* Doctor Notes Card */}
                 <View style={styles.card}>
                     <Text style={styles.cardTitle}>
-                        Health Notes
+                        {t('health_notes')}
                     </Text>
                     <TextInput
                         placeholder={`Example:\n• Avoid sugar\n• Low sodium diet\n• Daily walking recommended\n• Thyroid-friendly foods`}
@@ -312,18 +312,18 @@ const DoctorDescriptionScreen = ({navigation, route}) => {
                 {/* Suggestions */}
                 <View style={styles.suggestionContainer}>
                     <Text style={styles.suggestionTitle}>
-                        Common Instructions
+                        {t('common_instructions')}
                     </Text>
                     <View style={styles.tagsContainer}>
                         {[
-                            "Low Sugar",
-                            "High Protein",
-                            "Low Carb",
-                            "Low Sodium",
-                            "Daily Walking",
-                            "Avoid Junk Food",
-                            "More Water",
-                            "Thyroid Diet",
+                            t('low_sugar'),
+                            t('high_protein'),
+                            t('low_carb'),
+                            t('low_sodium'),
+                            t('daily_walking'),
+                            t('avoid_junk_food'),
+                            t('more_water'),
+                            t('thyroid_diet'),
                         ].map((item, index) => {
                         const isSelected = selectedTags.includes(item);
                         return (
@@ -353,7 +353,7 @@ const DoctorDescriptionScreen = ({navigation, route}) => {
                         {isLoading ? (
                             <ActivityIndicator size={'large'} color={COLORS.white} />
                         ) : (
-                            <Text style={styles.buttonText}>Next</Text>
+                            <Text style={styles.buttonText}>{t('next')}</Text>
                         )}
                 </TouchableOpacity>
             </View>

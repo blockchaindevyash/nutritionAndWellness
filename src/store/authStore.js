@@ -44,6 +44,7 @@ const useAuthStore = create((set) => ({
     medicalList: [],
     workoutList: [],
     profileData: null,
+    adviserList: [],
 
     updateSignupData: (data) =>
         set((state) => ({
@@ -83,6 +84,10 @@ const useAuthStore = create((set) => ({
     updateWeeklyPlan: (data) =>
         set({
             weeklyPlan: data
+        }),
+    updateAdviserList: (data) =>
+        set({
+            adviserList: data
         }),
 
 }));

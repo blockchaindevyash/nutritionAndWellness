@@ -19,8 +19,11 @@ import hidden from '../../images/hidden.png';
 import logo from '../../images/logo.png';
 import CountryPicker, { DEFAULT_THEME } from 'react-native-country-picker-modal';
 import useAuthStore from '../../store/authStore';
+import { getAuth, signInWithPhoneNumber } from '@react-native-firebase/auth';
+import { useTranslation } from 'react-i18next';
 
 const SignupScreen = ({ navigation }) => {
+    const { t } = useTranslation();
     const {updateSignupData, goalList, signupData} = useAuthStore();
     const orientation = useOrientation(); // Get current orientation
     const isPortrait = orientation === 'portrait';
@@ -59,6 +62,7 @@ const SignupScreen = ({ navigation }) => {
             setApiError(true);
             setApiErrorMessage('Password and Confirm password not match.');
         } else {
+            setIsLoading(true);
             updateSignupData({
                 name,
                 email,
@@ -69,9 +73,52 @@ const SignupScreen = ({ navigation }) => {
             });
             console.log('Signup Click')
             if (signupData?.verify_phone) {
+                setIsLoading(false);
                 navigation.navigate('BasicInfoScreen', {name: name, email: email, number: countryCode?.startsWith('+') ? countryCode + number : `+${countryCode}${number}`, password: password});
             } else {
-                navigation.navigate('PhoneVerificationScreen');
+                try {
+                    const confirmation = await signInWithPhoneNumber(getAuth(), countryCode?.startsWith('+') ? countryCode + number : `+${countryCode}${number}`);
+                    setIsLoading(false);
+                    navigation.navigate('PhoneVerificationScreen', {confirm: confirmation, phone: countryCode?.startsWith('+') ? countryCode + number : `+${countryCode}${number}`});
+                } catch (error) {
+                    setIsLoading(false);
+                    setApiError(true);
+                     let message = 'Unable to send OTP. Please try again.';
+
+    switch (error?.code) {
+        case 'auth/billing-not':
+            message =
+                'Phone authentication requires billing to be enabled for this Firebase project.';
+            break;
+
+        case 'auth/operation-not-allowed':
+            message =
+                'Phone authentication is not enabled or SMS is not allowed for this region.';
+            break;
+
+        case 'auth/invalid-phone-number':
+            message =
+                'Please enter a valid phone number.';
+            break;
+
+        case 'auth/too-many-requests':
+            message =
+                'Too many OTP requests. Please try again later.';
+            break;
+
+        default:
+            message =
+                error?.message ||
+                'Unable to send OTP. Please try again.';
+    }
+
+    setApiErrorMessage(message);
+
+    console.log('Firebase Phone Auth Error:', {
+        code: error?.code,
+        message: error?.message,
+    });
+                }
             }
         }
     };
@@ -95,7 +142,7 @@ const SignupScreen = ({ navigation }) => {
                                 setNameError(false);
                                 setApiError(false);
                             }}
-                            placeholder="Enter Name"
+                            placeholder={t('enter_name')}
                             placeholderTextColor={COLORS.greyColor}
                             style={[styles.textInput]}
                             keyboardType={'email-address'}
@@ -105,7 +152,7 @@ const SignupScreen = ({ navigation }) => {
                     </View>
                     {nameError && (
                         <Text style={styles.errorText}>
-                            {'Please first enter your name.'}
+                            {t('name_is_required')}
                         </Text>
                     )}
                     <View style={styles.countryCodeStyle}>
@@ -133,7 +180,7 @@ const SignupScreen = ({ navigation }) => {
                         <View style={[styles.textInputView, { width: '75%' }]}>
                             <TextInput
                                 value={number}
-                                placeholder={'User Phone'}
+                                placeholder={t('enter_phone')}
                                 placeholderTextColor={COLORS.greyColor}
                                 keyboardType={'numeric'}
                                 onChangeText={text => {
@@ -148,7 +195,7 @@ const SignupScreen = ({ navigation }) => {
                     </View>
                     {numberError && (
                         <Text style={styles.errorText}>
-                            {'Phone number is required.'}
+                            {t('phone_is_required')}
                         </Text>
                     )}
                     <View style={styles.textInputView}>
@@ -159,7 +206,7 @@ const SignupScreen = ({ navigation }) => {
                                 setEmailError(false);
                                 setApiError(false);
                             }}
-                            placeholder="Enter Email"
+                            placeholder={t('enter_email')}
                             placeholderTextColor={COLORS.greyColor}
                             style={[styles.textInput]}
                             keyboardType={'email-address'}
@@ -169,7 +216,7 @@ const SignupScreen = ({ navigation }) => {
                     </View>
                     {emailError && (
                         <Text style={styles.errorText}>
-                            {'Please first enter email address.'}
+                            {t('please_enter_email')}
                         </Text>
                     )}
                     <View
@@ -184,7 +231,7 @@ const SignupScreen = ({ navigation }) => {
                                 setPasswordError(false);
                                 setApiError(false);
                             }}
-                            placeholder="Enter Password"
+                            placeholder={t('enter_password')}
                             placeholderTextColor={COLORS.greyColor}
                             style={[
                                 styles.textInput,
@@ -206,7 +253,7 @@ const SignupScreen = ({ navigation }) => {
                     </View>
                     {passwordError && (
                         <Text style={styles.errorText}>
-                            {'Please first enter password.'}
+                            {t('please_enter_password')}
                         </Text>
                     )}
                     <View
@@ -221,7 +268,7 @@ const SignupScreen = ({ navigation }) => {
                                 setConfirmPassError(false);
                                 setApiError(false);
                             }}
-                            placeholder="Enter Confirm Password"
+                            placeholder={t('enter_confirm_password')}
                             placeholderTextColor={COLORS.greyColor}
                             style={[
                                 styles.textInput,
@@ -243,7 +290,7 @@ const SignupScreen = ({ navigation }) => {
                     </View>
                     {confirmPassError && (
                         <Text style={styles.errorText}>
-                            {'Please first enter confirm password.'}
+                            {t('confirm_password_is_required')}
                         </Text>
                     )}
                     {apiError && (
@@ -259,13 +306,13 @@ const SignupScreen = ({ navigation }) => {
                         {isLoading ? (
                             <ActivityIndicator size={'large'} color={COLORS.white} />
                         ) : (
-                            <Text style={styles.signinText}>Sign up</Text>
+                            <Text style={styles.signinText}>{t('sign_up')}</Text>
                         )}
                     </TouchableOpacity>
                     <TouchableOpacity
                         style={[styles.signupView]}
                         onPress={() => { navigation.navigate('LoginScreen') }}>
-                        <Text style={styles.signupText}>Login</Text>
+                        <Text style={styles.signupText}>{t('login')}</Text>
                     </TouchableOpacity>
                 </View>
             </View>

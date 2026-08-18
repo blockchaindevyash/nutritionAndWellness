@@ -11,6 +11,7 @@ import {
     FlatList,
 } from 'react-native';
 import React, { useCallback, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { portraitStyles, landscapeStyles } from './styles';
 import useOrientation from '../../components/OrientationComponent';
 import { COLORS } from '../../utils';
@@ -59,6 +60,7 @@ const ActivityLevelScreen = ({ navigation, route }) => {
     const [fromAccount, setFromAccount] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const styles = isPortrait ? portraitStyles : landscapeStyles;
+    const { t } = useTranslation();
 
     useFocusEffect(
         useCallback(() => {
@@ -190,11 +192,11 @@ const ActivityLevelScreen = ({ navigation, route }) => {
                 }}
             />
             <View style={styles.headerView}>
-                <Header title={'Activity Level'} onPress={() => navigation.goBack()} />
+                <Header title={t('activity_level')} onPress={() => navigation.goBack()} />
             </View>
             <View style={[styles.container, { backgroundColor: COLORS.backColor }]}>
                 <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: hp(10) }}>
-                    <Text style={styles.subtitle}>How active are you daily?</Text>
+                    <Text style={styles.subtitle}>{t('how_active_are_you_daily')}</Text>
                     {activityList.map((item) => (
                         <TouchableOpacity
                             key={item.id}
@@ -217,7 +219,7 @@ const ActivityLevelScreen = ({ navigation, route }) => {
                     {isLoading ? (
                         <ActivityIndicator size={'large'} color={COLORS.white} />
                     ) : (
-                        <Text style={styles.signinText}>{fromAccount ? 'Save' : 'Next'}</Text>
+                        <Text style={styles.signinText}>{fromAccount ? t('save') : t('next')}</Text>
                     )}
                 </TouchableOpacity>
             </View>

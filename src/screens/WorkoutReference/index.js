@@ -14,6 +14,7 @@ import React, { useEffect, useState } from 'react';
 import { portraitStyles, landscapeStyles } from './styles';
 import useOrientation from '../../components/OrientationComponent';
 import Header from '../../components/HeaderComponent';
+import { useTranslation } from 'react-i18next';
 import { COLORS } from '../../utils';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { hp } from '../../components/responsive';
@@ -34,6 +35,7 @@ const WorkoutReference = ({ navigation }) => {
     const isPortrait = orientation === 'portrait';
     const styles = isPortrait ? portraitStyles : landscapeStyles;
     const insets = useSafeAreaInsets();
+    const { t } = useTranslation();
     const [selected, setSelected] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const [otherText, setOtherText] = useState("");
@@ -49,7 +51,7 @@ const WorkoutReference = ({ navigation }) => {
     const handleNext = async () => {
         if (selected == '') {
             showMessage({
-                message: 'Please select atleast one workout option',
+                message: t('please_select_workout'),
                 type: 'danger',
                 duration: 4000,
                 icon: 'danger',
@@ -100,7 +102,7 @@ const WorkoutReference = ({ navigation }) => {
                 if (responseData.data.status) {
                     setIsLoading(false);
                     showMessage({
-                        message: 'Registration successful. Please login to continue.',
+                        message: t('register_successfully'),
                         type: 'success',
                         duration: 6000,
                         icon: 'success',
@@ -121,7 +123,7 @@ const WorkoutReference = ({ navigation }) => {
             } catch (err) {
                 console.log('onRegistrationApi error', err?.response || err);
                 showMessage({
-                    message: err?.response?.data?.message || 'Something went wrong. Please try again.',
+                    message: err?.response?.data?.message || t('something_went_wrong'),
                     type: 'danger',
                     duration: 4000,
                     icon: 'danger',
@@ -151,11 +153,11 @@ const WorkoutReference = ({ navigation }) => {
                 }}
             />
             <View style={styles.headerView}>
-                <Header title={'Workout Reference'} onPress={() => navigation.goBack()} />
+                <Header title={t('workout_reference')} onPress={() => navigation.goBack()} />
             </View>
             <View style={[styles.container, { backgroundColor: COLORS.backColor }]}>
                 <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: hp(10) }}>
-                    <Text style={styles.subtitle}>This helps us personalize your workout plan</Text>
+                    <Text style={styles.subtitle}>{t('workout_personalization')}</Text>
                     {workoutList.map((item) => {
                         return (
                             <View>
@@ -181,7 +183,7 @@ const WorkoutReference = ({ navigation }) => {
                     {isLoading ? (
                         <ActivityIndicator size={'large'} color={COLORS.white} />
                     ) : (
-                        <Text style={styles.signinText}>Submit</Text>
+                        <Text style={styles.signinText}>{t('submit')}</Text>
                     )}
                 </TouchableOpacity>
             </View>

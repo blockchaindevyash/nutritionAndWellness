@@ -10,6 +10,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import React, {useEffect, useState, useRef, useCallback} from 'react';
+import { useTranslation } from 'react-i18next';
 import {hp, wp} from '../../components/responsive';
 import {portraitStyles, landscapeStyles} from './styles';
 import useOrientation from '../../components/OrientationComponent';
@@ -31,6 +32,7 @@ const AnalysisDetailScreen = ({navigation, route}) => {
   const [isLoading, setIsLoading] = useState(false);
   const [analyticsData, setAnalyticsData] = useState(null);
   const [errorShow, setErrorShow] = useState(false);
+  const { t } = useTranslation();
 
   useFocusEffect(
     useCallback(() => {
@@ -66,12 +68,12 @@ const AnalysisDetailScreen = ({navigation, route}) => {
       />
         <View style={[styles.container, {backgroundColor: COLORS.backColor}]}>
             <View style={styles.headerView}>
-              <Header title={'Analysis Details'} onPress={() => navigation.goBack()}/>
+              <Header title={t('analysis_details')} onPress={() => navigation.goBack()}/>
             </View>
             {isLoading ? (
               <View style={[styles.mainView, {alignItems: 'center', justifyContent: 'center'}]}>
                 <ActivityIndicator size={'large'} color={COLORS.secondary} />
-                <Text style={styles.analysisText}>Analyzing...</Text>
+                <Text style={styles.analysisText}>{t('analyzing')}</Text>
               </View>
             ) : (
             <View style={styles.mainView}>
@@ -80,7 +82,7 @@ const AnalysisDetailScreen = ({navigation, route}) => {
                 {analyticsData?.image_url ? (
                   <Image source={{ uri: analyticsData?.image_url }} style={styles.foodImage} />
                 ) : (
-                  <Text style={styles.scanText}>Scanner Image</Text>
+                  <Text style={styles.scanText}>{t('scanner_image')}</Text>
                 )}
               </View>
               <View style={styles.scanView}>
@@ -88,7 +90,7 @@ const AnalysisDetailScreen = ({navigation, route}) => {
                 <Text style={styles.percentageText}>Calories: {analyticsData?.total_calories}</Text>
               </View>
               <Text style={styles.dateText}>{analyticsData?.notes?.health_assessment}</Text>
-              <Text style={[styles.analysisText, {color: COLORS.secondary}]}>Ingredients:</Text>
+              <Text style={[styles.analysisText, {color: COLORS.secondary}]}>{t('ingredients')}</Text>
               {analyticsData?.ingredients?.map((item, index) => {
                 return (
                 <View key={index} style={[styles.ingredientView]}>

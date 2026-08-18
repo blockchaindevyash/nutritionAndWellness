@@ -9,6 +9,7 @@ import {
   SafeAreaView,
 } from 'react-native';
 import React, { useEffect, useState, useRef, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { hp, wp } from '../../components/responsive';
 import { portraitStyles, landscapeStyles } from './styles';
 import useOrientation from '../../components/OrientationComponent';
@@ -29,6 +30,7 @@ const FoodAnalysis = ({ navigation }) => {
   const [enterText, setEnterText] = useState('');
   const [searchList, setSearchList] = useState([]);
   const [imageAttachment, setImageAttachment] = useState(null);
+  const { t } = useTranslation();
 
   const onCameraPress = () => {
     try {
@@ -82,29 +84,29 @@ const FoodAnalysis = ({ navigation }) => {
       <View style={[styles.container, { backgroundColor: COLORS.backColor }]}>
         <View style={styles.headerView}>
           <Text style={styles.callLogText}>
-            Food Scanner
+            {t('food_scanner')}
           </Text>
         </View>
         <View style={styles.mainView}>
-          <Text style={styles.titleText}>Scan Your Food</Text>
-          <Text style={styles.subtitleText}>Take a photo of your meal to get nutritional analysis</Text>
+          <Text style={styles.titleText}>{t('scan_your_food')}</Text>
+          <Text style={styles.subtitleText}>{t('scan_your_food_subtitle')}</Text>
           <View style={styles.imageView}>
             {imageAttachment ? (
               <Image source={{ uri: imageAttachment.uri }} style={styles.foodImage} />
             ) : (
-              <Text style={styles.scanText}>Scanner Image</Text>
+              <Text style={styles.scanText}>{t('scanner_image')}</Text>
             )}
           </View>
           <View style={styles.scanView}>
             <TouchableOpacity style={styles.scanButton} onPress={() => onGalleryPress()}>
-              <Text style={styles.scanText}>Gallery</Text>
+              <Text style={styles.scanText}>{t('gallery')}</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.scanButton} onPress={() => onCameraPress()}>
-              <Text style={styles.scanText}>Camera</Text>
+              <Text style={styles.scanText}>{t('camera')}</Text>
             </TouchableOpacity>
           </View>
           <TouchableOpacity style={styles.analysisButton} onPress={() => navigation.navigate('AnalysisDetailScreen', { imageAttachment: imageAttachment })}>
-            <Text style={styles.analysisText}>Analyze Food</Text>
+            <Text style={styles.analysisText}>{t('analyze_food')}</Text>
           </TouchableOpacity>
         </View>
       </View>

@@ -9,6 +9,7 @@ import {
   SafeAreaView,
 } from 'react-native';
 import React, { useEffect, useState, useRef, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { hp, wp } from '../../components/responsive';
 import { portraitStyles, landscapeStyles } from './styles';
 import useOrientation from '../../components/OrientationComponent';
@@ -25,12 +26,13 @@ const AIChatScreen = ({ navigation }) => {
   const styles = isPortrait ? portraitStyles : landscapeStyles;
   const [enterText, setEnterText] = useState('');
   const [searchList, setSearchList] = useState([]);
+  const { t } = useTranslation();
 
   return (
     <View style={styles.safeAreaStyle}>
       <View style={[styles.container, { backgroundColor: COLORS.backColor }]}>
         <View style={styles.headerView}>
-          <Header title={'AI Chat'} onPress={() => navigation.goBack()} />
+          <Header title={t('ai_chat')} onPress={() => navigation.goBack()} />
         </View>
         <View style={styles.mainView}>
           {searchList.length > 0 ? (
@@ -76,7 +78,7 @@ const AIChatScreen = ({ navigation }) => {
             </ScrollView>
           ) : (
             <View style={styles.emptyTextView}>
-              <Text style={styles.emptyText}>selectTemplate dummy_name</Text>
+              <Text style={styles.emptyText}>{t('select_template')}</Text>
               {/* <Text style={styles.chatText}>{selectTemplate?.description}</Text> */}
             </View>
           )}
@@ -92,7 +94,7 @@ const AIChatScreen = ({ navigation }) => {
                 onChangeText={text => {
                   setEnterText(text); 
                 }}
-                placeholder="Ask anything"
+                placeholder={t('ask_anything')}
                 placeholderTextColor={COLORS.greyColor}
                 style={[styles.textInput, {width: '78%'}]}
                 multiline

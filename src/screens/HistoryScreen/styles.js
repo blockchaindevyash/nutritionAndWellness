@@ -425,6 +425,11 @@ export const portraitStyles = StyleSheet.create({
     resizeMode: 'contain',
     tintColor: COLORS.white,
   },
+  loaderContainer: {
+    marginTop: hp(10),
+    alignItems: 'center',
+    justifyContent: 'center',
+  }
 });
 
 export const landscapeStyles = StyleSheet.create({

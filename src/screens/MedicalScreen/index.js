@@ -11,6 +11,7 @@ import {
     ActivityIndicator,
 } from 'react-native';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { portraitStyles, landscapeStyles } from './styles';
 import useOrientation from '../../components/OrientationComponent';
 import Header from '../../components/HeaderComponent';
@@ -42,6 +43,7 @@ const MedicalScreen = ({ navigation, route }) => {
     const [fromAccount, setFromAccount] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [otherText, setOtherText] = useState("");
+    const { t } = useTranslation();
 
     useFocusEffect(
         useCallback(() => {
@@ -203,11 +205,11 @@ const MedicalScreen = ({ navigation, route }) => {
                 }}
             />
             <View style={styles.headerView}>
-                <Header title={'Medical Conditions'} onPress={() => navigation.goBack()} />
+                <Header title={t('medical_conditions')} onPress={() => navigation.goBack()} />
             </View>
             <View style={[styles.container, { backgroundColor: COLORS.backColor }]}>
                 <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: hp(10) }}>
-                    <Text style={styles.subtitle}>This helps us personalize your diet plan</Text>
+                    <Text style={styles.subtitle}>{t('medical_conditions_subtitle')}</Text>
                     {medicalList.map((item) => {
                         const isSelected = selected.includes(item.id);
                         return (
@@ -223,10 +225,10 @@ const MedicalScreen = ({ navigation, route }) => {
                                         {item.name}
                                     </Text>
                                 </TouchableOpacity>
-                                {item.name === "Other" && isSelected && (
+                                    {item.name === "Other" && isSelected && (
                                     <TextInput
                                         style={styles.input}
-                                        placeholder="Enter your condition..."
+                                        placeholder={t('enter_your_condition')}
                                         value={otherText}
                                         onChangeText={setOtherText}
                                         placeholderTextColor={COLORS.white}
@@ -242,8 +244,8 @@ const MedicalScreen = ({ navigation, route }) => {
                     onPress={handleNext}>
                     {isLoading ? (
                         <ActivityIndicator size={'large'} color={COLORS.white} />
-                    ) : (
-                        <Text style={styles.signinText}>{fromAccount ? 'Save' : 'Next'}</Text>
+                        ) : (
+                        <Text style={styles.signinText}>{fromAccount ? t('save') : t('next')}</Text>
                     )}
                 </TouchableOpacity>
             </View>

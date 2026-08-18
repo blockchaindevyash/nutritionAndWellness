@@ -21,14 +21,18 @@ import useOrientation from '../../components/OrientationComponent';
 import { hp } from '../../components/responsive';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { COLORS } from '../../utils';
+import { useTranslation } from 'react-i18next';
 import { LineChart } from "react-native-gifted-charts"
 import { startCounter, stopCounter } from 'react-native-accurate-step-counter';
 import { getUpdatedWaterCount, MAX_WATER_GLASSES } from './helpers';
-import { scheduleDailyStepGoalReminder } from '../../../notificationService';
+import { scheduleDailyStepGoalReminder, scheduleMedicationRemindersForMedications, scheduleSupplementRemindersForSupplements } from '../../../notificationService';
 import { onAddCommonJsonApi, onGetCommonApi } from '../../services/Api';
 import useAuthStore from '../../store/authStore';
 import MeditationTimer from '../../components/MeditationTimer';
 import { useFocusEffect } from '@react-navigation/native';
+import pill from '../../images/pill.png';
+import pills from '../../images/pills.png';
+import pills1 from '../../images/pills1.png';
 
 const weeklyPlanList = [
   {
@@ -356,11 +360,12 @@ const uploadStepCount = async (stepsToUpload, dateKey = getTodayKey()) => {
 };
 
 const DashboardScreen = ({ navigation }) => {
-  const { weeklyPlan, updateWeeklyPlan } = useAuthStore();
+  const {weeklyPlan, updateWeeklyPlan, profileData} = useAuthStore();
   const orientation = useOrientation();
   const isPortrait = orientation === 'portrait';
   const styles = isPortrait ? portraitStyles : landscapeStyles;
   const insets = useSafeAreaInsets();
+  const { t } = useTranslation();
 
   const saveWeeklyPlanMeditationState = async (dateKey, meditationMinutes, completed) => {
     if (!dateKey) {
@@ -411,7 +416,7 @@ const DashboardScreen = ({ navigation }) => {
     try {
       const key = dateKey || selectedDate?.date || getTodayKey();
       if (key !== getTodayKey()) {
-        Alert.alert('Read only', 'You can only update exercises for today');
+        Alert.alert(t('read_only_title'), t('read_only_update_exercises'));
         return;
       }
       const current = { ...(completedExercisesByDate || {}) };
@@ -529,6 +534,47 @@ const DashboardScreen = ({ navigation }) => {
     };
 
     loadMeditationForSelectedDate();
+  }, [selectedDate, weeklyPlan]);
+
+  // Schedule medication reminders for the selected date's medications
+  useEffect(() => {
+    const scheduleForSelectedDate = async () => {
+      if (!selectedDate?.date) return;
+      const planForDate = weeklyPlan.find(plan => plan.date === selectedDate.date);
+      if (!planForDate || !Array.isArray(planForDate.medication) || planForDate.medication.length === 0) return;
+
+      // Normalize timing values to morning/afternoon/evening
+      const normalized = planForDate.medication.map(m => {
+        const text = (m?.timing || '').toString().toLowerCase();
+        let timing = 'morning';
+        if (text.includes('afternoon') || text.includes('lunch') || text.includes('noon')) timing = 'afternoon';
+        else if (text.includes('evening') || text.includes('dinner') || text.includes('night')) timing = 'evening';
+        else if (text.includes('breakfast') || text.includes('morning')) timing = 'morning';
+        return { ...m, timing };
+      });
+
+      try {
+        await scheduleMedicationRemindersForMedications(normalized);
+        // also schedule supplements reminders if present
+        const supplementsNormalized = planForDate.supplements && Array.isArray(planForDate.supplements)
+          ? planForDate.supplements.map(s => {
+            const text = (s?.timing || '').toString().toLowerCase();
+            let timing = 'morning';
+            if (text.includes('afternoon') || text.includes('lunch') || text.includes('noon')) timing = 'afternoon';
+            else if (text.includes('evening') || text.includes('dinner') || text.includes('night')) timing = 'evening';
+            else if (text.includes('breakfast') || text.includes('morning')) timing = 'morning';
+            return { ...s, timing };
+          })
+          : [];
+        if (supplementsNormalized.length > 0) {
+          await scheduleSupplementRemindersForSupplements(supplementsNormalized);
+        }
+      } catch (err) {
+        console.warn('Unable to schedule medication reminders', err);
+      }
+    };
+
+    scheduleForSelectedDate();
   }, [selectedDate, weeklyPlan]);
 
   useEffect(() => {
@@ -725,7 +771,7 @@ const DashboardScreen = ({ navigation }) => {
   const updateWater = (delta, selectedKey) => {
     if (!selectedDateKey || !isTodaySelected) {
       // only allow updates for today's date
-      Alert.alert('Read only', 'You can only update water for today');
+      Alert.alert(t('read_only_title'), t('read_only_update_water'));
       return;
     }
 
@@ -747,7 +793,7 @@ const DashboardScreen = ({ navigation }) => {
   const startTimer = () => {
     console.log('startTimer called', { remainingSeconds });
     if (!isTodaySelected) {
-      Alert.alert('Read only', 'You can only start meditation for today');
+      Alert.alert(t('read_only_title'), t('read_only_start_meditation'));
       return;
     }
 
@@ -802,14 +848,14 @@ const DashboardScreen = ({ navigation }) => {
         }}
       />
       <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: hp(8) }} showsVerticalScrollIndicator={false}>
-        <Text style={styles.greeting}>👋 Good Morning, Yash</Text>
-        <Text style={styles.subText}>You're doing great today!</Text>
+        <Text style={styles.greeting}>👋 {t('good_morning')}, {profileData?.name}</Text>
+        <Text style={styles.subText}>{t('dashboard_massage')}</Text>
 
         <View style={styles.stepCard}>
           <View style={styles.stepCardHeader}>
             <View>
-              <Text style={styles.stepTitle}>Today's Steps</Text>
-              <Text style={styles.stepSubTitle}>Progress toward your daily walking goal</Text>
+              <Text style={styles.stepTitle}>{t('today_step')}</Text>
+              <Text style={styles.stepSubTitle}>{t('daily_walking_progress')}</Text>
             </View>
             <View style={styles.stepBadgeWrapper}>
               <Text style={styles.stepBadge}>{progressPercent}</Text>
@@ -822,7 +868,7 @@ const DashboardScreen = ({ navigation }) => {
               <Text style={styles.stepGoalText}>{`${stepGoal.toLocaleString()} target`}</Text>
             </View>
             <View style={styles.stepCounterBadge}>
-              <Text style={styles.stepCounterLabel}>Remaining</Text>
+              <Text style={styles.stepCounterLabel}>{t('remaining')}</Text>
               <Text style={styles.stepCounterValue}>{stepsRemaining.toLocaleString()}</Text>
             </View>
           </View>
@@ -833,17 +879,17 @@ const DashboardScreen = ({ navigation }) => {
 
           <View style={styles.stepMetaRow}>
             <View style={styles.stepMetaItem}>
-              <Text style={styles.stepMetaLabel}>Live Tracking</Text>
-              <Text style={styles.stepMetaValue}>Active</Text>
+              <Text style={styles.stepMetaLabel}>{t('live_tracking')}</Text>
+              <Text style={styles.stepMetaValue}>{t('active')}</Text>
             </View>
             <View style={styles.stepMetaItem}>
-              <Text style={styles.stepMetaLabel}>Goal Status</Text>
+              <Text style={styles.stepMetaLabel}>{t('goal_status')}</Text>
               <Text style={styles.stepMetaValue}>{progressPercent}</Text>
             </View>
           </View>
 
           <Text style={styles.resumeText}>
-            {lastSensorValueRef.current !== null ? 'Resuming from last saved session' : 'Starting fresh today'}
+            {lastSensorValueRef.current !== null ? t('resuming_from_last_saved_session') : t('starting_fresh_today')}
           </Text>
         </View>
 
@@ -877,29 +923,40 @@ const DashboardScreen = ({ navigation }) => {
               {/* Meals */}
               <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('MealDetailScreen', { item: item })}>
                 <View style={styles.section}>
-                  <Text style={styles.sectionTitle}>Breakfast</Text>
+                  <Text style={styles.sectionTitle}>{t('breakfast')}</Text>
                   <Text style={styles.foodText}>{`${item.meals.breakfast}\n`}</Text>
-                  <Text style={styles.sectionTitle}>Lunch</Text>
+                  <Text style={styles.sectionTitle}>{t('lunch')}</Text>
                   <Text style={styles.foodText}>{`${item.meals.lunch}\n`}</Text>
-                  <Text style={styles.sectionTitle}>Dinner</Text>
+                  <Text style={styles.sectionTitle}>{t('dinner')}</Text>
                   <Text style={styles.foodText}>{`${item.meals.dinner}\n`}</Text>
                 </View>
               </TouchableOpacity>
               {item?.beverage != null && (
                 <View style={styles.card}>
                   <View style={styles.section}>
-                    <Text style={styles.sectionTitle}>Beverage</Text>
+                    <Text style={styles.sectionTitle}>{t('beverage')}</Text>
                     <Text style={styles.foodText}>{`${item?.beverage}`}</Text>
                   </View>
                 </View>
               )}
 
+              {/* BMI Calculator */}
+              <View style={styles.card}>
+                <View style={styles.section}>
+                  <Text style={styles.sectionTitle}>{t('bmi_calculator')}</Text>
+                  <Text style={styles.foodText}>{t('bmi_message')}</Text>
+                  <TouchableOpacity style={styles.workoutButton} onPress={() => navigation.navigate('BMIScreen')}>
+                    <Text style={styles.startText}>{t('calculate_bmi')}</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+
               {/* Water Intake */}
               <View style={styles.waterCard}>
                 <View style={styles.waterCardHeader}>
                   <View>
-                    <Text style={styles.waterTitle}>💧 Water intake</Text>
-                    <Text style={styles.waterSubtitle}>Track your daily glasses</Text>
+                    <Text style={styles.waterTitle}>💧 {t('water_intake')}</Text>
+                    <Text style={styles.waterSubtitle}>{t('track_your_daily_glasses')}</Text>
                   </View>
                   <View style={styles.waterBadge}>
                     <Text style={styles.waterBadgeText}>{waterCount}/{item?.water_target_glasses}</Text>
@@ -912,33 +969,33 @@ const DashboardScreen = ({ navigation }) => {
                   </TouchableOpacity>
                   <View style={styles.waterCenterBox}>
                     <Text style={styles.waterCountText}>{waterCount}</Text>
-                    <Text style={styles.waterHintText}>Glasses</Text>
+                    <Text style={styles.waterHintText}>{t('glasses')}</Text>
                   </View>
                   <TouchableOpacity style={styles.waterButton} onPress={() => updateWater(1, item?.water_target_glasses)} disabled={!isTodaySelected}>
                     <Text style={styles.waterButtonText}>+</Text>
                   </TouchableOpacity>
                 </View>
 
-                <Text style={styles.waterLimitText}>Maximum {item?.water_target_glasses} glasses per day</Text>
+                <Text style={styles.waterLimitText}>{t('maximum')} {item?.water_target_glasses} {t('glasses_per_day')}</Text>
               </View>
               {/* Exercises */}
               <View style={styles.card}>
                 <View style={styles.section}>
-                  <Text style={styles.sectionTitle}>Exercises</Text>
+                  <Text style={styles.sectionTitle}>{t('exercises')}</Text>
                   {item.exercises.map((ex, index) => (
                     <Text key={index} style={styles.exerciseText}>• {ex?.name}</Text>
                   ))}
                   <TouchableOpacity style={styles.workoutButton} onPress={() => navigation.navigate('ProgramDetailScreen', { item: item })}>
-                    <Text style={styles.startText}>Start Exercises</Text>
+                    <Text style={styles.startText}>{t('start_exercises')}</Text>
                   </TouchableOpacity>
                 </View>
               </View>
 
               <View style={styles.card}>
                 <View style={styles.section}>
-                  <Text style={styles.sectionTitle}>Meditation</Text>
+                  <Text style={styles.sectionTitle}>{t('meditation')}</Text>
                   {/* <Text style={styles.foodText}>{`${item.meditation}`}</Text> */}
-                  <MeditationTimer 
+                  <MeditationTimer
                     meditation={item.meditation}
                     remainingSeconds={remainingSeconds}
                     setRemainingSeconds={setRemainingSeconds}
@@ -950,16 +1007,40 @@ const DashboardScreen = ({ navigation }) => {
                   />
                 </View>
               </View>
-
               <View style={styles.card}>
                 <View style={styles.section}>
-                  <Text style={styles.sectionTitle}>Supplements</Text>
-                  {item.supplements.map((supplement, index) => (
+                  <Text style={styles.sectionTitle}>{t('medication')}</Text>
+                  {item.medication.map((medication, index) => (
                     <View style={styles.supplementTopRow}>
                       <View>
                         <Text style={styles.supplementName}>
-                          💊 {supplement.name}
+                          💊 {medication.name}
                         </Text>
+                        <Text style={styles.supplementTiming}>
+                          {medication.timing}
+                        </Text>
+                      </View>
+                      <View style={styles.dosageBox}>
+                        <Text style={styles.dosageText}>
+                          {medication.dosage}
+                        </Text>
+                      </View>
+                    </View>
+                  ))}
+                </View>
+              </View>
+              <View style={styles.card}>
+                <View style={styles.section}>
+                  <Text style={styles.sectionTitle}>{t('supplements')}</Text>
+                  {item.supplements.map((supplement, index) => (
+                    <View style={styles.supplementTopRow}>
+                      <View>
+                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                          <Image source={pills} style={styles.optionImageStyle} />
+                          <Text style={[styles.supplementName, { marginLeft: 8 }]}>
+                            {supplement.name}
+                          </Text>
+                        </View>
                         <Text style={styles.supplementTiming}>
                           {supplement.timing}
                         </Text>
@@ -977,7 +1058,7 @@ const DashboardScreen = ({ navigation }) => {
           ) : null
         })}
         <View style={styles.card}>
-          <Text style={styles.cardTitle}>🔥  Calories burned</Text>
+          <Text style={styles.cardTitle}>🔥  {t('calories_burned')}</Text>
           <LineChart
             initialSpacing={0}
             data={caloriesChart}
@@ -1004,13 +1085,13 @@ const DashboardScreen = ({ navigation }) => {
       </ScrollView>
       {/* Water completion modal */}
       <Modal visible={showWaterCompleteModal} transparent animationType="fade">
-        <View style={{flex:1,backgroundColor:'rgba(0,0,0,0.6)',alignItems:'center',justifyContent:'center'}}>
-          <View style={{width:'85%',backgroundColor:COLORS.primary,padding:20,borderRadius:12,alignItems:'center'}}>
-            <Text style={{color:COLORS.secondary,fontSize:18,fontWeight:'700',marginBottom:8}}>Nice job!</Text>
-            <Image source={{uri: 'https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExcTV5ZW9jZjAxZTRybG54Y2h0NXZvZDlrM2hheng2Z2N3ZGRycHp5bCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/lMBcCPM0VYfhh2zCAy/giphy.gif'}} style={{width:200,height:200,marginBottom:12,borderRadius:8}} />
-            <Text style={{color:COLORS.white,marginBottom:16}}>You've reached your water goal for today.</Text>
-            <TouchableOpacity onPress={() => setShowWaterCompleteModal(false)} style={{backgroundColor:COLORS.subPrimary,paddingVertical:10,paddingHorizontal:20,borderRadius:8}}>
-              <Text style={{color:COLORS.white}}>Done</Text>
+        <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.6)', alignItems: 'center', justifyContent: 'center' }}>
+          <View style={{ width: '85%', backgroundColor: COLORS.primary, padding: 20, borderRadius: 12, alignItems: 'center' }}>
+            <Text style={{ color: COLORS.secondary, fontSize: 18, fontWeight: '700', marginBottom: 8 }}>{t('nice_job')}</Text>
+            <Image source={{ uri: 'https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExcTV5ZW9jZjAxZTRybG54Y2h0NXZvZDlrM2hheng2Z2N3ZGRycHp5bCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/lMBcCPM0VYfhh2zCAy/giphy.gif' }} style={{ width: 200, height: 200, marginBottom: 12, borderRadius: 8 }} />
+            <Text style={{ color: COLORS.white, marginBottom: 16 }}>{t('water_goal_reached')}</Text>
+            <TouchableOpacity onPress={() => setShowWaterCompleteModal(false)} style={{ backgroundColor: COLORS.subPrimary, paddingVertical: 10, paddingHorizontal: 20, borderRadius: 8 }}>
+              <Text style={{ color: COLORS.white }}>{t('done')}</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -1018,13 +1099,13 @@ const DashboardScreen = ({ navigation }) => {
 
       {/* Meditation completion modal with gif */}
       <Modal visible={showMeditationCompleteModal} transparent animationType="fade">
-        <View style={{flex:1,backgroundColor:'rgba(0,0,0,0.6)',alignItems:'center',justifyContent:'center'}}>
-          <View style={{width:'90%',backgroundColor:COLORS.primary,padding:18,borderRadius:12,alignItems:'center'}}>
-            <Text style={{color:COLORS.secondary,fontSize:18,fontWeight:'700',marginBottom:8}}>Meditation Complete</Text>
-            <Image source={{uri: 'https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExN3hreTIxdTUyM3N5dGlpcG5yemIybGp3YnU0bzE3anNhMWMwaTRvZSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/879RsXB8GvEuY95LNl/giphy.gif'}} style={{width:200,height:200,marginBottom:12,borderRadius:8}} />
-            <Text style={{color:COLORS.white,marginBottom:16}}>Great work — you've finished your session.</Text>
-            <TouchableOpacity onPress={() => setShowMeditationCompleteModal(false)} style={{backgroundColor:COLORS.subPrimary,paddingVertical:10,paddingHorizontal:20,borderRadius:8}}>
-              <Text style={{color:COLORS.white}}>Done</Text>
+        <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.6)', alignItems: 'center', justifyContent: 'center' }}>
+          <View style={{ width: '90%', backgroundColor: COLORS.primary, padding: 18, borderRadius: 12, alignItems: 'center' }}>
+            <Text style={{ color: COLORS.secondary, fontSize: 18, fontWeight: '700', marginBottom: 8 }}>{t('meditation_complete')}</Text>
+            <Image source={{ uri: 'https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExN3hreTIxdTUyM3N5dGlpcG5yemIybGp3YnU0bzE3anNhMWMwaTRvZSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/879RsXB8GvEuY95LNl/giphy.gif' }} style={{ width: 200, height: 200, marginBottom: 12, borderRadius: 8 }} />
+            <Text style={{ color: COLORS.white, marginBottom: 16 }}>{t('meditation_session_finished')}</Text>
+            <TouchableOpacity onPress={() => setShowMeditationCompleteModal(false)} style={{ backgroundColor: COLORS.subPrimary, paddingVertical: 10, paddingHorizontal: 20, borderRadius: 8 }}>
+              <Text style={{ color: COLORS.white }}>{t('done')}</Text>
             </TouchableOpacity>
           </View>
         </View>

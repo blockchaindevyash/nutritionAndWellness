@@ -134,6 +134,159 @@ async function scheduleNotification({
   );
 }
 
+// Schedule medication reminders from an array of medication objects.
+// Each medication object may include `name`, `dosage` and `timing` (e.g. 'morning', 'afternoon', 'evening').
+export async function scheduleMedicationRemindersForMedications(medications = []) {
+  // cancel previous known medication reminders
+  const knownIds = [`medication-reminder-8`, `medication-reminder-12`, `medication-reminder-19`];
+  for (const id of knownIds) {
+    try {
+      await notifee.cancelNotification(id);
+    } catch (err) {
+      // ignore
+    }
+  }
+
+  if (!Array.isArray(medications) || medications.length === 0) {
+    // fallback to default 8am reminder
+    await scheduleNotification({
+      id: `medication-reminder-8`,
+      title: "Medication Reminder",
+      body: "Time to take your medication.",
+      hour: 8,
+      minute: 0,
+    });
+    return;
+  }
+
+  // Group medications by simplified timing keyword
+  const groups = { morning: [], afternoon: [], evening: [] };
+
+  for (const med of medications) {
+    const timingRaw = (med?.timing || '').toString().toLowerCase();
+    if (timingRaw.includes('afternoon') || timingRaw.includes('lunch') || timingRaw.includes('noon')) groups.afternoon.push(med);
+    else if (timingRaw.includes('evening') || timingRaw.includes('dinner') || timingRaw.includes('night')) groups.evening.push(med);
+    else groups.morning.push(med);
+  }
+
+  // Schedule three reminders per timing: e.g. morning -> 08:00, 08:10, 08:20
+  const scheduleSlots = {
+    morning: [ { hour: 8, minute: 0 }, { hour: 8, minute: 10 }, { hour: 8, minute: 20 } ],
+    afternoon: [ { hour: 12, minute: 0 }, { hour: 12, minute: 10 }, { hour: 12, minute: 20 } ],
+    evening: [ { hour: 21, minute: 0 }, { hour: 21, minute: 10 }, { hour: 21, minute: 20 } ],
+  };
+
+  const makeBody = (list) => {
+    if (!list || list.length === 0) return 'Time to take your medication.';
+    const parts = list.map(m => {
+      const name = m?.name || 'Medication';
+      const dose = m?.dosage ? ` - ${m.dosage}` : '';
+      return `${name}${dose}`;
+    });
+    return parts.join('\n');
+  };
+
+  // Cancel any medication reminder ids that match our planned slots
+  const allPlannedIds = [];
+  for (const key of Object.keys(scheduleSlots)) {
+    for (const slot of scheduleSlots[key]) {
+      allPlannedIds.push(`medication-reminder-${slot.hour}-${String(slot.minute).padStart(2, '0')}`);
+    }
+  }
+  for (const id of allPlannedIds) {
+    try { await notifee.cancelNotification(id); } catch (e) { /* ignore */ }
+  }
+
+  for (const key of Object.keys(groups)) {
+    const items = groups[key];
+    if (!items || items.length === 0) continue;
+    const title = `Medication Reminder - ${key.charAt(0).toUpperCase() + key.slice(1)}`;
+    const body = makeBody(items);
+
+    for (const slot of scheduleSlots[key] || []) {
+      const id = `medication-reminder-${slot.hour}-${String(slot.minute).padStart(2, '0')}`;
+      console.log(`Scheduling medication reminder for ${key} at ${slot.hour}:${String(slot.minute).padStart(2,'0')}`, id);
+      await scheduleNotification({
+        id,
+        title,
+        body,
+        hour: slot.hour,
+        minute: slot.minute,
+      });
+    }
+  }
+}
+
+// Schedule supplement reminders (same timing slots as medication) but with distinct IDs
+export async function scheduleSupplementRemindersForSupplements(supplements = []) {
+  // cancel previous known supplement reminders (we'll cancel any planned slot ids)
+  const scheduleSlots = {
+    morning: [ { hour: 8, minute: 0 }, { hour: 8, minute: 10 }, { hour: 8, minute: 20 } ],
+    afternoon: [ { hour: 12, minute: 0 }, { hour: 12, minute: 10 }, { hour: 12, minute: 20 } ],
+    evening: [ { hour: 21, minute: 0 }, { hour: 21, minute: 10 }, { hour: 21, minute: 20 } ],
+  };
+
+  const allPlannedIds = [];
+  for (const key of Object.keys(scheduleSlots)) {
+    for (const slot of scheduleSlots[key]) {
+      allPlannedIds.push(`supplement-reminder-${slot.hour}-${String(slot.minute).padStart(2, '0')}`);
+    }
+  }
+  for (const id of allPlannedIds) {
+    try { await notifee.cancelNotification(id); } catch (e) { /* ignore */ }
+  }
+
+  if (!Array.isArray(supplements) || supplements.length === 0) {
+    // fallback to a single morning supplement reminder
+    await scheduleNotification({
+      id: `supplement-reminder-8-00`,
+      title: "Supplement Reminder",
+      body: "Time to take your supplements.",
+      hour: 8,
+      minute: 0,
+    });
+    return;
+  }
+
+  // Group supplements by simplified timing keyword
+  const groups = { morning: [], afternoon: [], evening: [] };
+  for (const s of supplements) {
+    const timingRaw = (s?.timing || '').toString().toLowerCase();
+    if (timingRaw.includes('afternoon') || timingRaw.includes('lunch') || timingRaw.includes('noon')) groups.afternoon.push(s);
+    else if (timingRaw.includes('evening') || timingRaw.includes('dinner') || timingRaw.includes('night')) groups.evening.push(s);
+    else groups.morning.push(s);
+  }
+
+  const makeBody = (list) => {
+    if (!list || list.length === 0) return 'Time to take your supplements.';
+    const parts = list.map(m => {
+      const name = m?.name || 'Supplement';
+      const dose = m?.dosage ? ` - ${m.dosage}` : '';
+      return `${name}${dose}`;
+    });
+    return parts.join('\n');
+  };
+
+  for (const key of Object.keys(groups)) {
+    const items = groups[key];
+    if (!items || items.length === 0) continue;
+    const title = `Supplement Reminder - ${key.charAt(0).toUpperCase() + key.slice(1)}`;
+    const body = makeBody(items);
+
+    for (const slot of scheduleSlots[key] || []) {
+      const id = `supplement-reminder-${slot.hour}-${String(slot.minute).padStart(2, '0')}`;
+      console.log(`Scheduling supplement reminder for ${key} at ${slot.hour}:${String(slot.minute).padStart(2,'0')}`, id);
+      await scheduleNotification({
+        id,
+        title,
+        body,
+        hour: slot.hour,
+        minute: slot.minute,
+      });
+    }
+  }
+}
+
 export async function scheduleWalkReminders() {
   const walkImage = Image.resolveAssetSource(require("./assets/walk.png"));
   const walkImage1 = Image.resolveAssetSource(require("./assets/walk1.jpg"));
