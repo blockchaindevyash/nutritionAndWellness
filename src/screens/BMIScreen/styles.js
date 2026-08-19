@@ -1,4 +1,4 @@
-import {StyleSheet} from 'react-native';
+import { StyleSheet } from 'react-native';
 import { hp, wp, normalize } from '../../components/responsive';
 import { COLORS, Fonts } from '../../utils/index';
 
@@ -9,8 +9,8 @@ export const portraitStyles = StyleSheet.create({
     width: '100%',
   },
   headerView: {
-    height: '8%', 
-    width: '100%', 
+    height: '8%',
+    width: '100%',
     backgroundColor: COLORS.primary,
   },
   container: {
@@ -237,148 +237,148 @@ export const portraitStyles = StyleSheet.create({
     color: COLORS.white,
     textAlign: 'center'
   },
-
   bmiCard: {
-  backgroundColor: COLORS.primary,
-  padding: wp(5),
-  borderRadius: 20,
-  marginBottom: hp(2),
-  marginTop: hp(3),
-
-  shadowColor: '#000',
-  shadowOffset: {
-    width: 0,
-    height: 4,
+    backgroundColor: COLORS.primary,
+    padding: wp(5),
+    borderRadius: 20,
+    marginBottom: hp(2),
+    marginTop: hp(3),
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.12,
+    shadowRadius: 8,
+    elevation: 4,
   },
-  shadowOpacity: 0.12,
-  shadowRadius: 8,
-
-  elevation: 4,
-},
-
-bmiHeader: {
-  alignItems: 'center',
-},
-
-bmiTitle: {
-  fontSize: normalize(20),
-  fontFamily: Fonts.FONTS.PoppinsSemiBold,
-  color: COLORS.secondary,
-},
-
-bmiSubtitle: {
-  fontSize: normalize(12),
-  fontFamily: Fonts.FONTS.PoppinsRegular,
-  color: COLORS.white,
-  opacity: 0.7,
-  marginTop: hp(0.3),
-},
-
-bmiValueContainer: {
-  alignItems: 'center',
-  marginTop: hp(2),
-},
-
-bmiValue: {
-  fontSize: normalize(48),
-  fontFamily: Fonts.FONTS.PoppinsBold,
-  color: COLORS.white,
-  lineHeight: normalize(58),
-},
-
-bmiUnit: {
-  fontSize: normalize(17),
-  fontFamily: Fonts.FONTS.PoppinsMedium,
-  color: COLORS.secondary,
-  marginTop: -hp(0.5),
-},
-
-categoryBadge: {
-  alignSelf: 'center',
-  marginTop: hp(1.5),
-  paddingHorizontal: wp(5),
-  paddingVertical: hp(0.7),
-  borderRadius: 30,
-  backgroundColor: COLORS.secondary,
-},
-
-categoryText: {
-  fontSize: normalize(14),
-  fontFamily: Fonts.FONTS.PoppinsSemiBold,
-  color: COLORS.white,
-},
-
-scaleContainer: {
-  marginTop: hp(3),
-  position: 'relative',
-},
-
-scaleBar: {
-  flexDirection: 'row',
-  width: '100%',
-  height: hp(1.2),
-  borderRadius: 10,
-  overflow: 'hidden',
-},
-
-underweightBar: {
-  flex: 18.5,
-  backgroundColor: '#4A90E2',
-  fontSize: normalize(18),
-  fontFamily: Fonts.FONTS.PoppinsSemiBold,
-},
-
-normalBar: {
-  flex: 6.5,
-  backgroundColor: '#38B97A',
-  fontSize: normalize(18),
-  fontFamily: Fonts.FONTS.PoppinsSemiBold,
-},
-
-overweightBar: {
-  flex: 5,
-  backgroundColor: '#F5B942',
-  fontSize: normalize(18),
-  fontFamily: Fonts.FONTS.PoppinsSemiBold,
-},
-
-obesityBar: {
-  flex: 10,
-  backgroundColor: '#E85D5D',
-  fontSize: normalize(18),
-  fontFamily: Fonts.FONTS.PoppinsSemiBold,
-},
-
-scaleIndicator: {
-  position: 'absolute',
-  top: -hp(0.5),
-  width: wp(1.8),
-  height: hp(2.2),
-  borderRadius: 10,
-  backgroundColor: COLORS.white,
-  marginLeft: -wp(0.9),
-},
-
-scaleLabels: {
-  flexDirection: 'row',
-  justifyContent: 'space-between',
-  marginTop: hp(0.8),
-},
-
-scaleLabel: {
-  fontSize: normalize(10),
-  fontFamily: Fonts.FONTS.PoppinsMedium,
-  color: COLORS.white,
-},
-
-bmiDescription: {
-  textAlign: 'center',
-  marginTop: hp(2),
-  fontSize: normalize(15),
-  lineHeight: normalize(18),
-  fontFamily: Fonts.FONTS.PoppinsRegular,
-  color: COLORS.white,
-},
+  bmiHeader: {
+    alignItems: 'center',
+  },
+  bmiTitle: {
+    fontSize: normalize(20),
+    fontFamily: Fonts.FONTS.PoppinsSemiBold,
+    color: COLORS.secondary,
+  },
+  bmiSubtitle: {
+    fontSize: normalize(12),
+    fontFamily: Fonts.FONTS.PoppinsRegular,
+    color: COLORS.white,
+    opacity: 0.7,
+    marginTop: hp(0.3),
+  },
+  bmiValueContainer: {
+    alignItems: 'center',
+    marginTop: hp(2),
+  },
+  bmiValue: {
+    fontSize: normalize(48),
+    fontFamily: Fonts.FONTS.PoppinsBold,
+    color: COLORS.white,
+    lineHeight: normalize(58),
+  },
+  bmiUnit: {
+    fontSize: normalize(17),
+    fontFamily: Fonts.FONTS.PoppinsMedium,
+    color: COLORS.secondary,
+    marginTop: -hp(0.5),
+  },
+  categoryBadge: {
+    alignSelf: 'center',
+    marginTop: hp(1.5),
+    paddingHorizontal: wp(5),
+    paddingVertical: hp(0.7),
+    borderRadius: 30,
+    backgroundColor: COLORS.secondary,
+  },
+  categoryText: {
+    fontSize: normalize(14),
+    fontFamily: Fonts.FONTS.PoppinsSemiBold,
+    color: COLORS.white,
+  },
+  scaleContainer: {
+    marginTop: hp(3),
+    position: 'relative',
+  },
+  scaleBar: {
+    flexDirection: 'row',
+    width: '100%',
+    height: hp(1.2),
+    borderRadius: 10,
+    overflow: 'hidden',
+  },
+  underweightBar: {
+    flex: 18.5,
+    backgroundColor: '#4A90E2',
+    fontSize: normalize(18),
+    fontFamily: Fonts.FONTS.PoppinsSemiBold,
+  },
+  normalBar: {
+    flex: 6.5,
+    backgroundColor: '#38B97A',
+    fontSize: normalize(18),
+    fontFamily: Fonts.FONTS.PoppinsSemiBold,
+  },
+  overweightBar: {
+    flex: 5,
+    backgroundColor: '#F5B942',
+    fontSize: normalize(18),
+    fontFamily: Fonts.FONTS.PoppinsSemiBold,
+  },
+  obesityBar: {
+    flex: 10,
+    backgroundColor: '#E85D5D',
+    fontSize: normalize(18),
+    fontFamily: Fonts.FONTS.PoppinsSemiBold,
+  },
+  scaleIndicator: {
+    position: 'absolute',
+    top: -hp(0.5),
+    width: wp(1.8),
+    height: hp(2.2),
+    borderRadius: 10,
+    backgroundColor: COLORS.white,
+    marginLeft: -wp(0.9),
+  },
+  scaleLabels: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: hp(0.8),
+  },
+  scaleLabel: {
+    fontSize: normalize(10),
+    fontFamily: Fonts.FONTS.PoppinsMedium,
+    color: COLORS.white,
+  },
+  bmiDescription: {
+    textAlign: 'center',
+    marginTop: hp(2),
+    fontSize: normalize(15),
+    lineHeight: normalize(18),
+    fontFamily: Fonts.FONTS.PoppinsRegular,
+    color: COLORS.white,
+  },
+  heightOptionView: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+    marginTop: hp(3),
+    borderRadius: 5,
+    backgroundColor: COLORS.primary,
+  },
+  cmButton: {
+    width: '50%',
+    height: hp(5),
+    borderRadius: 5,
+    backgroundColor: COLORS.secondary,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  cmButtonText: {
+    fontSize: normalize(18),
+    fontFamily: Fonts.FONTS.PoppinsSemiBold,
+    color: COLORS.white,
+  }
 });
 
 export const landscapeStyles = StyleSheet.create({

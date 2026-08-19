@@ -201,6 +201,10 @@ const AccountScreen = ({ navigation }) => {
                     <Text style={styles.detailText}>{t('header_doctor_recommendations')}</Text>
                     <Image style={styles.editImage} source={rightArrow} />
                 </TouchableOpacity>
+                <TouchableOpacity style={styles.optionView} onPress={() => navigation.navigate('ConsultantScreen')}>
+                    <Text style={styles.detailText}>{t('consultant')}</Text>
+                    <Image style={styles.editImage} source={rightArrow} />
+                </TouchableOpacity>
                 <TouchableOpacity style={styles.optionView} onPress={() => navigation.navigate('HomeScreen')}>
                     <Text style={styles.detailText}>{t('food_recipes')}</Text>
                     <Image style={styles.editImage} source={rightArrow} />

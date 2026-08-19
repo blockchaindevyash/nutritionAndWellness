@@ -202,5 +202,24 @@
   "bmi_message": "Calculate your Body Mass Index (BMI) based on your height and weight to understand your healthy weight range.",
   "male": "Male",
   "female": "Female",
-  "result": "Result"
+  "result": "Result",
+  "good_afternoon": "Good Afternoon",
+  "good_evening": "Good Evening",
+  "good_night": "Good Night",
+
+  "consultant": "Consultants",
+  "find_consultant": "Find a Consultant",
+  "choose_right_specialist": "Choose the right specialist for your health needs",
+  "search_consultant": "Search consultant or specialist",
+  "filters": "Filters",
+  "clear_all": "Clear All",
+  "consultants_found": "Consultants Found",
+  "no_consultants_found": "No Consultants Found",
+  "changing_filter": "Try changing your filters or search term.",
+  "clear_filters": "Clear Filters",
+  "experience": "Experience",
+  "consultation": "Consultation",
+  "available": "Available",
+  "time": "Time",
+  "book_consultation": "Book Consultation"
 }

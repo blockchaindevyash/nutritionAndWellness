@@ -838,6 +838,20 @@ const DashboardScreen = ({ navigation }) => {
       });
   };
 
+  const getGreetingKey = () => {
+    const hour = new Date().getHours();
+
+    if (hour >= 5 && hour < 12) {
+      return 'good_morning';
+    } else if (hour >= 12 && hour < 17) {
+      return 'good_afternoon';
+    } else if (hour >= 17 && hour < 21) {
+      return 'good_evening';
+    } else {
+      return 'good_night';
+    }
+  };
+
   return (
     <View style={styles.safeAreaStyle}>
       <View
@@ -848,7 +862,7 @@ const DashboardScreen = ({ navigation }) => {
         }}
       />
       <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: hp(8) }} showsVerticalScrollIndicator={false}>
-        <Text style={styles.greeting}>👋 {t('good_morning')}, {profileData?.name}</Text>
+        <Text style={styles.greeting}>👋 {t(getGreetingKey())}, {profileData?.name}</Text>
         <Text style={styles.subText}>{t('dashboard_massage')}</Text>
 
         <View style={styles.stepCard}>

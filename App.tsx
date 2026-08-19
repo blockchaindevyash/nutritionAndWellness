@@ -35,9 +35,9 @@ import MedicineDetailScreen from './src/screens/MedicineDetailScreen';
 import CreateRecipeScreen from './src/screens/CreateRecipeScreen';
 import AdviserScreen from './src/screens/AdviserScreen';
 import BMIScreen from './src/screens/BMIScreen';
-import BMIResultScreen from './src/screens/BMIResultScreen';
 import AdviserDetailScreen from './src/screens/AdviserDetailScreen';
 import PhoneVerificationScreen from './src/screens/PhoneVerificationScreen';
+import ConsultantScreen from './src/screens/ConsultantScreen';
 import { Image, Platform, StatusBar, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import {COLORS, Fonts} from './src/utils';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -379,8 +379,8 @@ const App = () => {
             options={{headerShown: false}}
           />
           <Stack.Screen
-            name="BMIResultScreen"
-            component={BMIResultScreen}
+            name="ConsultantScreen"
+            component={ConsultantScreen}
             options={{headerShown: false}}
           />
         </Stack.Navigator>
