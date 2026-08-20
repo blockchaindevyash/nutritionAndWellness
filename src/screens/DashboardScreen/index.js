@@ -648,7 +648,9 @@ const DashboardScreen = ({ navigation }) => {
 
   // Show meditation complete modal when timer reaches zero
   useEffect(() => {
-    if (remainingSeconds === 0 && isRunning) {
+    console.log('remainingSeconds changed:', remainingSeconds, 'isRunning:', isRunning);
+    if (remainingSeconds === 1 && isRunning) {
+      finishTimer();
       setShowMeditationCompleteModal(true);
     }
   }, [remainingSeconds]);
@@ -800,6 +802,41 @@ const DashboardScreen = ({ navigation }) => {
     if (remainingSeconds > 0) {
       setIsRunning(true);
     }
+  };
+
+    const finishTimer = () => {
+    console.log('finishTimer called', { remainingSeconds, selectedDate });
+    if (!isTodaySelected) {
+      Alert.alert('Read only', 'You can only finish meditation for today');
+      return;
+    }
+
+    const dateKey = selectedDate?.date || getTodayKey();
+    const meditationMinutes = remainingSeconds / 60;
+    const isCompleted = remainingSeconds === 0;
+
+    persistMeditationState(dateKey, remainingSeconds, isCompleted).catch(error => {
+      console.warn('Unable to persist meditation state', error);
+    });
+
+    saveWeeklyPlanMeditationState(dateKey, meditationMinutes, isCompleted).catch(error => {
+      console.warn('Unable to save weekly plan meditation state', error);
+    });
+
+    const raw = {
+      date: dateKey,
+      meditatiion_minutes: parseInt(meditationMinutes),
+      is_meditation_completed: isCompleted,
+    };
+
+    console.log('Timer paused::', raw);
+    onAddCommonJsonApi('plan/track-progress', raw)
+      .then(responseData => {
+        console.log('responseData set::', responseData.data);
+      })
+      .catch(err => {
+        console.log('Error:', err.response);
+      });
   };
 
   const pauseTimer = () => {

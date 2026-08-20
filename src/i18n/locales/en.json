@@ -206,7 +206,6 @@
   "good_afternoon": "Good Afternoon",
   "good_evening": "Good Evening",
   "good_night": "Good Night",
-
   "consultant": "Consultants",
   "find_consultant": "Find a Consultant",
   "choose_right_specialist": "Choose the right specialist for your health needs",
@@ -221,5 +220,9 @@
   "consultation": "Consultation",
   "available": "Available",
   "time": "Time",
-  "book_consultation": "Book Consultation"
+  "book_consultation": "Book Consultation",
+  "avoids": "Avoids",
+  "recommendations": "Recommendations",
+
+  "community_forum": "Community Forum"
 }

@@ -38,6 +38,9 @@ import BMIScreen from './src/screens/BMIScreen';
 import AdviserDetailScreen from './src/screens/AdviserDetailScreen';
 import PhoneVerificationScreen from './src/screens/PhoneVerificationScreen';
 import ConsultantScreen from './src/screens/ConsultantScreen';
+import CommunityForum from './src/screens/CommunityForum';
+import CreatePostScreen from './src/screens/CreatePostScreen';
+import PostDetailsScreen from './src/screens/PostDetailsScreen';
 import { Image, Platform, StatusBar, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import {COLORS, Fonts} from './src/utils';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -58,6 +61,7 @@ import chat from './src/images/messenger.png';
 import trend from './src/images/trend.png';
 import toList from './src/images/toList.png';
 import FlashMessage from 'react-native-flash-message';
+
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -381,6 +385,21 @@ const App = () => {
           <Stack.Screen
             name="ConsultantScreen"
             component={ConsultantScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="CommunityForum"
+            component={CommunityForum}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="CreatePostScreen"
+            component={CreatePostScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="PostDetailsScreen"
+            component={PostDetailsScreen}
             options={{headerShown: false}}
           />
         </Stack.Navigator>

@@ -219,5 +219,7 @@
   "consultation": "相談",
   "available": "対応可能",
   "time": "時間",
-  "book_consultation": "相談を予約する"
+  "book_consultation": "相談を予約する",
+  "avoids": "避けるもの",
+  "recommendations": "おすすめ"
 }

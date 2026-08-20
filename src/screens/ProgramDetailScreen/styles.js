@@ -42,6 +42,7 @@ export const portraitStyles = StyleSheet.create({
     fontSize: normalize(16),
     fontFamily: Fonts.FONTS.PoppinsMedium,
     color: COLORS.white,
+    width: '90%'
   },
   doneText: {
     textDecorationLine: "line-through",

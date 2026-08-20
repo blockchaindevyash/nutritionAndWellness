@@ -189,6 +189,10 @@ const AccountScreen = ({ navigation }) => {
                     <Text style={styles.detailText}>{t('saved_recipes')}</Text>
                     <Image style={styles.editImage} source={rightArrow} />
                 </TouchableOpacity>
+                <TouchableOpacity style={styles.optionView} onPress={() => navigation.navigate('CommunityForum')}>
+                    <Text style={styles.detailText}>{t('community_forum')}</Text>
+                    <Image style={styles.editImage} source={rightArrow} />
+                </TouchableOpacity>
                 <TouchableOpacity style={styles.optionView} onPress={() => navigation.navigate('ActivityLevelScreen', {item: profileData})}>
                     <Text style={styles.detailText}>{t('activity_level')}</Text>
                     <Image style={styles.editImage} source={rightArrow} />

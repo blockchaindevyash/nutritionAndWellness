@@ -18,6 +18,7 @@ import Header from '../../components/HeaderComponent';
 import { hp } from '../../components/responsive';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import LinearGradient from "react-native-linear-gradient";
+import { portraitStyles, landscapeStyles } from './styles';
 
 const AdviserDetailScreen = ({ navigation, route }) => {
   const { details } = route.params;
@@ -82,7 +83,7 @@ const AdviserDetailScreen = ({ navigation, route }) => {
           {/* Avoid Foods */}
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>
-              {t('avoid_foods')}
+              {t('avoids')}
             </Text>
             {details.avoid.map((item, index) => (
               <View key={index} style={styles.listItem}>

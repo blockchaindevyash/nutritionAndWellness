@@ -219,5 +219,7 @@
   "consultation": "상담",
   "available": "상담 가능",
   "time": "시간",
-  "book_consultation": "상담 예약"
+  "book_consultation": "상담 예약",
+  "avoids": "피해야 할 것",
+  "recommendations": "권장 사항"
 }

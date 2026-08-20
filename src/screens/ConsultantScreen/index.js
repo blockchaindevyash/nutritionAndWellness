@@ -423,14 +423,6 @@ const ConsultantScreen = ({ navigation }) => {
               {item.experience}
             </Text>
           </View>
-          <View style={styles.infoBox}>
-            <Text style={styles.infoLabel}>
-              {t('consultation')}
-            </Text>
-            <Text style={styles.fee}>
-              ₹{item.consultationFee}
-            </Text>
-          </View>
         </View>
         <View style={styles.featuresContainer}>
           {item.features.slice(0, 3).map((feature, index) => (

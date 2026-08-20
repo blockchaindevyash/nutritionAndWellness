@@ -25,6 +25,7 @@ import plane from '../../images/plane.png';
 import { pick } from '@react-native-documents/picker'
 import { onAddChatFormApi, onAddCommonFormApi, onGetCommonApi } from '../../services/Api';
 import ImagePicker from "react-native-image-crop-picker";
+import { useTranslation } from 'react-i18next';
 
 const HistoryScreen = ({ navigation }) => {
     const orientation = useOrientation();
@@ -44,6 +45,7 @@ const HistoryScreen = ({ navigation }) => {
     const [MessageListData, setMessageListData] = useState([]);
     const [imageAttachment, setImageAttachment] = useState(null);
     const scrollViewRef = useRef(null);
+    const { t } = useTranslation();
 
     useFocusEffect(
         useCallback(() => {

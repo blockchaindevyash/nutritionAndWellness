@@ -219,5 +219,7 @@
   "consultation": "Consulta",
   "available": "Disponible",
   "time": "Horario",
-  "book_consultation": "Reservar consulta"
+  "book_consultation": "Reservar consulta",
+  "avoids": "Evita",
+  "recommendations": "Recomendaciones"
   }
