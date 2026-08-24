@@ -221,5 +221,19 @@
   "time": "時間",
   "book_consultation": "相談を予約する",
   "avoids": "避けるもの",
-  "recommendations": "おすすめ"
+  "recommendations": "おすすめ",
+
+  "community_forum": "Community Forum",
+  "discussion": "Discussion",
+  "share": "Share",
+  "create_post": "Create Post",
+  "start_discussion": "Start a discussion",
+  "share_experience": "Share your experience, ask questions, or help someone in the community.",
+  "title": "Title",
+  "category": "Category",
+  "description": "Description",
+  "add_image": "Add Image",
+  "add_an_image": "Add an image",
+  "note_community": "Please be respectful and supportive. Do not share personal medical information or harmful content.",
+  "publish_post": "Publish Post"
 }

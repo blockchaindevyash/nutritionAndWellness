@@ -4,7 +4,7 @@ buildscript {
         minSdkVersion = 24
         compileSdkVersion = 36
         targetSdkVersion = 35
-        ndkVersion = "26.1.10909125"
+        ndkVersion = "27.1.12297006"
         kotlinVersion = "2.1.20"
         REACT_NATIVE_NODE_MODULES_DIR = "$rootDir/../node_modules/react-native"
     }
@@ -34,6 +34,16 @@ subprojects {
             project.android {
                 if (compileSdkVersion == null) {
                     compileSdkVersion rootProject.ext.compileSdkVersion
+                }
+                
+                // Fix for missing <format> include in React Native 0.81.5 headers
+                defaultConfig.externalNativeBuild.cmake {
+                    if (cppFlags instanceof List) {
+                        cppFlags.add("-include format")
+                        cppFlags.add("-D_LIBCPP_HAS_NO_INCOMPLETE_FORMAT=0")
+                    } else {
+                        cppFlags = (cppFlags ?: "") + " -include format -D_LIBCPP_HAS_NO_INCOMPLETE_FORMAT=0"
+                    }
                 }
             }
         }

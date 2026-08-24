@@ -599,7 +599,6 @@ const DashboardScreen = ({ navigation }) => {
             await onStepCountDataAdd(storedSteps, parsed?.date);
           }
         }
-
         await saveStepState(0, todayKey, 0);
         setSteps(0);
         lastSensorValueRef.current = 0;
@@ -621,7 +620,6 @@ const DashboardScreen = ({ navigation }) => {
         console.warn('Unable to schedule daily step reminder', error);
       }
     };
-
     scheduleReminder();
   }, []);
 
@@ -738,9 +736,7 @@ const DashboardScreen = ({ navigation }) => {
         console.warn('Unable to start step counter:', error);
       }
     };
-
     start();
-
     return () => {
       try {
         stopCounter();
@@ -813,7 +809,7 @@ const DashboardScreen = ({ navigation }) => {
 
     const dateKey = selectedDate?.date || getTodayKey();
     const meditationMinutes = remainingSeconds / 60;
-    const isCompleted = remainingSeconds === 0;
+    const isCompleted = remainingSeconds === 1;
 
     persistMeditationState(dateKey, remainingSeconds, isCompleted).catch(error => {
       console.warn('Unable to persist meditation state', error);

@@ -32,8 +32,6 @@ export const portraitStyles = StyleSheet.create({
     padding: 15,
     borderRadius: 10,
     marginBottom: 10,
-    flexDirection: "row",
-    justifyContent: "space-between",
   },
   doneCard: {
     backgroundColor: "#d4edda",
@@ -42,7 +40,7 @@ export const portraitStyles = StyleSheet.create({
     fontSize: normalize(16),
     fontFamily: Fonts.FONTS.PoppinsMedium,
     color: COLORS.white,
-    width: '90%'
+    width: '80%'
   },
   doneText: {
     textDecorationLine: "line-through",
@@ -68,7 +66,49 @@ export const portraitStyles = StyleSheet.create({
     fontFamily: Fonts.FONTS.PoppinsSemiBold,
     color: '#fff',
     fontSize: normalize(16),
-  }
+  },
+exerciseContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+},
+checkbox: {
+    fontSize: 22,
+},
+timerButton: {
+    minWidth: 70,
+    height: 38,
+    paddingHorizontal: 14,
+    borderRadius: 20,
+    backgroundColor: COLORS.subPrimary,
+    alignItems: 'center',
+    justifyContent: 'center',
+},
+timerButtonText: {
+    color: COLORS.white,
+    fontSize: 13,
+    fontWeight: '700',
+},
+timerContainer: {
+    marginTop: 14,
+    paddingTop: 14,
+    borderTopWidth: 1,
+    borderTopColor: '#EEEEEE',
+    alignItems: 'center',
+},
+timerText: {
+    fontSize: normalize(28),
+    fontFamily: Fonts.FONTS.PoppinsSemiBold,
+    color: COLORS.secondary,
+},
+completedContainer: {
+    marginTop: 10,
+},
+completedText: {
+    fontSize: normalize(14),
+    fontFamily: Fonts.FONTS.PoppinsSemiBold,
+    color: COLORS.subPrimary,
+},
 })
 
 export const landscapeStyles = StyleSheet.create({

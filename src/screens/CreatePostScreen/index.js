@@ -94,7 +94,7 @@ const CreatePostScreen = ({navigation}) => {
 
       {/* Header */}
       <View style={styles.headerView}>
-        <Header title={'Create Post'} onPress={() => navigation.goBack()} />
+        <Header title={t('create_post')} onPress={() => navigation.goBack()} />
       </View>
 
       <ScrollView
@@ -113,12 +113,11 @@ const CreatePostScreen = ({navigation}) => {
 
           <View style={styles.introTextContainer}>
             <Text style={styles.introTitle}>
-              Start a discussion
+              {t('start_discussion')}
             </Text>
 
             <Text style={styles.introDescription}>
-              Share your experience, ask questions, or help
-              someone in the community.
+              {t('share_experience')}
             </Text>
           </View>
         </View>
@@ -126,7 +125,7 @@ const CreatePostScreen = ({navigation}) => {
         {/* Title */}
         <View style={styles.fieldContainer}>
           <Text style={styles.label}>
-            Title{' '}
+            {t('title')}{' '}
             <Text style={styles.required}>*</Text>
           </Text>
 
@@ -155,7 +154,7 @@ const CreatePostScreen = ({navigation}) => {
         {/* Category */}
         <View style={styles.fieldContainer}>
           <Text style={styles.label}>
-            Category{' '}
+            {t('category')}{' '}
             <Text style={styles.required}>*</Text>
           </Text>
 
@@ -202,7 +201,7 @@ const CreatePostScreen = ({navigation}) => {
         {/* Description */}
         <View style={styles.fieldContainer}>
           <Text style={styles.label}>
-            Description{' '}
+            {t('description')}{' '}
             <Text style={styles.required}>*</Text>
           </Text>
 
@@ -227,7 +226,7 @@ const CreatePostScreen = ({navigation}) => {
         {/* Image */}
         <View style={styles.fieldContainer}>
           <Text style={styles.label}>
-            Add Image
+            {t('add_image')}
           </Text>
 
           {!image ? (
@@ -245,7 +244,7 @@ const CreatePostScreen = ({navigation}) => {
               </View>
 
               <Text style={styles.uploadTitle}>
-                Add an image
+                {t('add_an_image')}
               </Text>
 
               <Text style={styles.uploadDescription}>
@@ -262,7 +261,6 @@ const CreatePostScreen = ({navigation}) => {
               <TouchableOpacity
                 style={styles.removeImageButton}
                 onPress={() => setImage(null)}>
-
                 <Icon
                   name="close"
                   size={22}
@@ -282,9 +280,7 @@ const CreatePostScreen = ({navigation}) => {
           />
 
           <Text style={styles.guidelineText}>
-            Please be respectful and supportive. Do not
-            share personal medical information or harmful
-            content.
+            {t('note_community')}
           </Text>
         </View>
 
@@ -301,7 +297,7 @@ const CreatePostScreen = ({navigation}) => {
           />
 
           <Text style={styles.postButtonText}>
-            Publish Post
+            {t('publish_post')}
           </Text>
         </TouchableOpacity>
 

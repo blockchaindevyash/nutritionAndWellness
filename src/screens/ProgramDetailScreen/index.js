@@ -37,11 +37,26 @@ const ProgramDetailScreen = ({ navigation, route }) => {
     const getTodayKey = () => moment().format('YYYY-MM-DD');
 
     // Add done state
+    // const [exercises, setExercises] = useState(
+    //     item.exercises.map((ex, index) => ({
+    //         id: index,
+    //         name: ex.name,
+    //         done: false,
+    //     }))
+    // );
+    const getExerciseMinutes = name => {
+        const match = name.match(/(\d+)\s*(min|mins|minute|minutes)\b/i);
+
+        return match ? parseInt(match[1], 10) : 0;
+    };
+
     const [exercises, setExercises] = useState(
         item.exercises.map((ex, index) => ({
             id: index,
             name: ex.name,
-            done: false,
+            done: ex.is_completed || false,
+            isRunning: false,
+            remainingSeconds: getExerciseMinutes(ex.name) * 60,
         }))
     );
 
@@ -66,6 +81,36 @@ const ProgramDetailScreen = ({ navigation, route }) => {
 
         loadCompleted();
     }, [item]);
+
+    useEffect(() => {
+        const timer = setInterval(() => {
+            setExercises(prev =>
+                prev.map(ex => {
+                    if (!ex.isRunning || ex.remainingSeconds <= 0) {
+                        return ex;
+                    }
+
+                    const remaining = ex.remainingSeconds - 1;
+
+                    if (remaining === 0) {
+                        return {
+                            ...ex,
+                            remainingSeconds: 0,
+                            isRunning: false,
+                            done: true,
+                        };
+                    }
+
+                    return {
+                        ...ex,
+                        remainingSeconds: remaining,
+                    };
+                }),
+            );
+        }, 1000);
+
+        return () => clearInterval(timer);
+    }, []);
 
     const toggleDone = (id) => {
         const dateKey = item.date || getTodayKey();
@@ -116,23 +161,113 @@ const ProgramDetailScreen = ({ navigation, route }) => {
         }
     };
 
+    const toggleExerciseTimer = id => {
+        const dateKey = item.date || getTodayKey();
+
+        if (dateKey !== getTodayKey()) {
+            Alert.alert(
+                'Read only',
+                'You can only update exercises for today',
+            );
+            return;
+        }
+
+        setExercises(prev =>
+            prev.map(ex =>
+                ex.id === id
+                    ? {
+                        ...ex,
+                        isRunning: !ex.isRunning,
+                    }
+                    : ex,
+            ),
+        );
+    };
+
+    const formatTime = seconds => {
+        const minutes = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+
+        return `${minutes.toString().padStart(2, '0')}:${secs
+            .toString()
+            .padStart(2, '0')}`;
+    };
+
     const getProgress = () => {
         const done = exercises.filter(e => e.done).length;
         return `${done}/${exercises.length}`;
     };
 
-    const renderItem = ({ item }) => {
-        return (
-            <TouchableOpacity
-                style={[styles.card, item.done]}
-                onPress={() => toggleDone(item.id)}>
-                <Text style={[styles.exerciseText, item.done && styles.doneText]}>
+    // const renderItem = ({ item }) => {
+    //     return (
+    //         <TouchableOpacity
+    //             style={[styles.card, item.done]}
+    //             onPress={() => toggleDone(item.id)}>
+    //             <Text style={[styles.exerciseText, item.done && styles.doneText]}>
+    //                 {item.name}
+    //             </Text>
+    //             <Text style={{color: COLORS.white}}>{item.done ? "✅" : "⬜"}</Text>
+    //         </TouchableOpacity>
+    //     );
+    // };
+
+    const renderItem = ({item}) => {
+    const exerciseMinutes = getExerciseMinutes(item.name);
+    const hasTimer = exerciseMinutes > 0;
+
+    return (
+        <View style={styles.card}>
+            <View style={styles.exerciseContent}>
+                <Text
+                    style={[
+                        styles.exerciseText,
+                        item.done && styles.doneText,
+                    ]}>
                     {item.name}
                 </Text>
-                <Text style={{color: COLORS.white}}>{item.done ? "✅" : "⬜"}</Text>
-            </TouchableOpacity>
-        );
-    };
+
+                {hasTimer ? (
+                    <TouchableOpacity
+                        style={styles.timerButton}
+                        onPress={() =>
+                            toggleExerciseTimer(item.id)
+                        }>
+                        <Text style={styles.timerButtonText}>
+                            {item.isRunning ? 'Pause' : 'Start'}
+                        </Text>
+                    </TouchableOpacity>
+                ) : (
+                    <TouchableOpacity
+                        onPress={() => toggleDone(item.id)}>
+                        <Text style={styles.checkbox}>
+                            {item.done ? '✅' : '⬜'}
+                        </Text>
+                    </TouchableOpacity>
+                )}
+            </View>
+
+            {/* Timer */}
+            {hasTimer && item.isRunning && (
+                <View style={styles.timerContainer}>
+                    <Text style={styles.timerText}>
+                        {formatTime(item.remainingSeconds)}
+                    </Text>
+                </View>
+            )}
+
+            {/* Completed timer */}
+            {hasTimer &&
+                item.done &&
+                item.remainingSeconds === 0 && (
+                    <View style={styles.completedContainer}>
+                        <Text style={styles.completedText}>
+                            ✓ Exercise completed
+                        </Text>
+                    </View>
+                )}
+        </View>
+    );
+};
 
     return (
         <View style={styles.safeAreaStyle}>

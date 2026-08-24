@@ -130,11 +130,11 @@ const CommunityForum = ({navigation}) => {
         style={styles.postCard}
         onPress={() => navigation.navigate('PostDetailsScreen', {post: item})}>
 
-        {item.pinned && (
+        {/* {item.pinned && (
           <View style={styles.pinnedContainer}>
             <Text style={styles.pinnedText}>Pinned Post</Text>
           </View>
-        )}
+        )} */}
 
         <View style={styles.userRow}>
           <Image
@@ -207,7 +207,7 @@ const CommunityForum = ({navigation}) => {
               size={21}
               color={COLORS.white}
             />
-            <Text style={styles.actionText}>Share</Text>
+            <Text style={styles.actionText}>{t('share')}</Text>
           </TouchableOpacity>
         </View>
       </TouchableOpacity>
@@ -332,7 +332,7 @@ const CommunityForum = ({navigation}) => {
         backgroundColor={COLORS.primary}
       />
       <View style={styles.headerView}>
-        <Header title={'Community'} onPress={() => navigation.goBack()} />
+        <Header title={t('community_forum')} onPress={() => navigation.goBack()} />
       </View>
       <FlatList
         data={filteredPosts}
@@ -350,11 +350,11 @@ const CommunityForum = ({navigation}) => {
             />
 
             <Text style={styles.emptyTitle}>
-              No discussions found
+              {t('no_discussion_found')}
             </Text>
 
             <Text style={styles.emptyText}>
-              Try another search or category.
+              {t('try_another_search')}
             </Text>
           </View>
         }
@@ -373,7 +373,7 @@ const CommunityForum = ({navigation}) => {
           color={COLORS.white}
         />
         <Text style={styles.createPostText}>
-          Create Post
+          {t('create_post')}
         </Text>
       </TouchableOpacity>
     </SafeAreaView>
