@@ -87,6 +87,18 @@ export const portraitStyles = StyleSheet.create({
     fontFamily: Fonts.FONTS.PoppinsMedium,
     color: COLORS.secondary,
     marginTop: hp(0.5),
+  },
+  errorView: {
+    alignItems: 'center',
+    height: '80%',
+    width: '90%',
+    alignSelf: 'center',
+    justifyContent: 'center',
+  },
+  errorText: {
+    fontSize: normalize(17),
+    fontFamily: Fonts.FONTS.PoppinsMedium,
+    color: COLORS.errorColor,
   }
 });
 

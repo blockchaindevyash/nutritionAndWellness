@@ -241,7 +241,7 @@ const AdviserScreen = ({ navigation }) => {
         <Header title={t('wellness_adviser')} onPress={() => navigation.goBack()} />
       </View>
       <View style={[styles.container, { backgroundColor: COLORS.backColor }]}>
-        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: hp(10) }}>
+        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: hp(18) }}>
           <Text style={styles.subtitle}>{t('adviser_subtitle')}</Text>
           {adviserList.map((item) => (
             <View key={item.id} style={styles.card}>

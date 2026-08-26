@@ -32,6 +32,7 @@ const AnalysisDetailScreen = ({navigation, route}) => {
   const [isLoading, setIsLoading] = useState(false);
   const [analyticsData, setAnalyticsData] = useState(null);
   const [errorShow, setErrorShow] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
   const { t } = useTranslation();
 
   useFocusEffect(
@@ -48,12 +49,15 @@ const AnalysisDetailScreen = ({navigation, route}) => {
       const response = await onAddCommonFormApi('ai/analyze-meal', formdata);
       console.log('onPostImageData Response:', response.data);
       if (response.data.status) {
+        setErrorShow(false);
         setAnalyticsData(response.data.data.analysis);
         setIsLoading(false);
       }
     } catch (err) {
       setIsLoading(false);
-      console.log('onPostImageData Error:', err);
+      setErrorShow(true);
+      setErrorMessage(err?.data?.data?.message || 'Invalid food image. try another food image.');
+      console.log('onPostImageData Error:', err.data);
     }
   };
 
@@ -76,6 +80,11 @@ const AnalysisDetailScreen = ({navigation, route}) => {
                 <Text style={styles.analysisText}>{t('analyzing')}</Text>
               </View>
             ) : (
+              errorShow ? (
+                <View style={styles.errorView}>
+                  <Text style={styles.errorText}>{errorMessage}</Text>
+                </View>
+              ): (
             <View style={styles.mainView}>
               <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{paddingBottom: hp(8)}}>
               <View style={styles.imageView}>
@@ -103,6 +112,7 @@ const AnalysisDetailScreen = ({navigation, route}) => {
               )})}
               </ScrollView>
             </View>
+              )
             )}
         </View>
     </View>

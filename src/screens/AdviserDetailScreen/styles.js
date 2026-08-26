@@ -21,9 +21,9 @@ export const portraitStyles = StyleSheet.create({
     marginTop: hp(2)
   },
   headerCard: {
-    paddingTop: 60,
-    paddingHorizontal: 20,
-    paddingBottom: 40,
+    paddingTop: hp(1),
+    paddingHorizontal: wp(1),
+    paddingBottom: hp(2),
     borderBottomLeftRadius: 35,
     borderBottomRightRadius: 35,
   },
@@ -40,18 +40,19 @@ export const portraitStyles = StyleSheet.create({
     fontSize: 40,
   },
   title: {
-    color: "#fff",
-    fontSize: 30,
-    fontWeight: "700",
+    color: COLORS.white,
+    fontSize: normalize(25),
+    fontFamily: Fonts.FONTS.PoppinsSemiBold,
     textAlign: "center",
-    marginTop: 20,
+    paddingVertical: 20,
   },
   description: {
-    color: "#fff",
+    color: COLORS.white,
     textAlign: "center",
     lineHeight: 24,
-    marginTop: 15,
-    fontSize: 15,
+    fontSize: normalize(15),
+    paddingHorizontal: wp(1),
+    fontFamily: Fonts.FONTS.PoppinsRegular,
   },
   goalBox: {
     backgroundColor: "rgba(255,255,255,0.2)",
@@ -59,7 +60,7 @@ export const portraitStyles = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 20,
     borderRadius: 8,
-    marginTop: 25,
+    marginVertical: 25,
   },
   goalText: {
     color: "#fff",

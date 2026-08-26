@@ -237,17 +237,17 @@ const MedicalScreen = ({ navigation, route }) => {
                             </View>
                         )
                     })}
+                    <TouchableOpacity
+                        style={[styles.buttonView, { opacity: isLoading ? 0.75 : 1 }]}
+                        disabled={isLoading}
+                        onPress={handleNext}>
+                        {isLoading ? (
+                            <ActivityIndicator size={'large'} color={COLORS.white} />
+                            ) : (
+                            <Text style={styles.signinText}>{fromAccount ? t('save') : t('next')}</Text>
+                        )}
+                    </TouchableOpacity>
                 </ScrollView>
-                <TouchableOpacity
-                    style={[styles.buttonView, { opacity: isLoading ? 0.75 : 1 }]}
-                    disabled={isLoading}
-                    onPress={handleNext}>
-                    {isLoading ? (
-                        <ActivityIndicator size={'large'} color={COLORS.white} />
-                        ) : (
-                        <Text style={styles.signinText}>{fromAccount ? t('save') : t('next')}</Text>
-                    )}
-                </TouchableOpacity>
             </View>
         </View>
     );

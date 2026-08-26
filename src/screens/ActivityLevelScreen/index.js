@@ -211,17 +211,17 @@ const ActivityLevelScreen = ({ navigation, route }) => {
                             <Text style={styles.cardDesc}>{item.description}</Text>
                         </TouchableOpacity>
                     ))}
+                    <TouchableOpacity
+                        style={[styles.buttonView, { opacity: isLoading ? 0.75 : 1 }]}
+                        disabled={isLoading}
+                        onPress={() => handleContinue()}>
+                        {isLoading ? (
+                            <ActivityIndicator size={'large'} color={COLORS.white} />
+                        ) : (
+                            <Text style={styles.signinText}>{fromAccount ? t('save') : t('next')}</Text>
+                        )}
+                    </TouchableOpacity>
                 </ScrollView>
-                <TouchableOpacity
-                    style={[styles.buttonView, { opacity: isLoading ? 0.75 : 1 }]}
-                    disabled={isLoading}
-                    onPress={() => handleContinue()}>
-                    {isLoading ? (
-                        <ActivityIndicator size={'large'} color={COLORS.white} />
-                    ) : (
-                        <Text style={styles.signinText}>{fromAccount ? t('save') : t('next')}</Text>
-                    )}
-                </TouchableOpacity>
             </View>
         </View>
     );

@@ -188,7 +188,7 @@ export const portraitStyles = StyleSheet.create({
     fontSize: normalize(15),
   },
   footer: {
-    padding: 20,
+    padding: 10,
     backgroundColor: COLORS.backColor,
   },
   button: {

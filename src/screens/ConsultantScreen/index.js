@@ -468,7 +468,14 @@ const ConsultantScreen = ({ navigation }) => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
+      <View
+        style={{
+          width: '100%',
+          paddingTop: insets.top,
+          backgroundColor: COLORS.primary,
+        }}
+      />
       <View style={styles.headerView}>
       <Header title={t('find_consultant')} onPress={() => navigation.goBack()} />
         </View>
@@ -579,7 +586,7 @@ const ConsultantScreen = ({ navigation }) => {
           </View>
         }
       />
-    </SafeAreaView>
+    </View>
   );
 };
 

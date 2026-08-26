@@ -82,7 +82,7 @@ const SplashScreen = ({ navigation }) => {
                 navigation.navigate('LoginScreen');
             }
         } catch (error) {
-            console.log('Error:', error);
+            console.log('Error:', error.response);
         }
     };
     

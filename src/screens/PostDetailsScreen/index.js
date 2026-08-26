@@ -362,11 +362,6 @@ const PostDetailsScreen = ({route, navigation}) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar
-        barStyle="dark-content"
-        backgroundColor={COLORS.primary}
-      />
-
       {/* Header */}
       <View style={styles.header}>
         {/* <Header title={'Discussion'} onPress={() => navigation.goBack()} /> */}

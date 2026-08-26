@@ -102,7 +102,7 @@ const MedicineDetailScreen = ({ navigation }) => {
             </View>
             <View style={[styles.mainView, { backgroundColor: COLORS.backColor }]}>
                 <ScrollView
-                    contentContainerStyle={styles.container}
+                    contentContainerStyle={{paddingBottom: hp(20), padding: 15}}
                     showsVerticalScrollIndicator={false}>
                     <View style={styles.headerContainer}>
                         <Text style={styles.subtitle}>
@@ -211,18 +211,17 @@ const MedicineDetailScreen = ({ navigation }) => {
                             ))}
                         </View>
                     )}
+                    {/* Bottom Button */}
+                    <View style={styles.footer}>
+                        <TouchableOpacity
+                            style={styles.button}
+                            onPress={handleContinue}>
+                            <Text style={styles.buttonText}>
+                                {t('next')}
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
                 </ScrollView>
-
-                {/* Bottom Button */}
-                <View style={styles.footer}>
-                    <TouchableOpacity
-                        style={styles.button}
-                        onPress={handleContinue}>
-                        <Text style={styles.buttonText}>
-                            {t('next')}
-                        </Text>
-                    </TouchableOpacity>
-                </View>
             </View>
         </View>
     );

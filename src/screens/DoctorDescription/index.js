@@ -26,6 +26,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import { onAddCommonFormApi, onGetCommonApi } from "../../services/Api";
 import moment from "moment";
 import { useTranslation } from 'react-i18next';
+import { hp } from "../../components/responsive";
 
 const DoctorDescriptionScreen = ({navigation, route}) => {
     const {updateSignupData, profileData, updateProfileData, signupData} = useAuthStore();
@@ -228,7 +229,7 @@ const DoctorDescriptionScreen = ({navigation, route}) => {
             </View>
             <View style={[styles.mainView, { backgroundColor: COLORS.backColor }]}>
             <ScrollView
-                contentContainerStyle={styles.container}
+                contentContainerStyle={{paddingBottom: hp(20), padding: 15}}
                 showsVerticalScrollIndicator={false}>
                 {/* Header */}
                 <Text style={styles.subtitle}>
@@ -342,21 +343,21 @@ const DoctorDescriptionScreen = ({navigation, route}) => {
                         )})}
                     </View>
                 </View>
+                {/* Bottom Button */}
+                <View style={styles.footer}>
+                    <TouchableOpacity
+                        style={styles.button}
+                        disabled={isLoading}
+                        onPress={handleContinue}>
+                            {isLoading ? (
+                                <ActivityIndicator size={'large'} color={COLORS.white} />
+                            ) : (
+                                <Text style={styles.buttonText}>{t('next')}</Text>
+                            )}
+                    </TouchableOpacity>
+                </View>
             </ScrollView>
 
-            {/* Bottom Button */}
-            <View style={styles.footer}>
-                <TouchableOpacity
-                    style={styles.button}
-                    disabled={isLoading}
-                    onPress={handleContinue}>
-                        {isLoading ? (
-                            <ActivityIndicator size={'large'} color={COLORS.white} />
-                        ) : (
-                            <Text style={styles.buttonText}>{t('next')}</Text>
-                        )}
-                </TouchableOpacity>
-            </View>
             </View>
         </View>
     );

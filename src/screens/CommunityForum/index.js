@@ -326,10 +326,13 @@ const CommunityForum = ({navigation}) => {
   );
 
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar
-        barStyle="dark-content"
-        backgroundColor={COLORS.primary}
+    <View style={styles.container}>
+      <View
+        style={{
+          width: '100%',
+          paddingTop: insets.top,
+          backgroundColor: COLORS.primary,
+        }}
       />
       <View style={styles.headerView}>
         <Header title={t('community_forum')} onPress={() => navigation.goBack()} />
@@ -376,7 +379,7 @@ const CommunityForum = ({navigation}) => {
           {t('create_post')}
         </Text>
       </TouchableOpacity>
-    </SafeAreaView>
+    </View>
   );
 };
 

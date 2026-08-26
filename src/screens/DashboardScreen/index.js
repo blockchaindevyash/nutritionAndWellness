@@ -895,7 +895,7 @@ const DashboardScreen = ({ navigation }) => {
         }}
       />
       <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: hp(8) }} showsVerticalScrollIndicator={false}>
-        <Text style={styles.greeting}>👋 {t(getGreetingKey())}, {profileData?.name}</Text>
+        <Text style={styles.greeting}><Text style={{fontFamily: undefined}}>👋</Text> {t(getGreetingKey())}, {profileData?.name}</Text>
         <Text style={styles.subText}>{t('dashboard_massage')}</Text>
 
         <View style={styles.stepCard}>

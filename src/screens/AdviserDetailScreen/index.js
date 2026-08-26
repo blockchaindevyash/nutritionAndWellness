@@ -43,7 +43,7 @@ const AdviserDetailScreen = ({ navigation, route }) => {
         <Header title={t('wellness_adviser')} onPress={() => navigation.goBack()} />
       </View>
       <View style={[styles.container, {backgroundColor: COLORS.backColor}]}>
-        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: hp(10) }}>
+        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: hp(13) }}>
           <LinearGradient
             colors={details.color}
             style={styles.headerCard}>
