@@ -32,7 +32,9 @@ import MeditationTimer from '../../components/MeditationTimer';
 import { useFocusEffect } from '@react-navigation/native';
 import pill from '../../images/pill.png';
 import pills from '../../images/pills.png';
-import pills1 from '../../images/pills1.png';
+import wavingHand from '../../images/wavingHand.png';
+import fire from '../../images/fire.png';
+import drop from '../../images/drop.png';
 
 const weeklyPlanList = [
   {
@@ -895,7 +897,10 @@ const DashboardScreen = ({ navigation }) => {
         }}
       />
       <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: hp(8) }} showsVerticalScrollIndicator={false}>
-        <Text style={styles.greeting}><Text style={{fontFamily: undefined}}>👋</Text> {t(getGreetingKey())}, {profileData?.name}</Text>
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <Image source={wavingHand} style={styles.optionImageStyle} />
+          <Text style={styles.greeting}> {t(getGreetingKey())}, {profileData?.name}</Text>
+        </View>
         <Text style={styles.subText}>{t('dashboard_massage')}</Text>
 
         <View style={styles.stepCard}>
@@ -963,9 +968,12 @@ const DashboardScreen = ({ navigation }) => {
                   {item.day} - {item.date}
                 </Text>
                 {/* Calories */}
-                <Text style={styles.calories}>
-                  🔥 {item.calories} kcal
-                </Text>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <Image source={fire} style={styles.optionImageStyle} />
+                  <Text style={styles.calories}>
+                     {item.calories} kcal
+                  </Text>
+                </View>
               </View>
               {/* Meals */}
               <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('MealDetailScreen', { item: item })}>
@@ -985,7 +993,7 @@ const DashboardScreen = ({ navigation }) => {
                     <Text style={styles.foodText}>{`${item?.beverage}`}</Text>
                   </View>
                 </View>
-              )}
+              )}˘
 
               {/* BMI Calculator */}
               <View style={styles.card}>
@@ -1002,7 +1010,10 @@ const DashboardScreen = ({ navigation }) => {
               <View style={styles.waterCard}>
                 <View style={styles.waterCardHeader}>
                   <View>
-                    <Text style={styles.waterTitle}>💧 {t('water_intake')}</Text>
+                      <View style={{ flexDirection: 'row', alignItems: 'center'}}>
+                        <Image source={drop} style={styles.optionImageStyle} />
+                        <Text style={styles.waterTitle}> {t('water_intake')}</Text>
+                      </View>
                     <Text style={styles.waterSubtitle}>{t('track_your_daily_glasses')}</Text>
                   </View>
                   <View style={styles.waterBadge}>
@@ -1060,9 +1071,12 @@ const DashboardScreen = ({ navigation }) => {
                   {item.medication.map((medication, index) => (
                     <View style={styles.supplementTopRow}>
                       <View>
-                        <Text style={styles.supplementName}>
-                          💊 {medication.name}
+                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                          <Image source={pill} style={styles.optionImageStyle} />
+                        <Text style={[styles.supplementName, { marginLeft: 8 }]}>
+                           {medication.name}
                         </Text>
+                        </View>
                         <Text style={styles.supplementTiming}>
                           {medication.timing}
                         </Text>
@@ -1105,7 +1119,10 @@ const DashboardScreen = ({ navigation }) => {
           ) : null
         })}
         <View style={styles.card}>
-          <Text style={styles.cardTitle}>🔥  {t('calories_burned')}</Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: hp(1) }}>
+            <Image source={fire} style={styles.optionImageStyle} />
+            <Text style={styles.cardTitle}> {t('calories_burned')}</Text>
+          </View>
           <LineChart
             initialSpacing={0}
             data={caloriesChart}

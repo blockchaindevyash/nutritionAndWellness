@@ -114,6 +114,9 @@ export const portraitStyles = StyleSheet.create({
     paddingVertical: hp(1.5),
     alignItems: 'center',
     marginRight: wp(2),
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   actionButtonActive: {
     backgroundColor: COLORS.secondary,
@@ -122,6 +125,7 @@ export const portraitStyles = StyleSheet.create({
     color: COLORS.white,
     fontSize: normalize(14),
     fontFamily: Fonts.FONTS.PoppinsSemiBold,
+    marginLeft: wp(2)
   },
   actionTextActive: {
     color: COLORS.white,

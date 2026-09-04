@@ -24,6 +24,8 @@ import { showMessage } from "react-native-flash-message";
 import useAuthStore from "../../store/authStore";
 import { useFocusEffect } from "@react-navigation/native";
 import { onAddCommonFormApi, onGetCommonApi } from "../../services/Api";
+import camera from '../../images/camera.png';
+import document from '../../images/document.png';
 import moment from "moment";
 import { useTranslation } from 'react-i18next';
 import { hp } from "../../components/responsive";
@@ -244,13 +246,13 @@ const DoctorDescriptionScreen = ({navigation, route}) => {
                         <TouchableOpacity
                             style={styles.uploadOptionBox}
                             onPress={() => pickDocument()}>
-                            <Text style={styles.uploadIcon}>📄</Text>
+                            <Image source={document} style={styles.optionImageStyle} />
                             <Text style={styles.uploadText}>{t('upload_file')}</Text>
                         </TouchableOpacity>
                         <TouchableOpacity
                             style={styles.uploadOptionBox}
                             onPress={() => takePhoto()}>
-                            <Text style={styles.uploadIcon}>📷</Text>
+                            <Image source={camera} style={styles.optionImageStyle} />
                             <Text style={styles.uploadText}>{t('use_camera')}</Text>
                         </TouchableOpacity>
                     </View>

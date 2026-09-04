@@ -292,7 +292,6 @@ export const portraitStyles = StyleSheet.create({
     fontSize: normalize(18),
     color: COLORS.white,
     fontFamily: Fonts.FONTS.PoppinsMedium,
-    marginBottom: hp(2),
   },
   dishCard: {
     width: '47%',
@@ -349,11 +348,6 @@ export const portraitStyles = StyleSheet.create({
     fontSize: normalize(16),
     color: COLORS.white,
     fontFamily: Fonts.FONTS.PoppinsSemiBold,
-  },
-  optionImageStyle: {
-    width: wp(5),
-    height: hp(5),
-    resizeMode: 'contain',
   },
   calories: {
     fontSize: normalize(16),
@@ -431,6 +425,11 @@ export const landscapeStyles = StyleSheet.create({
     height: '100%',
     width: '100%',
     backgroundColor: COLORS.backColor,
+  },
+  optionImageStyle: {
+    width: wp(6),
+    height: hp(5),
+    resizeMode: 'contain',
   },
   titleText: {
     fontSize: normalize(16),

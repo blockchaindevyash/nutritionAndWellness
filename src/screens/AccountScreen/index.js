@@ -133,7 +133,7 @@ const AccountScreen = ({ navigation }) => {
                     </View>
                 </View>
                 <View style={styles.optionView}>
-                    <Text style={styles.detailText}>{'Languages'}</Text>
+                    <Text style={styles.detailText}>{t('languages')}</Text>
                     <SelectDropdown
                         data={LANGS}
                         defaultValueByIndex={0}

@@ -208,6 +208,11 @@ export const portraitStyles = StyleSheet.create({
   selectedTagText: {
     color: "#fff",
   },
+  optionImageStyle: {
+    width: wp(10),
+    height: hp(7),
+    resizeMode: 'contain',
+  }
 })
 
 export const landscapeStyles = StyleSheet.create({
@@ -380,4 +385,9 @@ export const landscapeStyles = StyleSheet.create({
   selectedTagText: {
     color: "#fff",
   },
+  optionImageStyle: {
+    width: wp(10),
+    height: hp(7),
+    resizeMode: 'contain',
+  }
 })

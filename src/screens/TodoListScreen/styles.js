@@ -180,6 +180,7 @@ const baseStyles = {
   taskLeft: {
     flexDirection: 'row',
     alignItems: 'center',
+    width: '90%',
   },
   taskDot: {
     width: normalize(10),
@@ -213,6 +214,11 @@ const baseStyles = {
     fontFamily: Fonts.FONTS.PoppinsMedium,
     fontSize: normalize(15),
     marginTop: hp(1),
+  },
+  optionImageStyle: {
+    width: wp(6),
+    height: hp(5),
+    resizeMode: 'contain',
   }
 };
 

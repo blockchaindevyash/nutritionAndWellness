@@ -52,6 +52,7 @@ export const portraitStyles = StyleSheet.create({
     fontSize: normalize(14),
     color: COLORS.white,
     paddingVertical: 0,
+    paddingLeft: wp(2)
   },
   filterHeader: {
     paddingHorizontal: 20,
@@ -309,6 +310,11 @@ export const portraitStyles = StyleSheet.create({
     resizeMode: 'contain',
     tintColor: COLORS.greyColor,
   },
+  optionImageStyle: {
+    width: wp(4),
+    height: hp(3),
+    resizeMode: 'contain',
+  }
 });
 
 export const landscapeStyles = StyleSheet.create({

@@ -16,7 +16,7 @@ import { useTranslation } from 'react-i18next';
 import { portraitStyles, landscapeStyles } from './styles';
 import useOrientation from '../../components/OrientationComponent';
 import { COLORS } from '../../utils';
-import pencil from '../../images/pencil.png';
+import pizza from '../../images/pizza.png';
 import user from '../../images/user.png';
 import rightArrow from '../../images/rightArrow.png';
 import { hp, wp } from '../../components/responsive';
@@ -194,9 +194,10 @@ const CreateRecipeScreen = ({ navigation, route }) => {
                             />
                         ) : (
                             <>
-                                <Text style={styles.imageIcon}>
+                                {/* <Text style={styles.imageIcon}>
                                     🍲
-                                </Text>
+                                </Text> */}
+                                <Image source={pizza} style={styles.optionImageStyle} />
 
                                 <Text style={styles.uploadText}>
                                     {t('upload_recipe_image')}

@@ -161,6 +161,11 @@ export const portraitStyles = StyleSheet.create({
     marginTop: hp(1),
     marginLeft: wp(1),
   },
+  optionImageStyle: {
+    width: wp(12),
+    height: hp(7),
+    resizeMode: 'contain',
+  }
 });
 
 export const landscapeStyles = StyleSheet.create({
@@ -260,4 +265,9 @@ export const landscapeStyles = StyleSheet.create({
     resizeMode: 'contain',
     tintColor: COLORS.white,
   },
+  optionImageStyle: {
+    width: wp(12),
+    height: hp(7),
+    resizeMode: 'contain',
+  }
 })

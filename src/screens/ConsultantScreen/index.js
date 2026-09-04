@@ -20,6 +20,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import Header from '../../components/HeaderComponent';
 import { useTranslation } from 'react-i18next';
 import down from '../../images/down.png';
+import searchIcon from '../../images/search.png';
 import SelectDropdown from 'react-native-select-dropdown';
 import { hp, wp } from '../../components/responsive';
 
@@ -487,9 +488,10 @@ const ConsultantScreen = ({ navigation }) => {
       </View>
       {/* Search */}
       <View style={styles.searchContainer}>
-        <Text style={styles.searchIcon}>
+        {/* <Text style={styles.searchIcon}>
           🔍
-        </Text>
+        </Text> */}
+        <Image source={searchIcon} style={styles.optionImageStyle} />
         <TextInput
           value={search}
           onChangeText={setSearch}

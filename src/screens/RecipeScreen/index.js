@@ -28,6 +28,7 @@ import { onAddCommonJsonApi, onDeleteCommonApi, onGetCommonApi } from '../../ser
 import { showMessage } from 'react-native-flash-message';
 import { useFocusEffect } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
+import Icon from '../../components/Icon';
 
 const RecipeScreen = ({ navigation, route }) => {
   const { t } = useTranslation();
@@ -280,13 +281,18 @@ const RecipeScreen = ({ navigation, route }) => {
                 onPress={onToggleLike}
                 disabled={likeLoading}
               >
+                <Icon
+                  name={isLiked ? 'heart' : 'heart-outline'}
+                  size={21}
+                  color={isLiked ? COLORS.subPrimary : COLORS.white}
+                />
                 <Text
                   style={[
                     styles.actionText,
                     isLiked && styles.actionTextActive,
                   ]}
                 >
-                  {isLiked ? '♥' : '♡'} Like {likesCount}
+                  Like {likesCount}
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity

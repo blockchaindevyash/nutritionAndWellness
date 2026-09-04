@@ -1,4 +1,4 @@
-import { Text, View, TouchableOpacity, ScrollView } from 'react-native';
+import { Text, View, TouchableOpacity, ScrollView, Image } from 'react-native';
 import React, { useCallback, useMemo, useState } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
 import moment from 'moment';
@@ -11,6 +11,8 @@ import { onGetCommonApi } from '../../services/Api';
 import { buildCalendarDays, canEditTasksForDate, computeStreak, getStreakDates, TASKS } from './helpers';
 import { useTranslation } from 'react-i18next';
 import useAuthStore from '../../store/authStore';
+import wavingHand from '../../images/wavingHand.png';
+import fire from '../../images/fire.png';
 
 const TodoListScreen = () => {
   const {profileData} = useAuthStore();
@@ -121,7 +123,10 @@ const TodoListScreen = () => {
         style={styles.container}
         contentContainerStyle={{ paddingBottom: hp(8) }}
         showsVerticalScrollIndicator={false}>
-        <Text style={styles.greeting}>👋 {t(getGreetingKey())}, {profileData?.name}</Text>
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <Image source={wavingHand} style={styles.optionImageStyle} />
+          <Text style={styles.greeting}> {t(getGreetingKey())}, {profileData?.name}</Text>
+        </View>
         <Text style={styles.subText}>{t('dashboard_massage')}</Text>
 
         <View style={styles.heroCard}>
@@ -131,7 +136,8 @@ const TodoListScreen = () => {
               <Text style={styles.heroValue}>{streak} {t('days')}</Text>
             </View>
             <View style={styles.streakBadge}>
-              <Text style={styles.streakBadgeText}>🔥</Text>
+              {/* <Text style={styles.streakBadgeText}>🔥</Text> */}
+              <Image source={fire} style={styles.optionImageStyle} />
             </View>
           </View>
           <Text style={styles.heroCaption}>
