@@ -142,9 +142,9 @@ export const portraitStyles = StyleSheet.create({
   },
   postCard: {
     backgroundColor: COLORS.primary,
-    borderRadius: 18,
-    padding: 16,
-    marginBottom: 14,
+    borderRadius: 8,
+    padding: 10,
+    marginTop: 14,
   },
   pinnedContainer: {
     flexDirection: 'row',
@@ -274,6 +274,26 @@ export const portraitStyles = StyleSheet.create({
     marginTop: 5,
     fontSize: 13,
     color: '#999',
+  },
+  groupImage: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: '#E8E8E8',
+  },
+  groupImagePlaceholder: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: '#FFFFFF',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  groupImageText: {
+    fontSize: normalize(18),
+    fontFamily: Fonts?.medium,
+    fontWeight: '700',
+    color: COLORS.primary,
   },
 });
 

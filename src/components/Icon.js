@@ -75,7 +75,10 @@ const icons = {
   edit: '✎',
   delete: '⌫',
   refresh: '↻',
-
+  image: '▧',
+  search: '⌕',
+  bell: '♢',
+  'bell-off': '♢',
   // =========================
   // Search
   // =========================

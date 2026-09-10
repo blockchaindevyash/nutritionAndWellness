@@ -6316,6 +6316,11 @@ react-native-accurate-step-counter@^2.0.4:
   dependencies:
     react-native-shake "^4.0.2"
 
+react-native-contacts@^7.0.8:
+  version "7.0.8"
+  resolved "https://registry.yarnpkg.com/react-native-contacts/-/react-native-contacts-7.0.8.tgz#485ba7a77653b30205c76f96494808d07b8e57b9"
+  integrity sha512-Zfkdpw1uQVRb8v1m+ogknzjyfEs9k63o2sPAYvxZ8ZJff31D45G8+uZb6VcM4tIe3ELH9EDvh93nd515kFvRYQ==
+
 react-native-country-picker-modal@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/react-native-country-picker-modal/-/react-native-country-picker-modal-2.0.0.tgz#005421303349a81fedf5975e465405bb4b7312d5"

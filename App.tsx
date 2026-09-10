@@ -41,6 +41,11 @@ import ConsultantScreen from './src/screens/ConsultantScreen';
 import CommunityForum from './src/screens/CommunityForum';
 import CreatePostScreen from './src/screens/CreatePostScreen';
 import PostDetailsScreen from './src/screens/PostDetailsScreen';
+import MessageScreen from './src/screens/MessageScreen';
+import GroupDetailsScreen from './src/screens/GroupDetailsScreen';
+import CreateGroupScreen from './src/screens/CreateGroupScreen';
+import CreateGroupInfoScreen from './src/screens/CreateGroupInfoScreen';
+import MediaListScreen from './src/screens/MediaListScreen';
 import { Image, Platform, StatusBar, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import {COLORS, Fonts} from './src/utils';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -400,6 +405,31 @@ const App = () => {
           <Stack.Screen
             name="PostDetailsScreen"
             component={PostDetailsScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="MessageScreen"
+            component={MessageScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="GroupDetailsScreen"
+            component={GroupDetailsScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="CreateGroupScreen"
+            component={CreateGroupScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="CreateGroupInfoScreen"
+            component={CreateGroupInfoScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="MediaListScreen"
+            component={MediaListScreen}
             options={{headerShown: false}}
           />
         </Stack.Navigator>

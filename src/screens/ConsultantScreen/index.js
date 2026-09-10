@@ -339,6 +339,26 @@ const ConsultantScreen = ({ navigation }) => {
     { label: 'Under ₹1500', value: '1500' },
   ];
 
+  useFocusEffect(
+    useCallback(() => {
+      fetchConsultants();
+    }, []),
+  );
+
+  const fetchConsultants = async () => {
+    setIsLoading(true);
+    try {
+      // In a real scenario, you would fetch data from an API here
+      const response = await onGetCommonApi('consultants');
+      if (response.data.status) {
+        setRecipeList(response.data.data);
+      }
+    } catch (error) {
+      setIsLoading(false);
+      console.error('Error fetching consultants:', error);
+    }
+  }
+
   const filteredConsultants = useMemo(() => {
     return consultantsList.filter(item => {
       // Specialist filter
@@ -569,9 +589,6 @@ const ConsultantScreen = ({ navigation }) => {
         contentContainerStyle={styles.listContainer}
         ListEmptyComponent={
           <View style={styles.emptyContainer}>
-            <Text style={styles.emptyIcon}>
-              🔍
-            </Text>
             <Text style={styles.emptyTitle}>
               {t('no_consultants_found')}
             </Text>

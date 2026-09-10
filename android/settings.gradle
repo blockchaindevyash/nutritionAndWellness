@@ -5,4 +5,6 @@ rootProject.name = 'AiHealthCare'
 include ':app'
 include ':react-native-accurate-step-counter'
 project(':react-native-accurate-step-counter').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-accurate-step-counter/android')
+include ':react-native-contacts'
+project(':react-native-contacts').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-contacts/android')
 includeBuild('../node_modules/@react-native/gradle-plugin')

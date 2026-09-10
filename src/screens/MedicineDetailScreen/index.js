@@ -21,6 +21,7 @@ import { COLORS } from '../../utils';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { showMessage } from "react-native-flash-message";
 import useAuthStore from "../../store/authStore";
+import { hp } from "../../components/responsive";
 
 const MedicineDetailScreen = ({ navigation }) => {
     const {updateSignupData} = useAuthStore();
