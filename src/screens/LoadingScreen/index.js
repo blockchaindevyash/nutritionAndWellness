@@ -19,7 +19,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import moment from 'moment';
 
 const LoadingScreen = ({ navigation }) => {
-    const {updateWeeklyPlan, updateAdviserList} = useAuthStore();
+    const {updateWeeklyPlan, updateAdviserList, updateConslutantList, updateAllUsersList} = useAuthStore();
     const orientation = useOrientation(); // Get current orientation
     const isPortrait = orientation === 'portrait';
     const styles = isPortrait ? portraitStyles : landscapeStyles;
@@ -63,6 +63,10 @@ const LoadingScreen = ({ navigation }) => {
                 }
                 const wellnessRes = await onGetCommonApi('ai/wellness-advice');
                 updateAdviserList(wellnessRes.data.data.advice_data);
+                const consultantsRes = await onGetCommonApi('consultants');
+                updateConslutantList(consultantsRes.data.data);
+                const allUserRes = await onGetCommonApi('community/users');
+                updateAllUsersList(allUserRes.data.data.users);
                 navigation.navigate('TabStack');
             }
         } catch (error) {

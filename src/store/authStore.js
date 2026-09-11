@@ -45,6 +45,8 @@ const useAuthStore = create((set) => ({
     workoutList: [],
     profileData: null,
     adviserList: [],
+    conslutantList: [],
+    allUsersList: [],
 
     updateSignupData: (data) =>
         set((state) => ({
@@ -89,7 +91,14 @@ const useAuthStore = create((set) => ({
         set({
             adviserList: data
         }),
-
+    updateConslutantList: (data) =>
+        set({
+            conslutantList: data
+        }),
+    updateAllUsersList: (data) =>
+        set({
+            allUsersList: data
+        }),
 }));
 
 export default useAuthStore;

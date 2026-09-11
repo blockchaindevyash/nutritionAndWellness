@@ -63,6 +63,8 @@ export const portraitStyles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 15,
     marginVertical: 14,
+    width: '92%',
+    alignSelf: 'center',
   },
   searchInput: {
     flex: 1,

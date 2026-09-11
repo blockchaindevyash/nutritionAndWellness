@@ -238,5 +238,11 @@
   "note_community": "Please be respectful and supportive. Do not share personal medical information or harmful content.",
   "publish_post": "Publish Post",
   "no_discussion_found": "No discussions found",
-  "try_another_search": "Try another search or category."
+  "try_another_search": "Try another search or category.",
+  "start_date": "Start date",
+  "unit": "Unit",
+  "total_daily_dose": "Total Daily Dose",
+  "duration": "Duration",
+  "dose": "Dose",
+  "schedule": "schedule"
 }

@@ -561,6 +561,33 @@ const CommunityForum = ({navigation}) => {
       <View style={styles.headerView}>
         <Header title={t('community_forum')} onPress={() => navigation.goBack()} />
       </View>
+      {/* Search */}
+        <View style={styles.searchContainer}>
+          <Icon
+            name="search"
+            size={22}
+            color="#777777"
+          />
+
+          <TextInput
+            value={search}
+            onChangeText={setSearch}
+            placeholder="Search contacts"
+            placeholderTextColor="#999999"
+            style={styles.searchInput}
+          />
+
+          {search.length > 0 && (
+            <TouchableOpacity
+              onPress={() => setSearch('')}>
+              <Icon
+                name="close"
+                size={20}
+                color="#777777"
+              />
+            </TouchableOpacity>
+          )}
+        </View>
       <FlatList
         data={filteredPosts}
         keyExtractor={item => item.id}

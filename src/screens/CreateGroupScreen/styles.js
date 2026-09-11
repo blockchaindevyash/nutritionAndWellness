@@ -124,7 +124,7 @@ export const portraitStyles = StyleSheet.create({
   },
 
   contactList: {
-    paddingBottom: hp(12),
+    paddingBottom: hp(2),
   },
 
   contactRow: {
@@ -493,10 +493,7 @@ export const portraitStyles = StyleSheet.create({
   },
 
   inviteSection: {
-    marginTop: hp(1),
     paddingTop: hp(1.5),
-    borderTopWidth: 1,
-    borderTopColor: '#EEEEEE',
   },
 
   inviteContactRow: {

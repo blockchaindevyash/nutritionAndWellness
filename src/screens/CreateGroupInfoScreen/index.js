@@ -31,6 +31,7 @@ const CreateGroupInfoScreen = ({navigation, route}) => {
   const [groupName, setGroupName] = useState('');
   const [groupImage, setGroupImage] = useState(null);
   const [creating, setCreating] = useState(false);
+  const [radioButtonVisible, setRadioButtonView] = useState(false);
 
   const getInitials = name => {
     const parts = name.split(' ').filter(Boolean);
@@ -196,7 +197,6 @@ const CreateGroupInfoScreen = ({navigation, route}) => {
         contentContainerStyle={styles.groupInfoContent}
         ListHeaderComponent={
           <>
-            {/* Group Image */}
             <View style={styles.groupImageSection}>
               <TouchableOpacity
                 activeOpacity={0.8}
@@ -258,7 +258,23 @@ const CreateGroupInfoScreen = ({navigation, route}) => {
                 {groupName.length}/50
               </Text>
             </View>
-
+            <Text style={styles.sectionTitle}>
+              Group Type
+            </Text>
+            <View style={styles.groupTypeView}>
+              <TouchableOpacity style={styles.radioButtonView} onPress={() => setRadioButtonView(false)}>
+                <View style={styles.radioButton}>
+                  {!radioButtonVisible && <View style={styles.selectedRadio} />}
+                </View>
+                <Text style={styles.typeText}>Private</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.radioButtonView} onPress={() => setRadioButtonView(true)}>
+                <View style={styles.radioButton}>
+                  {radioButtonVisible && <View style={styles.selectedRadio} />}
+                </View>
+                <Text style={styles.typeText}>Public</Text>
+              </TouchableOpacity>
+            </View>
             {/* Members */}
             <View style={styles.membersHeader}>
               <Text style={styles.sectionTitle}>

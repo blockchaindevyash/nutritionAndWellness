@@ -23,6 +23,7 @@ import down from '../../images/down.png';
 import searchIcon from '../../images/search.png';
 import SelectDropdown from 'react-native-select-dropdown';
 import { hp, wp } from '../../components/responsive';
+import useAuthStore from '../../store/authStore';
 
 const consultantsList = [
   {
@@ -298,6 +299,7 @@ const consultantsList = [
 ];
 
 const ConsultantScreen = ({ navigation }) => {
+  const { conslutantList } = useAuthStore();
   const orientation = useOrientation();
   const isPortrait = orientation === 'portrait';
   const styles = isPortrait ? portraitStyles : landscapeStyles;
@@ -308,6 +310,7 @@ const ConsultantScreen = ({ navigation }) => {
   const [selectedRating, setSelectedRating] = useState('All');
   const [selectedFee, setSelectedFee] = useState('All');
   const [search, setSearch] = useState('');
+  const [refresh, setRefresh] = useState(false);
   const { t } = useTranslation();
 
 
@@ -339,32 +342,12 @@ const ConsultantScreen = ({ navigation }) => {
     { label: 'Under ₹1500', value: '1500' },
   ];
 
-  useFocusEffect(
-    useCallback(() => {
-      fetchConsultants();
-    }, []),
-  );
-
-  const fetchConsultants = async () => {
-    setIsLoading(true);
-    try {
-      // In a real scenario, you would fetch data from an API here
-      const response = await onGetCommonApi('consultants');
-      if (response.data.status) {
-        setRecipeList(response.data.data);
-      }
-    } catch (error) {
-      setIsLoading(false);
-      console.error('Error fetching consultants:', error);
-    }
-  }
-
   const filteredConsultants = useMemo(() => {
-    return consultantsList.filter(item => {
+    return conslutantList.filter(item => {
       // Specialist filter
       const specialistMatch =
         selectedSpecialist === 'All Specialists' ||
-        item.category === selectedSpecialist;
+        item.specialist === selectedSpecialist;
 
       // Rating filter
       const ratingMatch =
@@ -394,8 +377,10 @@ const ConsultantScreen = ({ navigation }) => {
     selectedRating,
     selectedFee,
     search,
+    recipeList,
   ]);
-
+  console.log('recipeList:', recipeList);
+  console.log('filteredConsultants:', filteredConsultants);
   const clearFilters = () => {
     setSelectedSpecialist('All');
     setSelectedRating('All');
@@ -409,10 +394,12 @@ const ConsultantScreen = ({ navigation }) => {
         activeOpacity={0.8}
         style={styles.card}>
         <View style={styles.cardTop}>
+          {item?.profile_image != null && (
           <Image
-            source={{ uri: item.profileImage }}
+            source={{ uri: item?.profile_image }}
             style={styles.profileImage}
           />
+          )}
           <View style={styles.doctorInfo}>
             <Text style={styles.doctorName}>
               {item.name}
@@ -462,7 +449,7 @@ const ConsultantScreen = ({ navigation }) => {
               {t('available')}
             </Text>
             <Text style={styles.availableText}>
-              {item.availableDays.slice(0, 2).join(', ')}
+              {item.available_days.slice(0, 2).join(', ')}
             </Text>
           </View>
           <View style={styles.timeContainer}>
@@ -470,7 +457,7 @@ const ConsultantScreen = ({ navigation }) => {
               {t('time')}
             </Text>
             <Text style={styles.availableText}>
-              {item.availableTime}
+              {item.available_time}
             </Text>
           </View>
         </View>

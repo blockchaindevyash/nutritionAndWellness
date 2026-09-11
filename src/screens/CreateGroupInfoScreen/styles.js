@@ -205,6 +205,38 @@ export const portraitStyles = StyleSheet.create({
     fontSize: normalize(16),
     fontFamily: Fonts.FONTS.PoppinsSemiBold,
   },
+  groupTypeView: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: '55%',
+    paddingVertical: hp(1)
+  },
+  radioButtonView: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  radioButton: {
+    width: 18,
+    height: 18,
+    borderRadius: 9,
+    borderWidth: 1,
+    borderColor: COLORS.secondary,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  selectedRadio: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    backgroundColor: COLORS.secondary
+  },
+  typeText: {
+    fontSize: normalize(14),
+    fontFamily: Fonts.FONTS.PoppinsMedium,
+    color: COLORS.white,
+    marginLeft: wp(4)
+  }
 });
 
 export const landscapeStyles = StyleSheet.create({

@@ -54,9 +54,9 @@ export const portraitStyles = StyleSheet.create({
     borderRadius: 5,
     justifyContent: 'center',
     paddingHorizontal: wp(2),
-    paddingVertical: 5,
+    paddingVertical: 4,
     backgroundColor: COLORS.primary,
-    height: hp(5)
+    height: hp(4.5)
   },
   notesInput: {
     height: 100,
@@ -123,6 +123,46 @@ export const portraitStyles = StyleSheet.create({
     color: "#fff",
     fontSize: normalize(18),
     fontFamily: Fonts.FONTS.PoppinsSemiBold,
+  },
+  dropdown2DropdownStyle: {
+    backgroundColor: COLORS.primary,
+    borderRadius: 4,
+    paddingVertical: hp(1),
+    // height: hp(25),
+    // borderRadius: 12,
+  },
+  dropdownItemTxtStyle: {
+    color: COLORS.white,
+    fontFamily: Fonts.FONTS.PoppinsMedium,
+    fontSize: hp(2.1),
+    paddingLeft: wp(2),
+  },
+  dropdownView: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: hp(1),
+    // height: hp(4),
+    borderBottomWidth: 0,
+  },
+  dropdown2BtnStyle2: {
+    width: '100%',
+    paddingVertical: hp(0.5),
+    backgroundColor: COLORS.primary,
+    borderRadius: 5,
+    alignItems: 'center',
+    flexDirection: 'row',
+    borderWidth: 1,
+    borderColor: COLORS.primary,
+    // marginTop: hp(1),
+    justifyContent: 'space-between',
+    borderWidth: 0.3,
+    borderColor: COLORS.greyColor,
+  },
+  filterImage: {
+    width: wp(4),
+    height: hp(2.5),
+    resizeMode: 'contain',
+    tintColor: COLORS.greyColor,
   },
 });
 

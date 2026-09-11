@@ -19,7 +19,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import moment from 'moment';
 
 const SplashScreen = ({ navigation }) => {
-    const {updateGoalData, updateDietData, updateActivityData, updateMedicalData, updateWorkoutData, updateProfileData, updateWeeklyPlan, updateAdviserList} = useAuthStore();
+    const {updateGoalData, updateDietData, updateActivityData, updateMedicalData, updateWorkoutData, updateProfileData, updateWeeklyPlan, updateAdviserList, updateConslutantList, updateAllUsersList} = useAuthStore();
     const orientation = useOrientation(); // Get current orientation
     const isPortrait = orientation === 'portrait';
     const styles = isPortrait ? portraitStyles : landscapeStyles;
@@ -77,6 +77,10 @@ const SplashScreen = ({ navigation }) => {
                 updateProfileData(profileRes.data.data.user);
                 const wellnessRes = await onGetCommonApi('ai/wellness-advice');
                 updateAdviserList(wellnessRes.data.data.advice_data);
+                const consultantsRes = await onGetCommonApi('consultants');
+                updateConslutantList(consultantsRes.data.data);
+                const allUserRes = await onGetCommonApi('community/users');
+                updateAllUsersList(allUserRes.data.data.users);
                 navigation.navigate('TabStack');
             } else {
                 navigation.navigate('LoginScreen');
